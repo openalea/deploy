@@ -23,10 +23,15 @@ from openalea.misc import sphinx_tools
 
 
 filenames = ['deploy/openalea_deploy_binary_deps_ref.rst']
-
 for file in filenames:
     process = sphinx_tools.PostProcess(file)
     process.switch_automodule_to_autofunction('binary_deps')
+
+filenames = ['deploy/openalea_deploy_command_ref.rst']
+for file in filenames:
+    process = sphinx_tools.PostProcess(file)
+    process.remove_options('inherited-members')
+    process.remove_options('show-inheritance')
 
 
 print 'Try python setup.py build_sphinx now.'
