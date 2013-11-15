@@ -7,33 +7,33 @@ eggGlobs = "*\\dist\\VPlants*.egg|*\\dist\\OpenAlea*.egg|tissue\\*\\dist\\VPlant
 
 # package -> (installerFlags, installationOrder)
 thirdPartyPackages = [   ("python", (NOT_INSTALLABLE|RUNTIME|DEVELOP,)), #always tested
-                         ("openalea", (NOT_INSTALLABLE|RUNTIME|DEVELOP|TEST_ME,)),
-                         ("scons", (EGG|DEVELOP|TEST_ME,)),
-                         ("bisonflex", (EGG|DEVELOP|TEST_ME,)),
-                         ("boost", (EGG|PY_DEP|ARCH|RUNTIME|DEVELOP|TEST_ME,)),
-                         ("ann", (EGG|ARCH|RUNTIME|TEST_ME,)),
-                         ("cgal", (EGG|ARCH|RUNTIME|TEST_ME,)),
-                         ("qhull", (EGG|ARCH|DEVELOP|TEST_ME,)),
-                         ("gnuplot", (EGG|ARCH|RUNTIME|DEVELOP|TEST_ME,)),
-                         ("pyopengl", (EXEDIST|ARCH|RUNTIME|DEVELOP|TEST_ME,)),
-                         ("pyqglviewer", (EGG|ARCH|PY_DEP|RUNTIME|DEVELOP|TEST_ME,)),
-                         ("qt4_dev", (EGG|ARCH|DEVELOP|TEST_ME,)),
-                         ("mingw", (EGG|ARCH|DEVELOP,)),                       
-                         ("networkx", (EGG|PY_DEP|RUNTIME|DEVELOP|TEST_ME,)),                       
-                         ]                         
+                         ("openalea", (NOT_INSTALLABLE|RUNTIME|DEVELOP,)),
+                         ("scons", (EGG|DEVELOP,)),
+                         ("bisonflex", (EGG|DEVELOP,)),
+                         ("boost", (EGG|PY_DEP|ARCH|RUNTIME|DEVELOP,)),
+                         ("ann", (EGG|ARCH|RUNTIME,)),
+                         ("cgal", (EGG|ARCH|RUNTIME,)),
+                         ("qhull", (EGG|ARCH|DEVELOP,)),
+                         ("gnuplot", (EXE|ARCH|RUNTIME|DEVELOP,)),
+                         ("pyopengl", (EXE|ARCH|RUNTIME|DEVELOP,)),
+                         ("pyqglviewer", (EGG|ARCH|PY_DEP|RUNTIME|DEVELOP,)),
+                         ("qt4_dev", (EGG|ARCH|DEVELOP,)),
+                         ("mingw", (EGG|ARCH|DEVELOP,))                               
+                         ]    
+                         #("networkx", (EGG|PY_DEP|RUNTIME|DEVELOP,)), 
                          
 
                          
-def generate_pascal_install_code(options):        
+def generate_pascal_install_code(eggmaxid):        
     manuallyInstalled = ["VPlants"]
 
-    s = """
+    tmpl = StrictTemplate("""
 var i, incr:Integer;
 var s:String;
 begin
     Result:=False;
-    incr := (100 - WizardForm.ProgressGauge.Position)/high(Eggs)/2;
-    for i:=0 to high(Eggs) do begin
+    incr := (100 - WizardForm.ProgressGauge.Position)/$EGGMAXID/2;
+    for i:=0 to $EGGMAXID do begin
         s := ExtractFileName(Eggs[i]);
         WizardForm.StatusLabel.Caption:='Uncompressing '+s;
         WizardForm.Update();
@@ -45,7 +45,9 @@ begin
         end;
         WizardForm.ProgressGauge.Position := WizardForm.ProgressGauge.Position + incr;
     end;
-    """
+    """)
+    s = tmpl.substitute(EGGMAXID=eggmaxid)
+    
     manInstTemplate = StrictTemplate("""
     WizardForm.StatusLabel.Caption:='Installing $PACKAGE';
     WizardForm.Update();

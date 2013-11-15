@@ -11,34 +11,34 @@ eggGlobs = "*\\dist\\OpenAlea*.egg"
 # NOTE: Symbols here are "injected" by master makeWinInstaller.py script.
 # TODO : Use ordered dict
 thirdPartyPackages = [  ("python", (MSI|RUNTIME|DEVELOP,)),
-                        ("pywin32", (EXE|PY_DEP|ARCH|RUNTIME|DEVELOP|TEST_ME,)),
-                        ("setuptools", (EXE|PY_DEP|ARCH|RUNTIME|DEVELOP|TEST_ME,)),
+                        ("pywin", (EXE|RUNTIME|DEVELOP,)),
+                        ("setuptools", (EXE|RUNTIME|DEVELOP,)),
                         #("PyQt", (EXE|PY_DEP|ARCH|RUNTIME|DEVELOP|TEST_ME,)), #if using standard installer
                         ("mingw_rt", (EGG|ARCH|RUNTIME|DEVELOP,)),
-                        ("qt4", (EGG|PY_DEP|ARCH|RUNTIME|TEST_ME,)),
-                        ("numpy", (EXE|PY_DEP|ARCH|RUNTIME|TEST_ME,)),
-                        ("scipy", (EXE|PY_DEP|ARCH|RUNTIME|TEST_ME,)),
-                        ("matplotlib", (EXE|PY_DEP|ARCH|RUNTIME|TEST_ME,)),                         
-                        ("pil", (EXE|PY_DEP|RUNTIME|TEST_ME,)),
-                        ("pylsm", (TARDIST|RUNTIME|TEST_ME,)),
-                        ("soappy", (TARDIST|RUNTIME,)),
-                        ("wstools", (TARDIST|RUNTIME,)),
-                        ("fpconst", (TARDIST|RUNTIME,)),
-                        ("nose", (TARDIST|DEVELOP,)),
+                        ("qt4", (EGG|PY_DEP|ARCH|RUNTIME,)),
+                        ("numpy", (EXE|RUNTIME,)),
+                        ("scipy", (EXE|RUNTIME,)),
+                        ("matplotlib", (EXE|RUNTIME,)),                         
+                        ("pillow", (EXE|RUNTIME,)),
+                        ("pylsm", (EGG|ARCH|RUNTIME,)),
+                        #("soappy", (TARDIST|RUNTIME,)),
+                        #("wstools", (TARDIST|RUNTIME,)),
+                        #("fpconst", (TARDIST|RUNTIME,)),
+                        #("nose", (TARDIST|DEVELOP,)),
                         #("pylibtiff", (EGG|PY_DEP|ARCH|RUNTIME|TEST_ME,)),
                          ]
                          
 
 
                          
-def generate_pascal_install_code(options):        
-    return  """
+def generate_pascal_install_code(eggmaxid):        
+    tmpl = StrictTemplate("""
 var i, incr:Integer;
 var s:String;
 begin
     Result:=False;
-    incr := (100 - WizardForm.ProgressGauge.Position)/high(Eggs)/2;
-    for i:=0 to high(Eggs) do begin
+    incr := (100 - WizardForm.ProgressGauge.Position)/$EGGMAXID/2;
+    for i:=0 to $EGGMAXID do begin
         s := ExtractFileName(Eggs[i]);
         WizardForm.StatusLabel.Caption:='Uncompressing '+s;
         WizardForm.Update();
@@ -63,7 +63,10 @@ begin
 
     WizardForm.ProgressGauge.Position := 100;
     WizardForm.Update();                   
-end;"""
+end;""")
+    code = tmpl.substitute(EGGMAXID=eggmaxid)
+    return code
+    
 
         
 # -- The default generate_pascal_post_install_code(opt) function returns "". --

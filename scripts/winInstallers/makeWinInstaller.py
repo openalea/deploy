@@ -385,14 +385,14 @@ def generate_pascal_post_install_code(options):
     return ""
 
 # -- Override me to generate application installation pascal code.         
-def generate_pascal_install_code(options):        
-    return  """
+def generate_pascal_install_code(eggmaxid):        
+    tmpl =  StrictTemplate("""
 var i, incr:Integer;
 var s:String;
 begin
     Result:=False;
-    incr := (100 - WizardForm.ProgressGauge.Position)/high(Eggs);
-    for i:=0 to high(Eggs) do begin
+    incr := (100 - WizardForm.ProgressGauge.Position)/$EGGMAXID;
+    for i:=0 to $EGGMAXID do begin
         s := ExtractFileName(Eggs[i]);
         WizardForm.StatusLabel.Caption:='Uncompressing '+s;
         WizardForm.Update();
@@ -401,7 +401,9 @@ begin
         WizardForm.ProgressGauge.Position := WizardForm.ProgressGauge.Position + incr;
     end;
     Result := True;
-end;"""
+end;""")
+    code = tmpl.substitute(EGGMAXID=eggmaxid)
+    return code
     
 def configure_inno_setup(appname, appversion, dependencies, args, funcs, egg_pths):
     print "Configuring inno script...",
@@ -414,8 +416,11 @@ def configure_inno_setup(appname, appversion, dependencies, args, funcs, egg_pth
 
     eggArrayInit = ""
     for i, e in enumerate(egg_pths):
-        eggArrayInit+="Eggs[%i] := '%s';\n"%(i, e)      
-            
+        eggArrayInit+="Eggs[%i] := '%s';\n"%(i, e) 
+    
+    s='\n'+"#"*80+'\n'
+    print s+eggArrayInit+s
+    
     step = int(100./(eggnum+len(dependencies)))    
     detect, testVars = funcs["generate_pascal_test_install_code"](dependencies)
     testingBody, reportingBody = funcs["generate_pascal_detect_env_body"](dependencies, testVars, appname)
@@ -445,7 +450,7 @@ def configure_inno_setup(appname, appversion, dependencies, args, funcs, egg_pth
                             TEST_VAR_RESULTS=testingBody,
                             #configure the body of DetectEnv that reports
                             REPORT_VAR_RESULTS=reportingBody,
-                            INSTALL_APP_BODY=funcs["generate_pascal_install_code"](None),
+                            INSTALL_APP_BODY=funcs["generate_pascal_install_code"](str(eggnum-1)),
                             #configure the body of Deploy that installs the dependencies
                             DEPLOY_BODY=installationBody,
                             #Code to run on post install
@@ -660,7 +665,7 @@ def main():
     print "Now compiling",    
     if subprocess.call("iscc.exe "+gen, shell=True, env=os.environ):
         return False
-    
+        
     if args.upload:
         print "Uploading the installer ",
         if args.release:
