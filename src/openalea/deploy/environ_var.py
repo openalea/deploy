@@ -44,10 +44,9 @@ def set_lsb_env(name, vars):
         vname, value = newvar.split('=')
 
         # Exception
-        lib_names = ['LD_LIBRARY_PATH', 'DYLD_LIBRARY_PATH', 'LD_FRAMEWORK_PATH']
+        lib_names = ['LD_LIBRARY_PATH', 'DYLD_FALLBACK_LIBRARY_PATH', 'DYLD_FRAMEWORK_PATH']
         if (vname in lib_names and
-           (value == "/usr/local/lib") or
-           (value == "/usr/lib")):
+           (value in ["/usr/local/lib", "/opt/local/lib", "/usr/lib"])):
             continue
 
         if(((vname in lib_names) or (vname== "PATH")) and value):

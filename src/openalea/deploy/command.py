@@ -848,8 +848,8 @@ def set_env(dyn_lib=None):
             'PATH=$OPENALEA_BIN']
     try:
         if 'darwin' in sys.platform :
-            vars.append('DYLD_LIBRARY_PATH=$OPENALEA_LIB')
-            vars.append('DYLD_FRAMEWORK_PATH=$OPENALEA_LIB')
+            vars.append('DYLD_FALLBACK_LIBRARY_PATH=$OPENALEA_LIB')
+            #vars.append('DYLD_FRAMEWORK_PATH=$OPENALEA_LIB')
         set_lsb_env('openalea',vars)
     except:
         print vars
