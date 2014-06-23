@@ -65,18 +65,19 @@ def set_lsb_env(name, vars):
         filename = '/etc/profile.d/'+name+'.sh'
         filehandle = open(filename, 'w')
     except:
+        # On Mac, we set the /etc/profile file (there is not .bashrc file)    
+        if "darwin" in sys.platform.lower():
+            filename = os.path.join(os.path.expanduser('~'), ".profile")
+        else:
+            filename = os.path.join(os.path.expanduser('~'), ".bashrc")
+
         print "Warning : Cannot create /etc/profile.d/%s.sh"%(name)
-        print "Trying to setup environment in the ~/.bashrc file"
+        print "Trying to setup environment in %s" % filename
 
         # If profile.d directory is not writable, try to update $HOM/.bashrc
         try:
             script_name = ".%s.sh"%(name)
 
-            # On Mac, we set the /etc/profile file (there is not .bashrc file)	
-            if "darwin" in sys.platform.lower():
-                filename = os.path.join(os.path.expanduser('~'), ".profile")
-            else:
-                filename = os.path.join(os.path.expanduser('~'), ".bashrc")
             filehandle = open(filename, 'r')
             bashrc = filehandle.read()
             filehandle.close()
