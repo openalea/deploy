@@ -1,7 +1,7 @@
 OpenAlea.Deploy
 ===============
 
-**Authors** : S. Dufour-Kowalski 
+**Authors** : S. Dufour-Kowalski, C. Pradal 
 
 **Contributors** : OpenAlea Consortium
 
@@ -19,7 +19,9 @@ About
 
 OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage 
 their dependencies .
-It is an extension of [[http://peak.telecommunity.com/DevCenter/setuptools|Setuptools]].
+It is an extension of Setuptools_.
+
+
 
 **Additional Features** :
    * Discover and manage packages in EGG format
@@ -35,8 +37,8 @@ It doesn't include any GUI interface (See [[packages:compilation_installation:de
 Requirements
 -------------
 
-  * [[http://www.python.org|Python >= 2.4]]
-  * [[http://peak.telecommunity.com/DevCenter/setuptools|Setuptools]]
+  * Python_ <= 2.7
+  * Setuptools_
 
 Download
 ---------
@@ -48,10 +50,13 @@ Installation
 
   python setup.py install
 
-..note:: OpenAlea.Deploy can be automatically installed with the //alea_setup.py// script.
+.. note:: 
+
+  OpenAlea.Deploy can be automatically installed with the *alea_setup.py* script.
 
 
-
+.. _Setuptools: http://pythonhosted.org/setuptools
+.. _Python: http://www.python.org
 
 
 Developper Documentation
@@ -60,30 +65,29 @@ Developper Documentation
 To distribute your package with OpenAlea.Deploy, you need to write a setup.py script
 as you do with setuptools.
 
-  * have a look to the [[http://peak.telecommunity.com/DevCenter/setuptools|Setuptools developer's.
-guide]].
+  * have a look to the Setuptools_ developer's guide.
   * OpenAlea.Deploy add a numerous of keywords and commands
 
 Setup keywords
 ###############
 
-  * create_namespace = [True|False] : if //True// create the namespaces in //namespace_packages//
-  * scons_scripts = [//list of Scons scripts//] : if not empty, call scons to build extensions
-  * scons_parameters = [//list of Scons parameters//] : such as ''build_prefix=...''
-  * postinstall_scripts = [//list of strings//] : Each string corresponds to a python module to execute at installation time. The module may contain a install function ''def install():''.
-  * inc_dirs = {//dict of dest_dir:src_dir//} : Dictionary to map the directory containing the header files.
-  * lib_dirs = {//dict of dest_dir:src_dir//} : Dictionary to map the directory containing the dynamic libraries to share.
-  * share_dirs = {//dict of dest_dir:src_dir//} : Dictionary to map the directory containing shared data.
+  * create_namespace = [True|False] : if **True** create the namespaces in *namespace_packages*
+  * scons_scripts = [list of Scons scripts] : if not empty, call scons to build extensions
+  * scons_parameters = [list of Scons parameters] : such as ``build_prefix=...``
+  * postinstall_scripts = [list of strings] : Each string corresponds to a python module to execute at installation time. The module may contain a install function ``def install():``.
+  * inc_dirs = {dict of dest_dir:src_dir} : Dictionary to map the directory containing the header files.
+  * lib_dirs = {dict of dest_dir:src_dir} : Dictionary to map the directory containing the dynamic libraries to share.
+  * share_dirs = {dict of dest_dir:src_dir} : Dictionary to map the directory containing shared data.
 
 Additional setup.py commands
 #############################
 
-   * //create_namespace// : create_namespace declared in //namespace_packages//usage : ''python setup.py create_namespace''.
-   * //scons// : call scons scripts, usage : ''python setup.py scons''.
-   * //alea_install// : wrap easy_install command, usage : ''python setup.py alea_install''.
-   * //alea_upload// : upload distribution forge on the openalea gforge
+   * *create_namespace* : create_namespace declared in *namespace_packages*, usage : ``python setup.py create_namespace``.
+   * *scons* : call scons scripts, usage : ``python setup.py scons``.
+   * *alea_install* : wrap easy_install command, usage : ``python setup.py alea_install``.
+   * *alea_upload* : upload distribution forge on the openalea gforge
 
-For more information see : ''python setup.py --help-commands''
+For more information see : ``python setup.py --help-commands``
 
 Setup.py example
 #################
