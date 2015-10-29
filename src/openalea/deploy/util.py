@@ -2,14 +2,15 @@
 #
 #       OpenAlea.Deploy: OpenAlea setuptools extension
 #
-#       Copyright 2006-2009 INRIA - CIRAD - INRA  
+#       Copyright 2006-2015 INRIA - CIRAD - INRA
 #
-#       File author(s): Samuel Dufour-Kowalski <samuel.dufour@sophia.inria.fr>
+#       File author(s): Samuel Dufour-Kowalski <samuel.dufour@cirad.fr>
+#          Christophe Pradal <christophe.pradal@cirad.fr>
 #
 #       Distributed under the Cecill-C License.
 #       See accompanying file LICENSE.txt or copy at
 #           http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
-# 
+#
 #       OpenAlea WebSite : http://openalea.gforge.inria.fr
 #
 """Deployment utilities"""
@@ -44,13 +45,13 @@ def get_base_dir(pkg_name):
 
 def get_egg_info(pkg_name, info_key):
     """ Return as a generator the egg-infos contained in info_key"""
-    
+
     dist = pkg_resources.get_distribution(pkg_name)
     try:
         lstr = dist.get_metadata(info_key)
     except:
         lstr = ""
-        
+
     return pkg_resources.yield_lines(lstr)
 
 
@@ -111,7 +112,7 @@ def get_eggs(namespace=None, precedence=ALL_DIST):
     env = pkg_resources.Environment()
 
     for project_name in env: 
-        
+
         if(precedence):
             pkg = pkg_resources.get_distribution(project_name)
             if(pkg.precedence not in precedence):
@@ -125,8 +126,8 @@ def get_eggs(namespace=None, precedence=ALL_DIST):
 
 
 def get_all_lib_dirs(namespace=None, precedence=ALL_DIST):
-    """ 
-    Return the iterator of the directories corresponding to the shared lib 
+    """
+    Return the iterator of the directories corresponding to the shared lib
     Select only egg with a particular precedence
     """
 
@@ -176,7 +177,7 @@ def merge_uniq(list1, list2):
 
 def check_system():
     """
-    Check system configuration and 
+    Check system configuration and
 
     Return a dictionnary containing environment variables to be set.
     """
@@ -187,6 +188,8 @@ def check_system():
     out_env = {}
 
     try:
+        if is_virtual_env() or is_conda_env():
+            return out_env
 
         # Linux
         if ("posix" in os.name) and ("linux" in sys.platform.lower()):
@@ -280,6 +283,15 @@ def is_virtual_env():
     import site
     return hasattr(site, "virtual_addsitepackages")
 
+
+def is_conda_env():
+    """ Return True if we are in a conda env
+
+    The CONDA_ENVPATH environment variable is set by the activate conda script.
+    """
+
+    import os
+    return ('CONDA_ENV_PATH' in os.environ)
    
 
 

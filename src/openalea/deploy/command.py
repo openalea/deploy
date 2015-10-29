@@ -51,7 +51,7 @@ from distutils.dist import Distribution
 
 import pkg_resources
 from distutils.errors import DistutilsSetupError
-from distutils.util import convert_path
+# from distutils.util import convert_path
 from distutils.dir_util import mkpath
 
 import re
@@ -103,11 +103,11 @@ def copy_data_tree(src, dst, exclude_pattern=['(RCS|CVS|\.svn)', '.*\~']):
 def has_ext_modules(dist):
     """ Replacement function for has_ext_module """
     try:
-        return Distribution.has_ext_modules(dist) or \
-               (dist.scons_scripts or
-                dist.lib_dirs or dist.inc_dirs or
-                dist.bin_dirs) or \
-                dist.add_plat_name
+        return (Distribution.has_ext_modules(dist) or
+                (dist.scons_scripts or
+                 dist.lib_dirs or dist.inc_dirs or
+                 dist.bin_dirs) or
+                dist.add_plat_name)
     except:
         return dist.has_ext_modules()
 
@@ -128,7 +128,7 @@ class build(old_build):
                     ('build_py', old_build.has_pure_modules),
                     ('build_clib', old_build.has_c_libraries),
                     ('build_scripts', old_build.has_scripts),
-                   ]
+                    ]
 
 
 class build_py(old_build_py):
@@ -169,12 +169,12 @@ class build_ext(old_build_ext):
     user_options = []
     user_options.extend(old_build_ext.user_options)
     user_options.append(('scons-ext-param=',
-                           None,
-                           'External parameters to pass to scons.'))
+                         None,
+                         'External parameters to pass to scons.'))
     user_options.append(('scons-path=',
-                           None,
-                           'Optional scons executable path.'
-                           'eg : C:\Python25\scons.bat for windows.'))
+                         None,
+                         'Optional scons executable path.'
+                         'eg : C:\Python27\scons.bat for windows.'))
 
     def initialize_options(self):
         old_build_ext.initialize_options(self)
@@ -193,10 +193,10 @@ class build_ext(old_build_ext):
         for d in (self.distribution.lib_dirs,
                   self.distribution.inc_dirs,
                   self.distribution.bin_dirs,
-                  #self.distribution.share_dirs,
+                  # self.distribution.share_dirs,
                   ):
 
-            if (not d or self.inplace==1):
+            if (not d or self.inplace == 1):
                 continue
 
             if (not os.path.exists(self.build_lib)):
@@ -268,7 +268,6 @@ def validate_pylint_packages(dist, attr, value):
              where to find the python source files """ % attr)
 
 
-
 def validate_bin_dirs(dist, attr, value):
     """ Validation for shared directories keywords"""
 
@@ -283,7 +282,6 @@ def validate_bin_dirs(dist, attr, value):
             setuptools.command.install_lib.install_lib = cmd_install_lib
             setuptools.command.develop.develop = develop
             set_has_ext_modules(dist)
-
 
     except (TypeError, ValueError, AttributeError, AssertionError):
         raise DistutilsSetupError(
@@ -320,6 +318,7 @@ def validate_postinstall_scripts(dist, attr, value):
         raise DistutilsSetupError(
             "%r must be a list of strings (got %r)" % (attr, value))
 
+
 def validate_add_plat_name(dist, attr, value):
     """ Validation for add_plat_name keyword"""
     try:
@@ -333,6 +332,7 @@ def validate_add_plat_name(dist, attr, value):
         raise DistutilsSetupError(
             "%r must be a boolean (got %r)" % (attr, value))
 
+
 def write_keys_arg(cmd, basename, filename, force=False):
     """ Egg-info writer """
 
@@ -341,7 +341,6 @@ def write_keys_arg(cmd, basename, filename, force=False):
     if value is not None:
         value = '\n'.join(value.keys()) + '\n'
     cmd.write_or_delete_file(argname, filename, value, force)
-
 
 
 # SCons Management
@@ -361,12 +360,12 @@ class scons(Command):
 
     description = "Run SCons"
 
-    user_options =[('scons-ext-param=',
+    user_options = [('scons-ext-param=',
                     None,
                     'External parameters to pass to scons.'),
                     ('scons-path=',
                     None,
-                    'Optional scons executable path. eg : C:\Python25\scons.bat for windows.')]
+                    'Optional scons executable path. eg : C:\Python27\scons.bat for windows.')]
 
     def initialize_options(self):
         self.outfiles = None
@@ -431,7 +430,8 @@ class scons(Command):
                 else:
                     command = 'scons'
 
-                command_param = file_param + ' ' + build_param + ' ' + param + ' ' + externp
+                command_param = ' '.join([file_param, build_param,
+                                          param, externp])
                 commandstr = command + ' ' + command_param
 
                 print commandstr
@@ -638,8 +638,8 @@ class install(old_install):
     user_options = []
     user_options.extend(old_install.user_options)
     user_options.append(('install-dyn-lib=',
-                          None,
-                          'Directory to install dynamic library.'))
+                         None,
+                        'Directory to install dynamic library.'))
 
     def initialize_options(self):
         old_install.initialize_options(self)
@@ -685,18 +685,18 @@ class alea_install(old_easy_install):
 
     user_options = []
     user_options.extend(old_easy_install.user_options)
-    user_options.extend([ ('install-dyn-lib=', None, 'Directory to install dynamic library.'),
-                          ('gforge-private',  "g" , "Use private gforge repository too (will search for authentication pydistutils.cfg or ask if not found)"),                        
-                          ])
-                        
+    user_options.extend([('install-dyn-lib=', None, 'Directory to install dynamic library.'),
+                         ('gforge-private', "g", "Use private gforge repository too (will search for authentication pydistutils.cfg or ask if not found)"),                        
+                         ])
+
     boolean_options = old_easy_install.boolean_options + ["gforge-private"]
 
     def initialize_options(self):
         old_easy_install.initialize_options(self)
         self.install_dyn_lib = None
-        self.gforge_private  = False
+        self.gforge_private = False
 
-    def finalize_options(self):    
+    def finalize_options(self):
         # Add openalea package link
         repolist = get_repo_list()
         if (not self.find_links):
@@ -715,11 +715,11 @@ class alea_install(old_easy_install):
 
     def run(self):
         self.set_system()
-        
+
         if self.gforge_private:
             from openalea.deploy.gforge_util import add_private_gforge_repositories
             add_private_gforge_repositories()
-            
+
         old_easy_install.run(self)
 
         # Activate the correct egg
@@ -728,12 +728,11 @@ class alea_install(old_easy_install):
             del pkg_resources.working_set.by_key[self.dist.key]
         pkg_resources.working_set.add(self.dist)
 
-	# Call postinstall
+        # Call postinstall
         self.postinstall(self.dist)
 
-	# Set environment
+        # Set environment
         set_env(self.install_dyn_lib)
-
 
     def set_system(self):
         """ Set environment """
@@ -806,8 +805,10 @@ def set_env(dyn_lib=None):
     """
 
     virtualenv = is_virtual_env()
+    condaenv = is_conda_env()
 
-    print "Install dynamic libs "
+
+    print "Install dynamic or share libs "
 
     #lib_dirs = list(get_all_lib_dirs())
     dyn_lib = install_lib.install_lib(dyn_lib)
@@ -834,23 +835,23 @@ def set_env(dyn_lib=None):
         except:
             pass
 
-    if (is_virtual_env()):
+    if virtualenv or condaenv:
         print "EDIT the activate script to setup PATH and/or LD_LIBRARY_PATH"
         return
 
     all_dirs = set(lib_dirs + bin_dirs)
-    set_win_env(['OPENALEA_LIB=%s'%(';'.join(all_dirs)),
+    set_win_env(['OPENALEA_LIB=%s' % (';'.join(all_dirs)),
                  'PATH=%OPENALEA_LIB%', ])
 
-    vars = ['OPENALEA_LIB=%s'%(':'.join(lib_dirs)),
-            'OPENALEA_BIN=%s'%(':'.join(bin_dirs)),
+    vars = ['OPENALEA_LIB=%s' % (':'.join(lib_dirs)),
+            'OPENALEA_BIN=%s' % (':'.join(bin_dirs)),
             'LD_LIBRARY_PATH=$OPENALEA_LIB',
             'PATH=$OPENALEA_BIN']
     try:
-        if 'darwin' in sys.platform :
+        if 'darwin' in sys.platform:
             vars.append('DYLD_FALLBACK_LIBRARY_PATH=$OPENALEA_LIB')
-            #vars.append('DYLD_FRAMEWORK_PATH=$OPENALEA_LIB')
-        set_lsb_env('openalea',vars)
+            # vars.append('DYLD_FRAMEWORK_PATH=$OPENALEA_LIB')
+        set_lsb_env('openalea', vars)
     except:
         print vars
         return
