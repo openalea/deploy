@@ -147,12 +147,27 @@ class build_py(old_build_py):
         self.run_command("create_namespaces")
 
         # Add share_dirs
-        d = self.distribution.share_dirs
-        if (d):
+        share_dirs = self.distribution.share_dirs
+        if share_dirs:
+
+            """
+            if is_conda_env():
+                env_dir = os.path.abspath(os.environ['PREFIX'])
+                share_dir = os.path.join(env_dir, 'share')
+
+                # get the name of the package
+                pkg_name = self.distribution.name.lower()
+
+                for (name, dir) in share_dirs.items():
+                    if name == 'share':
+                        copy_data_tree(dir, pj(share_dir, pkg_name))
+
+            else:
+            """
             if (not os.path.exists(self.build_lib)):
                 self.mkpath(self.build_lib)
 
-            for (name, dir) in d.items():
+            for (name, dir) in share_dirs.items():
                 copy_data_tree(dir, pj(self.build_lib, name))
 
         ret = old_build_py.run(self)
@@ -686,7 +701,7 @@ class alea_install(old_easy_install):
     user_options = []
     user_options.extend(old_easy_install.user_options)
     user_options.extend([('install-dyn-lib=', None, 'Directory to install dynamic library.'),
-                         ('gforge-private', "g", "Use private gforge repository too (will search for authentication pydistutils.cfg or ask if not found)"),                        
+                         ('gforge-private', "g", "Use private gforge repository too (will search for authentication pydistutils.cfg or ask if not found)"),
                          ])
 
     boolean_options = old_easy_install.boolean_options + ["gforge-private"]
