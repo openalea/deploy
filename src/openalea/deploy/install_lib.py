@@ -1,9 +1,9 @@
-################################################################################
+###############################################################################
 # -*- python -*-
 #
 #       OpenAlea.Deploy : OpenAlea setuptools extension
 #
-#       Copyright 2006-2009 INRIA - CIRAD - INRA  
+#       Copyright 2006-2015 INRIA - CIRAD - INRA
 #
 #       File author(s): Samuel Dufour-Kowalski <samuel.dufour@sophia.inria.fr>
 #                       Christophe Pradal <christophe.prada@cirad.fr>
@@ -11,10 +11,10 @@
 #       Distributed under the Cecill-C License.
 #       See accompanying file LICENSE.txt or copy at
 #           http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
-# 
+#
 #       OpenAlea WebSite : http://openalea.gforge.inria.fr
 #
-################################################################################
+###############################################################################
 """Install dynamic library.
 
 The egm file describes the directory the dynamic library is originated from.
@@ -31,7 +31,7 @@ from os.path import join
 EGG_MARKER_EXTENSION = ".egm"
 
 from openalea.deploy.util import get_all_lib_dirs, get_base_dir, INSTALL_DIST
-from openalea.deploy.util import is_virtual_env
+from openalea.deploy.util import is_virtual_env, is_conda_env
 from distutils.dir_util import mkpath
 from distutils.sysconfig import get_python_lib
 
@@ -44,10 +44,16 @@ def get_default_dyn_lib():
     # Virtual environment
     if(is_virtual_env()):
         if("posix" in os.name):
-            return os.path.abspath( 
-                os.path.join(basedir, '../../lib') )
+            return os.path.abspath(
+                os.path.join(basedir, '../../lib'))
         else:
             return os.path.join(basedir, "shared_libs")
+
+    # Conda environment
+    if is_conda_env():
+        env_dir = os.path.abspath(os.environ['CONDA_ENV_PATH'])
+        dyn_dir = os.path.join(env_dir, 'lib')
+        return dyn_dir
 
     # Standard environment
     if("posix" in os.name):
@@ -58,8 +64,8 @@ def get_default_dyn_lib():
 
 
 def get_dyn_lib_dir(use_default=True):
-    """ 
-    Return the shared lib directory 
+    """
+    Return the shared lib directory
     if use_default : return default directory if not defined
     """
 
@@ -72,20 +78,19 @@ def get_dyn_lib_dir(use_default=True):
         print 'Reading shared-lib.pth found in %s' % lib_dir
         f.close()
 
-    except Exception, e:
+    except Exception:
 
         if(use_default):
             lib_dir = get_default_dyn_lib()
         else:
             lib_dir = None
-        
-    return lib_dir
 
+    return lib_dir
 
 
 def set_dyn_lib_dir(path):
     """ Set the shared lib directory """
-    
+
     path = os.path.abspath(path)
     bdir = get_base_dir("openalea.deploy")
     dir = os.path.abspath(join(bdir, os.path.pardir))
@@ -93,16 +98,21 @@ def set_dyn_lib_dir(path):
     try:
         f = open(dst, 'w')
         f.write(path)
-        print "Write ", dst
         f.close()
     except Exception, e:
         print e
 
 
 def is_lib(filename):
-    """ Return true if filename is a library """
+    """ Return true if filename is a library
 
-    #Add ".la" and ".framework" for using the framework on Mac
+    Depending on the OS, a lib may have different extension.
+    Linux extensions are : .so, .a, plus versionned libs.
+    Mac ones are .dylib and .framework
+    Windows are mainly dll.
+    """
+
+    # Add ".la" and ".framework" for using the framework on Mac
     for pat in (".dll", ".so", ".a", ".lib", ".dylib", ".la", ".framework"):
         if filename.endswith(pat):
             return True
@@ -117,15 +127,15 @@ def is_lib(filename):
             return True
         except:
             return False
-            
+
     return False
 
 
 def link_lib(src, dst):
-    """ 
+    """
     Symlink/copy library if necessary
     and create a marker file (egm) if it is absent
-    
+
     :param src : source lib file
     :param dst : destination lib file
     """
@@ -143,7 +153,7 @@ def link_lib(src, dst):
             return False
     except:
         pass
-    
+
     # copy
     print "Installing %s -> %s" % (src, dst)
     if(os.path.exists(dst)):
@@ -163,7 +173,6 @@ def link_lib(src, dst):
     return True
 
 
-    
 def clean_lib(lib_dir, clean_all=False):
     """ Remove lib if source has been removed
     If clean_all is True, remove all library with egm
@@ -182,13 +191,12 @@ def clean_lib(lib_dir, clean_all=False):
                 os.remove(libfile)
             except Exception, e:
                 print "Cannot remove %s : %s" % (libfile, e)
-            
+
             try:
                 print "Removing ", egm
                 os.remove(egm)
             except Exception, e:
                 print "Cannot remove %s : %s" % (egm, e)
-
 
 
 def install_lib(lib_dir):
@@ -214,7 +222,7 @@ def install_lib(lib_dir):
 
     if(changed):
         set_dyn_lib_dir(lib_dir)
-    
+
     # get all the intial package lib_dirs before the copy of the sh lib.
     # Copy only libraries of the installed eggs.
     egglibdirs = set(get_all_lib_dirs(precedence=INSTALL_DIST))
@@ -225,15 +233,15 @@ def install_lib(lib_dir):
         try:
             src_dir = os.path.abspath(d)
             dst_dir = os.path.abspath(lib_dir)
-    
+
             for f in os.listdir(src_dir):
 
-                if( is_lib(f) ):
+                if is_lib(f):
                     src = join(src_dir, f)
                     dst = join(dst_dir, f)
                     link_lib(src, dst)
-                    
+
         except Exception, e:
             print e
-            
+
     return lib_dir
