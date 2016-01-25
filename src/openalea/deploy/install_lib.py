@@ -205,6 +205,14 @@ def install_lib(lib_dir):
     if None, use previous dir or default
     Return real lib_dir
     """
+
+    # Conda environment
+    if is_conda_env():
+        print "INSTALL lib in the CONDA Environment"
+        env_dir = os.path.abspath(os.environ['CONDA_ENV_PATH'])
+        dyn_dir = os.path.join(env_dir, 'lib')
+        return dyn_dir
+
     if(not lib_dir):
         lib_dir = get_dyn_lib_dir()
 
