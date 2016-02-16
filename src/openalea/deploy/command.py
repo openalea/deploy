@@ -234,6 +234,9 @@ class cmd_install_lib(old_install_lib):
             if self.distribution.has_pure_modules():
                 self.run_command('build_py')
 
+    def run(self):
+        old_install_lib.run(self)
+
 # Validation functions
 
 
@@ -356,7 +359,9 @@ def write_keys_arg(cmd, basename, filename, force=False):
     if value is not None:
         value = '\n'.join(value.keys()) + '\n'
     cmd.write_or_delete_file(argname, filename, value, force)
-
+    if is_conda_env():
+        print 'CONDA EGG WRITER: ', cmd, basename, filename, value
+        pass
 
 # SCons Management
 
@@ -665,6 +670,7 @@ class install(old_install):
         if (not self.install_dyn_lib):
             self.install_dyn_lib = get_dyn_lib_dir()
         self.install_dyn_lib = os.path.expanduser(self.install_dyn_lib)
+        print 'INSTALL LIB: ', self.install_dyn_lib
         old_install.finalize_options(self)
 
     def do_egg_install(self):
@@ -676,7 +682,7 @@ class install(old_install):
         )
 
         cmd.install_dyn_lib = self.install_dyn_lib
-        cmd.ensure_finalized()  # finalize before bdist_egg munges install cmd
+        cmd.ensure_finalized()  # finalize before munges install cmd
 
         self.run_command('bdist_egg')
         args = [self.distribution.get_command_obj('bdist_egg').egg_output]
@@ -687,6 +693,7 @@ class install(old_install):
 
         cmd.args = args
         cmd.run()
+
         setuptools.bootstrap_install_from = None
 
 
@@ -745,7 +752,6 @@ class alea_install(old_easy_install):
 
         # Call postinstall
         self.postinstall(self.dist)
-
         # Set environment
         set_env(self.install_dyn_lib)
 
@@ -823,7 +829,9 @@ def set_env(dyn_lib=None):
     condaenv = is_conda_env()
 
     if condaenv:
-        print "CONDA Environment Detected. set_env do nothing"
+        print "CONDA Environment Detected. set_env do something:", dyn_lib
+        dyn_lib = install_lib.install_lib(dyn_lib)
+        print list(get_all_lib_dirs(precedence=DEV_DIST))
         return
 
     print "Install dynamic or share libs "

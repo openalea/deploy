@@ -1,4 +1,4 @@
-###############################################################################
+    ###############################################################################
 # -*- python -*-
 #
 #       OpenAlea.Deploy : OpenAlea setuptools extension
@@ -33,7 +33,6 @@ def set_lsb_env(name, vars):
     :param vars: ['VAR1=VAL1', 'VAR2=VAL2', 'LIBRARY_PATH=SOMEPATH']
     """
     if is_conda_env():
-        print '############# DEBUG CONDA'
         return
 
     if(not 'posix' in os.name):

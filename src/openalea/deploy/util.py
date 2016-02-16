@@ -28,9 +28,9 @@ OPENALEA_RECOMMENDED_PKG = "http://openalea.gforge.inria.fr/pkg_prefix"
 
 
 # Precedence
-INSTALL_DIST = [pkg_resources.EGG_DIST, 
-                pkg_resources.BINARY_DIST, 
-                pkg_resources.SOURCE_DIST, 
+INSTALL_DIST = [pkg_resources.EGG_DIST,
+                pkg_resources.BINARY_DIST,
+                pkg_resources.SOURCE_DIST,
                 pkg_resources.CHECKOUT_DIST,]
 
 DEV_DIST = [pkg_resources.DEVELOP_DIST]
@@ -57,7 +57,7 @@ def get_egg_info(pkg_name, info_key):
 
 def get_metainfo(pkg_name, info):
     """ Return the metainfo of a package named pkg_name
-    
+
     Available info are:
       - name
       - version
@@ -105,13 +105,13 @@ def get_postinstall_scripts(pkg_name):
 
 def get_eggs(namespace=None, precedence=ALL_DIST):
     """ Return as a generator the list of the name of all EGGS in
-    a particular namespace (optional) 
+    a particular namespace (optional)
     select only egg with a particular precedence
     """
 
     env = pkg_resources.Environment()
 
-    for project_name in env: 
+    for project_name in env:
 
         if(precedence):
             pkg = pkg_resources.get_distribution(project_name)
@@ -145,8 +145,8 @@ def get_all_lib_dirs(namespace=None, precedence=ALL_DIST):
 
 
 def get_all_bin_dirs(namespace=None, precedence=ALL_DIST):
-    """ 
-    Return the iterator of the directories corresponding to the shared lib 
+    """
+    Return the iterator of the directories corresponding to the shared lib
     Select only egg with a particular precedence
     """
 
@@ -196,7 +196,7 @@ def check_system():
 
             paths = list(get_all_bin_dirs())
             paths = merge_uniq(paths, in_env['PATH'].split(':'))
-            
+
             libs = [get_dyn_lib_dir()]
             libs = merge_uniq(libs, in_env['LD_LIBRARY_PATH'].split(':'))
 
@@ -213,25 +213,25 @@ def check_system():
                 bin.append(lib)
 
             paths = [d.lower() for d in in_env['PATH'].split(';')]
-            libs = merge_uniq(bin, paths) 
+            libs = merge_uniq(bin, paths)
 
             out_env['PATH'] = ';'.join(libs)
-        # Mac 
+        # Mac
         elif "darwin" in sys.platform.lower():
 
             paths = list(get_all_bin_dirs())
             paths = merge_uniq(paths, in_env['PATH'].split(':'))
-            
+
             libs = [get_dyn_lib_dir()]
 
             #The environment variable ("DYLD_FRAMEWORK_PATH") is not set with the sudo commands.
-            #If "DYLD_LIBRARY_PATH" is in os.environ, we try to run the merge 
+            #If "DYLD_LIBRARY_PATH" is in os.environ, we try to run the merge
             try:
                 libs = merge_uniq(libs, in_env['DYLD_FRAMEWORK_PATH'].split(':'))
                 libs = merge_uniq(libs, in_env['DYLD_LIBRARY_PATH'].split(':'))
 
             except:
-                pass 
+                pass
             # update the environment
             out_env['DYLD_LIBRARY_PATH'] = ':'.join(libs)
             out_env['DYLD_FRAMEWORK_PATH'] = ':'.join(libs)
@@ -290,9 +290,8 @@ def is_conda_env():
     The CONDA_ENVPATH environment variable is set by the activate conda script.
     """
 
-    import os
-    return ('CONDA_ENV_PATH' in os.environ)
-   
+    return ('CONDA_DEFAULT_ENV' in os.environ)
+
 
 
 def get_metadata(name):
@@ -309,4 +308,4 @@ def get_metadata(name):
     import pkg_resources
     dist = pkg_resources.get_distribution(name)
     return dist._get_metadata('PKG-INFO')
- 
+
