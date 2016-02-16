@@ -829,9 +829,9 @@ def set_env(dyn_lib=None):
     condaenv = is_conda_env()
 
     if condaenv:
-        print "CONDA Environment Detected. set_env do something:", dyn_lib
+        # print "CONDA Environment Detected. set_env do something:", dyn_lib
         dyn_lib = install_lib.install_lib(dyn_lib)
-        print list(get_all_lib_dirs(precedence=DEV_DIST))
+        # print list(get_all_lib_dirs(precedence=DEV_DIST))
         return
 
     print "Install dynamic or share libs "
