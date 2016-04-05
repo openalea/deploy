@@ -1,13 +1,14 @@
 """Functionalities to parse configuration file"""
 
+from .console import nocolor, color_terminal, green
 
 
-compulsary_words = ['project','version','authors','package','release']
+compulsary_words = ['project', 'version', 'authors', 'package', 'release']
 
 def read_metainfo(filename, section='metainfo', verbose=False):
     """Parse a section in a given file using ConfigParser module
 
-    This function read a file (called `filename`), which must have a format 
+    This function read a file (called `filename`), which must have a format
     compatible with ConfigParser::
 
         [metainfo]
@@ -26,19 +27,14 @@ def read_metainfo(filename, section='metainfo', verbose=False):
 
         read_metainfo('metainfo.ini', metainfo='metainfo')
 
-    :author: Thomas Cokelaer <Thomas Cokelaer __at__ sophis inria fr>
+    :author: Thomas Cokelaer <Thomas Cokelaer __at__ sophia inria fr>
     """
-    global compulsary_words
-    try:
-        from openalea.misc.console import nocolor, color_terminal, green
-        if not color_terminal():
-            nocolor()
-    except:
-        green =  lambda x: x
+    if not color_terminal():
+        nocolor()
 
     if verbose:
         print green('Reading metainfo ')
-    import ConfigParser 
+    import ConfigParser
     config = ConfigParser.RawConfigParser()
     res = config.read(filename)
     if len(res)==0:
