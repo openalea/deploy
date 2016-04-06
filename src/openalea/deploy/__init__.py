@@ -1,4 +1,9 @@
-from util import *
+# {{pkglts base1,
+from . import version
 
-from doc_tools import *
-from autosum_generator import *
+__version__ = version.__version__
+# }}
+
+# {{pkglts base2,
+
+# }}

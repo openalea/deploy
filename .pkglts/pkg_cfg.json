@@ -1,0 +1,40 @@
+{
+    "_pkglts": {
+        "auto_install": true, 
+        "install_front_end": "stdout", 
+        "use_prompts": false
+    }, 
+    "base": {
+        "namespace": "openalea", 
+        "owner": "openalea", 
+        "pkgname": "deploy", 
+        "url": "https://openalea.gforge.inria.fr"
+    }, 
+    "doc": {
+        "description": "OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools. ", 
+        "keywords": [
+            "setuptools", 
+            "openalea"
+        ]
+    }, 
+    "license": {
+        "name": "cecill-c", 
+        "organization": "CIRAD/Inria", 
+        "project": "{{key, base.pkgname}}", 
+        "year": 2016
+    }, 
+    "pysetup": {
+        "author_email": "christophe dot pradal at cirad dot fr", 
+        "author_name": "{{key, base.owner}}", 
+        "intended_versions": [
+            "27"
+        ]
+    }, 
+    "sphinx": {}, 
+    "test": {}, 
+    "version": {
+        "major": 2, 
+        "minor": 0, 
+        "post": 0
+    }
+}

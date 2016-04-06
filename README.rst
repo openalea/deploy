@@ -1,7 +1,16 @@
-OpenAlea.Deploy
-===============
+========================
+openalea.deploy
+========================
 
-**Authors** : S. Dufour-Kowalski, C. Pradal 
+.. {{pkglts doc,
+
+
+
+
+
+
+.. }}
+**Authors** : S. Dufour-Kowalski, C. Pradal
 
 **Contributors** : OpenAlea Consortium
 
@@ -17,7 +26,7 @@ OpenAlea.Deploy
 About
 ------
 
-OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage 
+OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage
 their dependencies .
 It is an extension of Setuptools_.
 
@@ -30,7 +39,7 @@ It is an extension of Setuptools_.
    * Create namespaces if necessary
    * Support post_install scripts
    * Support 'develop' command
-   * OpenAlea GForge upload 
+   * OpenAlea GForge upload
 
 It doesn't include any GUI interface (See [[packages:compilation_installation:deploygui:deploygui|OpenAlea.DeployGui]] for that).
 
@@ -50,7 +59,7 @@ Installation
 
   python setup.py install
 
-.. note:: 
+.. note::
 
   OpenAlea.Deploy can be automatically installed with the *alea_setup.py* script.
 
@@ -98,9 +107,9 @@ Setup.py example
     import os
     from setuptools import setup, find_packages
     from os.path import join as pj
-    
+
     build_prefix = "build-scons"
-    
+
     # Setup function
     setup(
         name = "OpenAlea.FakePackage",
@@ -111,40 +120,40 @@ Setup.py example
         license = 'GPL',
         keywords = 'fake',
         url = 'http://myurl.com',
-    
+
         # Scons
         scons_scripts = ["SConstruct"],
         scons_parameters = ["build_prefix=%s"%(build_prefix)],
-    
+
         # Packages
         namespace_packages = ["openalea"],
         create_namespaces = True,
         packages = ['openalea.fakepackage', ],
-        
-        package_dir = { 
-                    'openalea.fakepackage':  pj('src','fakepackage'), 
+
+        package_dir = {
+                    'openalea.fakepackage':  pj('src','fakepackage'),
                     '' : 'src',  # necessary to use develop command
-                      }, 
+                      },
         include_package_data = True,
         zip_safe= False,
-    
+
         # Specific options of openalea.deploy
         lib_dirs = { 'lib' : pj(build_prefix, 'lib'), },
         inc_dirs = { 'include' : pj(build_prefix, 'include') },
         share_dirs = { 'share' : 'share' },
         postinstall_scripts = ['openalea.fakepackage.postinstall',],
-        
+
         # Scripts
         entry_points = { 'console_scripts': [
                                'fake_script = openalea.fakepackage.amodule:console_script', ],
                          'gui_scripts': [
                                'fake_gui = openalea.fakepackage.amodule:gui_script',]},
-    
+
         # Dependencies
         setup_requires = ['openalea.deploy'],
         dependency_links = ['http://openalea.gforge.inria.fr/pi'],
         #install_requires = [],
-        
+
     )
 
 
