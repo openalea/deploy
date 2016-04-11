@@ -48,12 +48,12 @@ Documentation
 Authors
 =======
 
-.. include:: authors.rst
+.. include:: ../AUTHORS.rst
 
 ChangeLog
 =========
 
-.. include:: history.rst
+.. include:: ../HISTORY.rst
 
 License
 =======
