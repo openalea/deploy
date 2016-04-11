@@ -2,8 +2,8 @@
 
 from .console import nocolor, color_terminal, green
 
-
 compulsary_words = ['project', 'version', 'authors', 'package', 'release']
+
 
 def read_metainfo(filename, section='metainfo', verbose=False):
     """Parse a section in a given file using ConfigParser module
@@ -37,7 +37,7 @@ def read_metainfo(filename, section='metainfo', verbose=False):
     import ConfigParser
     config = ConfigParser.RawConfigParser()
     res = config.read(filename)
-    if len(res)==0:
+    if len(res) == 0:
         raise IOError("Input file %s does not seem to exist" % filename)
 
     metadata = {}
@@ -48,14 +48,15 @@ def read_metainfo(filename, section='metainfo', verbose=False):
         metadata[option] = config.get(section, option)
 
     if 'project' in metadata.keys():
-        if metadata['project'] not in ['vplants','openalea','alinea']:
-            raise ValueError('option project (openalea/vplants/alinea) not found in metainfo.ini file')
+        if metadata['project'] not in ['vplants', 'openalea', 'alinea']:
+            raise ValueError(
+                'option project (openalea/vplants/alinea) not found in metainfo.ini file')
     else:
-        raise ValueError('option project (openalea/vplants/alinea) not found in metainfo.ini file')
+        raise ValueError(
+            'option project (openalea/vplants/alinea) not found in metainfo.ini file')
 
     for word in compulsary_words:
         if word not in metadata.keys():
             raise ValueError('%s field not found in metainfo.ini' % word)
 
     return metadata
-

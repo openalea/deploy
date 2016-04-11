@@ -28,7 +28,6 @@ import shutil
 from distutils.errors import *
 import stat
 import glob
-
 from os.path import join as pj
 from setuptools import Command
 from setuptools.dist import assert_string_list, assert_bool
@@ -40,30 +39,24 @@ from setuptools.command.install import install as old_install
 from setuptools.command.easy_install import easy_install as old_easy_install
 from setuptools.command.develop import develop as old_develop
 from distutils.command.clean import clean as old_clean
-
 import distutils.command.build
 import setuptools.command.build_py
 import setuptools.command.build_ext
 import setuptools.command.install
 import setuptools.command.install_lib
-
 from distutils.dist import Distribution
-
 import pkg_resources
 from distutils.errors import DistutilsSetupError
 # from distutils.util import convert_path
 from distutils.dir_util import mkpath
-
 import re
 import new
 import ConfigParser
-
 from util import get_all_lib_dirs, get_all_bin_dirs, DEV_DIST
 from install_lib import get_dyn_lib_dir
 from util import get_base_dir, get_repo_list, OPENALEA_PI
 from util import is_virtual_env, is_conda_env
 from environ_var import set_lsb_env, set_win_env
-
 import install_lib
 
 
@@ -81,7 +74,7 @@ def copy_data_tree(src, dst, exclude_pattern=['(RCS|CVS|\.svn)', '.*\~']):
     outfiles = []
 
     for p in exclude_pattern:
-        names = filter(lambda x: not(re.match(p, x)), names)
+        names = filter(lambda x: not (re.match(p, x)), names)
 
     for n in names:
         src_name = os.path.join(src, n)
@@ -140,7 +133,7 @@ class build_py(old_build_py):
     def initialize_options(self):
         old_build_py.initialize_options(self)
         self.scons_ext_param = ""  # None value are not accepted
-        self.scons_path = None     # Scons path
+        self.scons_path = None  # Scons path
 
     def run(self):
         # Run others commands
@@ -194,7 +187,7 @@ class build_ext(old_build_ext):
     def initialize_options(self):
         old_build_ext.initialize_options(self)
         self.scons_ext_param = ""  # None value are not accepted
-        self.scons_path = None     # Scons path
+        self.scons_path = None  # Scons path
 
     def run(self):
         # Run others commands
@@ -234,6 +227,7 @@ class cmd_install_lib(old_install_lib):
             if self.distribution.has_pure_modules():
                 self.run_command('build_py')
 
+
 # Validation functions
 
 
@@ -267,7 +261,6 @@ def validate_cmake_scripts(dist, attr, value):
 
 
 def validate_pylint_options(dist, attr, value):
-
     try:
         assert type(value[0]) == str
     except ValueError:
@@ -376,18 +369,18 @@ class scons(Command):
     description = "Run SCons"
 
     user_options = [('scons-ext-param=',
-                    None,
-                    'External parameters to pass to scons.'),
+                     None,
+                     'External parameters to pass to scons.'),
                     ('scons-path=',
-                    None,
-                    'Optional scons executable path. eg : C:\Python27\scons.bat for windows.')]
+                     None,
+                     'Optional scons executable path. eg : C:\Python27\scons.bat for windows.')]
 
     def initialize_options(self):
         self.outfiles = None
-        self.scons_scripts = []   #scons directory
-        self.scons_parameters = [] #scons parameters
-        self.build_dir = None        #build directory
-        self.scons_ext_param = None  #scons external parameters
+        self.scons_scripts = []  # scons directory
+        self.scons_parameters = []  # scons parameters
+        self.build_dir = None  # build directory
+        self.scons_ext_param = None  # scons external parameters
         self.scons_path = None
 
     def finalize_options(self):
@@ -428,14 +421,15 @@ class scons(Command):
         for s in self.scons_scripts:
             try:
                 # Join all the SCons parameters.
-                file_param = '-f %s' % (s, )
+                file_param = '-f %s' % (s,)
 
                 # Join all parameters strings from setup.py scons_parameters list
                 param = ' '.join(self.scons_parameters)
 
                 # Integrated Build parameter
-                build_param = 'python_build_dir=%s ' % (self.build_dir, )
-                build_param += 'py_pkg_name=%s ' % (self.distribution.metadata.get_name(), )
+                build_param = 'python_build_dir=%s ' % (self.build_dir,)
+                build_param += 'py_pkg_name=%s ' % (
+                    self.distribution.metadata.get_name(),)
 
                 # External parameters (from the command line)
                 externp = self.scons_ext_param
@@ -455,7 +449,7 @@ class scons(Command):
                 if (subprocess_enabled):
                     retval = subprocess.call(commandstr, shell=True)
                 else:
-                    retval =os.system(commandstr)
+                    retval = os.system(commandstr)
 
                 # Test if command success with return value
                 if (retval != 0):
@@ -488,8 +482,8 @@ class cmake(Command):
     description = "Run CMake"
 
     def initialize_options(self):
-        self.cmake_scripts = []   #cmake directory
-        self.build_dir = None        #build directory
+        self.cmake_scripts = []  # cmake directory
+        self.build_dir = None  # build directory
 
     def finalize_options(self):
 
@@ -499,11 +493,9 @@ class cmake(Command):
         except:
             pass
 
-
         self.set_undefined_options('build_ext',
                                    ('build_lib', 'build_dir'),
-                                    )
-
+                                   )
 
     def run(self):
         """
@@ -519,12 +511,11 @@ class cmake(Command):
         except ImportError:
             subprocess_enabled = False
 
-
         # run each CMake script from setup.py
         for s in self.cmake_scripts:
             try:
                 # Join all the SCons parameters.
-                #file_param = s
+                # file_param = s
                 file_param = '../src'
 
                 cmake_cmd = 'cmake'
@@ -534,22 +525,20 @@ class cmake(Command):
 
                 print commandstr
 
-                if not os.path.isdir('build-cmake') :
+                if not os.path.isdir('build-cmake'):
                     os.mkdir('build-cmake')
 
                 os.chdir('build-cmake')
-
 
                 # Run CMake
                 if (subprocess_enabled):
                     retval = subprocess.call(commandstr, shell=True)
                 else:
-                    retval =os.system(commandstr)
+                    retval = os.system(commandstr)
 
                 # Test if command success with return value
                 if (retval != 0):
                     raise CMakeError()
-
 
                 make_cmd = 'make'
                 commandstr = make_cmd
@@ -558,7 +547,7 @@ class cmake(Command):
                 if (subprocess_enabled):
                     retval = subprocess.call(commandstr, shell=True)
                 else:
-                    retval =os.system(commandstr)
+                    retval = os.system(commandstr)
 
                 # Test if command success with return value
                 if (retval != 0):
@@ -587,15 +576,15 @@ class create_namespaces(Command):
     description = "Create namespace packages"
 
     namespace_header = \
-"""
-try:
-    import pkg_resources
-    pkg_resources.declare_namespace(__name__)
-except ImportError:
-    import pkgutil
-    __path__ = pkgutil.extend_path(__path__, __name__)
+        """
+        try:
+            import pkg_resources
+            pkg_resources.declare_namespace(__name__)
+        except ImportError:
+            import pkgutil
+            __path__ = pkgutil.extend_path(__path__, __name__)
 
-"""
+        """
 
     user_options = []
 
@@ -611,10 +600,10 @@ except ImportError:
             self.namespaces = self.distribution.namespace_packages
             if (self.namespaces is None):
                 self.namespaces = []
-#             # Add namespace to packages
-#             for ns in self.namespaces:
-#                 if (ns not in self.distribution.packages):
-#                     self.distribution.packages.append(ns)
+                #             # Add namespace to packages
+                #             for ns in self.namespaces:
+                #                 if (ns not in self.distribution.packages):
+                #                     self.distribution.packages.append(ns)
         except:
             pass
 
@@ -637,7 +626,7 @@ except ImportError:
         """ Run command """
 
         for namespace in self.namespaces:
-            print "creating %s namespace"%(namespace)
+            print "creating %s namespace" % (namespace)
             self.create_empty_namespace(namespace)
 
 
@@ -654,7 +643,7 @@ class install(old_install):
     user_options.extend(old_install.user_options)
     user_options.append(('install-dyn-lib=',
                          None,
-                        'Directory to install dynamic library.'))
+                         'Directory to install dynamic library.'))
 
     def initialize_options(self):
         old_install.initialize_options(self)
@@ -700,9 +689,11 @@ class alea_install(old_easy_install):
 
     user_options = []
     user_options.extend(old_easy_install.user_options)
-    user_options.extend([('install-dyn-lib=', None, 'Directory to install dynamic library.'),
-                         ('gforge-private', "g", "Use private gforge repository too (will search for authentication pydistutils.cfg or ask if not found)"),
-                         ])
+    user_options.extend(
+        [('install-dyn-lib=', None, 'Directory to install dynamic library.'),
+         ('gforge-private', "g",
+          "Use private gforge repository too (will search for authentication pydistutils.cfg or ask if not found)"),
+         ])
 
     boolean_options = old_easy_install.boolean_options + ["gforge-private"]
 
@@ -732,7 +723,8 @@ class alea_install(old_easy_install):
         self.set_system()
 
         if self.gforge_private:
-            from openalea.deploy.gforge_util import add_private_gforge_repositories
+            from openalea.deploy.gforge_util import \
+                add_private_gforge_repositories
             add_private_gforge_repositories()
 
         old_easy_install.run(self)
@@ -763,7 +755,7 @@ class alea_install(old_easy_install):
                 pkg_resources.require("pywin32")
                 bdir = get_base_dir("pywin32")
                 pywin32lib = pj(bdir, "pywin32_system32")
-                set_win_env(['PATH=%s'%(pywin32lib, ), ])
+                set_win_env(['PATH=%s' % (pywin32lib,), ])
             except:
                 pass
 
@@ -771,7 +763,8 @@ class alea_install(old_easy_install):
         """
         Just a way to retrieve the current distribution object.
         """
-        ret = old_easy_install.process_distribution(self, requirement, dist, deps, *info)
+        ret = old_easy_install.process_distribution(self, requirement, dist,
+                                                    deps, *info)
         # save distribution
         self.dist = dist
 
@@ -802,14 +795,14 @@ class alea_install(old_easy_install):
 
         # process postinstall
         for s in pkg_resources.yield_lines(lstr):
-            print "Executing %s"%(s)
+            print "Executing %s" % (s)
 
             try:
                 module = __import__(s, globals(), locals(), s.split('.'))
                 module.install()
 
             except Exception, e:
-                print "Warning : Cannot execute %s"%(s, )
+                print "Warning : Cannot execute %s" % (s,)
                 print e
 
 
@@ -822,12 +815,10 @@ def set_env(dyn_lib=None):
     virtualenv = is_virtual_env()
     condaenv = is_conda_env()
 
-
     print "Install dynamic or share libs "
 
-    #lib_dirs = list(get_all_lib_dirs())
+    # lib_dirs = list(get_all_lib_dirs())
     dyn_lib = install_lib.install_lib(dyn_lib)
-
 
     print "Setting environment variables"
 
@@ -836,8 +827,10 @@ def set_env(dyn_lib=None):
     lib_dirs = list(get_all_lib_dirs(precedence=DEV_DIST)) + [dyn_lib]
     bin_dirs = list(get_all_bin_dirs())
 
-    print "The following directories contains shared library :", '\n'.join(lib_dirs), '\n'
-    print "The following directories contains binaries :", '\n'.join(bin_dirs), '\n'
+    print "The following directories contains shared library :", '\n'.join(
+        lib_dirs), '\n'
+    print "The following directories contains binaries :", '\n'.join(
+        bin_dirs), '\n'
 
     # To fix the lost of access rights during the step of extract and instal .egg on Linux and MacOsX
     for d in bin_dirs:
@@ -846,7 +839,8 @@ def set_env(dyn_lib=None):
                 filepath = os.path.join(d, f)
                 if os.path.isfile(filepath):
                     if not os.access(filepath, os.X_OK):
-                        os.chmod(filepath, stat.S_IRWXU | stat.S_IXGRP +  stat.S_IRGRP | stat.S_IXOTH + stat.S_IROTH)
+                        os.chmod(filepath,
+                                 stat.S_IRWXU | stat.S_IXGRP + stat.S_IRGRP | stat.S_IXOTH + stat.S_IROTH)
         except:
             pass
 
@@ -928,7 +922,7 @@ from %s.__init__ import *
                 # replace dest_dir by src_dir
                 adir = os.path.join(self.setup_path, src_dir)
                 d[adir] = adir
-                del(d[dest_dir])
+                del (d[dest_dir])
 
     def create_fake_namespace(self, name):
         """ Create namespace directory with a __init__.py """
@@ -956,7 +950,7 @@ from %s.__init__ import *
             splitted = pkg_name.split('.')[1:]
 
             # keep only first order packages
-            if (len(splitted)>1):
+            if (len(splitted) > 1):
                 continue
 
             # remove first component (ex for openalea.core.algo, we keep core.algo)
@@ -972,7 +966,7 @@ from %s.__init__ import *
 
             if (not os.path.exists(initfilename)):
                 f = open(initfilename, 'w')
-                f.write(develop.redirect_ns%(pkg_name, full_pkg_name))
+                f.write(develop.redirect_ns % (pkg_name, full_pkg_name))
                 f.close()
 
     def run(self):
@@ -1014,13 +1008,18 @@ class egg_upload(Command):
 
     user_options = [('login=', 'l', 'login name to the gforge'),
                     ('password=', None, 'your password to the gforge account'),
-                    ('release=', None, 'release number. if not provided, try to obtain it from the setup.py'),
+                    ('release=', None,
+                     'release number. if not provided, try to obtain it from the setup.py'),
                     ('package=', None, 'name of the pacakge (compulsary)'),
-                    ('project=', None, 'project [vplants, openalea] default:openalea'),
-                    ('mode=', None, 'mode in [add, delete, query], default:add'),
-                    ('glob=', None, 'a glob for filenames, if not provide, looks into ./dist/* '),
-                    ('yes-to-all', None, 'reply yes to all questions (in particular it will overwrite existing files')]
-
+                    ('project=', None,
+                     'project [vplants, openalea] default:openalea'),
+                    (
+                        'mode=', None,
+                        'mode in [add, delete, query], default:add'),
+                    ('glob=', None,
+                     'a glob for filenames, if not provide, looks into ./dist/* '),
+                    ('yes-to-all', None,
+                     'reply yes to all questions (in particular it will overwrite existing files')]
 
     def initialize_options(self):
         self.login = None
@@ -1040,9 +1039,10 @@ class egg_upload(Command):
                 import warnings
                 version = self.distribution.metadata.version
                 self.release = '.'.join(version.split('.')[0:2])
-                warnings.warn('Release not provided but found one in the setup.py (%s).' % self.release)
+                warnings.warn(
+                    'Release not provided but found one in the setup.py (%s).' % self.release)
             except Exception, e:
-                print e , 'release could not be found.'
+                print e, 'release could not be found.'
                 import sys
                 sys.exit(0)
 
@@ -1058,12 +1058,13 @@ class egg_upload(Command):
         parser.add_option("--project", dest="project", default='openalea')
         parser.add_option("--package", dest="package", default=None)
         parser.add_option("--release", dest="release", default=None)
-        parser.add_option("--login",    dest="login", default=None)
-        parser.add_option("--mode",    dest="mode", default="add")
+        parser.add_option("--login", dest="login", default=None)
+        parser.add_option("--mode", dest="mode", default="add")
         parser.add_option("--password", dest="password", default=None)
         parser.add_option("--dry-run", dest="dry_run", default=None)
         parser.add_option("--glob", dest="glob", default=None)
-        parser.add_option("--yes-to-all", dest="non_interactive", action="store_true", default=False)
+        parser.add_option("--yes-to-all", dest="non_interactive",
+                          action="store_true", default=False)
 
         # now , we mimic the user arguments
         arguments = ' --mode %s' % self.mode
@@ -1074,7 +1075,7 @@ class egg_upload(Command):
             arguments += ' --login %s' % self.login
         if self.glob:
             arguments += " --glob %s" % self.glob
-        elif self.mode=='add':
+        elif self.mode == 'add':
             arguments += ' --glob dist/*egg'
         if self.dry_run:
             arguments += ' --dry-run %s' % self.dry_run
@@ -1084,13 +1085,12 @@ class egg_upload(Command):
         print 'Command that will be called is : \n\tgforge_upload %s' % arguments
         # password is afterwards so that it does not appear on the screen!
         if self.password:
-            arguments += ' --password %s'%  self.password
-        #and finally call the command
+            arguments += ' --password %s' % self.password
+        # and finally call the command
         (options, args) = parser.parse_args(arguments.split(" "))
 
         uploader = Uploader(options)
         uploader.run()
-
 
 
 class pylint(Command):
@@ -1104,25 +1104,25 @@ class pylint(Command):
 
     :Examples:
 
-        >>> python setup.py pylint
-        >>> python setup.py pylint --pylint-packages
-        >>> python setup.py pylint --pylint-options --disable-msg=C0103
+        $ python setup.py pylint
+        $ python setup.py pylint --pylint-packages
+        $ python setup.py pylint --pylint-options --disable-msg=C0103
 
     You can add the options in the setup.cfg::
 
-        >>> [pylint]
-        >>> pylint-packages = src/openalea/stat_tool,src/openalea/stat_tool
-        >>> pylint-options = --disable-msg=C0103
+        [pylint]
+        pylint-packages = src/openalea/stat_tool,src/openalea/stat_tool
+        pylint-options = --disable-msg=C0103
 
     or the setup.py
 
-        >>>  pylint_packages = ['src/openalea/stat_tool'],
-        >>>  pylint_options = ['--disable-msg=C0103']
-
-
+        pylint_packages = ['src/openalea/stat_tool'],
+        pylint_options = ['--disable-msg=C0103']
     """
-    user_options = [('pylint-packages=', None, 'list of pathnames to parse with pylint'),
-                    ('pylint-options=', None, 'optional arguments to pylint such as --disable-msg=C0103')]
+    user_options = [
+        ('pylint-packages=', None, 'list of pathnames to parse with pylint'),
+        ('pylint-options=', None,
+         'optional arguments to pylint such as --disable-msg=C0103')]
 
     def initialize_options(self):
         self.output_filename = '.pylint.output'
@@ -1141,7 +1141,7 @@ class pylint(Command):
         # look into the setup.cfg
         if (not self.pylint_packages):
             self.pylint_packages = self.distribution.pylint_packages
-            #print self.pylint_packages
+            # print self.pylint_packages
 
         # if not defined in the setup.py or not provided as user arguments,
         # look into the setup.cfg
@@ -1157,27 +1157,28 @@ class pylint(Command):
         if self.pylint_options is None:
             self.pylint_options = ''
 
-
     def run(self):
         print '    PYLINT processing'
         if self.pylint_packages:
-            #print '    Processing ' + self.pylint_packages + ' through pylint'
+            # print '    Processing ' + self.pylint_packages + ' through pylint'
             cmd = 'pylint '
             for package in self.pylint_packages:
-                cmd +=  package.replace('/', os.sep) + os.sep + '*.py '
+                cmd += package.replace('/', os.sep) + os.sep + '*.py '
             cmd += ' ' + self.pylint_options
             cmd += self.pylint_base_options
             print cmd
             status = subprocess.call(cmd,
-                                     stdout=open(self.output_filename,'w+'),
+                                     stdout=open(self.output_filename, 'w+'),
                                      stderr=None, shell=True)
-            if status!=0:
+            if status != 0:
                 print 'This command returns status (%s) different from 0.' % \
-                    str(status)
-            cmd = 'tail -n 1 %s ; grep \"Your code\"  %s ' % (self.output_filename, self.output_filename)
+                      str(status)
+            cmd = 'tail -n 1 %s ; grep \"Your code\"  %s ' % (
+                self.output_filename, self.output_filename)
             subprocess.call(cmd, stdout=None, stderr=None, shell=True)
         else:
-            raise('missing --pylint-packages in setup.py. skipped pylint processing')
+            raise (
+                'missing --pylint-packages in setup.py. skipped pylint processing')
 
 
 class upload_sphinx(Command):
@@ -1197,9 +1198,10 @@ class upload_sphinx(Command):
         ('password=', 'p', "user password"),
         ('project=', None, None),
         ('package=', None, None),
-        ('release=', None,None),
-        ('stable=', 'r', "put the documentation in the stable repository [default False]"),
-        ]
+        ('release=', None, None),
+        ('stable=', 'r',
+         "put the documentation in the stable repository [default False]"),
+    ]
 
     def initialize_options(self):
         self.username = None
@@ -1217,8 +1219,9 @@ class upload_sphinx(Command):
         if not self.project:
             raise ValueError("""Project field missing. Provide it in your setup.cfg, in the [upload_sphinx] section.
                 It should be either vplants, alinea or openalea. %s provided""" % self.project)
-        elif self.project not in ['vplants','alinea','openalea']:
-            raise ValueError("""Project must be vplants, alinea or openalea. Check your setup.cfg pupload_sphinx] section. %s provided""" % self.project)
+        elif self.project not in ['vplants', 'alinea', 'openalea']:
+            raise ValueError(
+                """Project must be vplants, alinea or openalea. Check your setup.cfg pupload_sphinx] section. %s provided""" % self.project)
 
         if self.stable is False:
             print "Documentation will be uploaded to unstable directory"
@@ -1237,9 +1240,9 @@ class upload_sphinx(Command):
 
         if not self.username:
             self.username = raw_input('login:')
-        # to be used with gforge tools only. not with scp tht is currently used.
-        #if not self.password:
-        #    self.password = raw_input('password:')
+            # to be used with gforge tools only. not with scp tht is currently used.
+            # if not self.password:
+            #    self.password = raw_input('password:')
 
     def run(self):
         """.. todo:: fix this code so that gforge proxy and scp are not both used."""
@@ -1251,47 +1254,47 @@ class upload_sphinx(Command):
         print "Copying files on the GForge. Be patient ..."
 
         self.test_and_build_dir()
-        for output in  ['html' , 'latex']:
-
+        for output in ['html', 'latex']:
             cmd1 = 'scp -r %s %s@%s:%s/%s/%s/doc/_build/' \
-                % ( os.path.join(os.getcwd(), 'doc', '_build', output),
-                    self.username,
-                    self.DOMAIN,
-                    self.destination,
-                    self.project,
-                    self.package
-                    )
+                   % (os.path.join(os.getcwd(), 'doc', '_build', output),
+                      self.username,
+                      self.DOMAIN,
+                      self.destination,
+                      self.project,
+                      self.package
+                      )
             self.upload_file(cmd1)
 
     def test_and_build_dir(self):
-        direc = "%s/%s/%s/doc/_build/"%(self.destination, self.project, self.package)
+        direc = "%s/%s/%s/doc/_build/" % (
+            self.destination, self.project, self.package)
 
         cmd1 = 'ssh  %s@%s "if [ ! -d %s ]; then mkdir -p %s; fi;"' \
-            % ( self.username,
-                self.DOMAIN,
-                direc,
-                direc )
+               % (self.username,
+                  self.DOMAIN,
+                  direc,
+                  direc)
 
         print cmd1
-        status = subprocess.call(cmd1 ,stdout=open('/tmp/test','w'),stderr=None, shell=True)
-        if status!=0:
+        status = subprocess.call(cmd1, stdout=open('/tmp/test', 'w'),
+                                 stderr=None, shell=True)
+        if status != 0:
             print 'This command failed'
             import sys
             sys.exit(status)
         print "Ensured directory exists."
-
-
 
     def upload_file(self, command):
         print "Project: ", self.project
         print "Package: ", self.package
         print "Release: ", self.release
         print command
-        status = subprocess.call(command ,stdout=open('/tmp/test','w'),stderr=None, shell=True)
-        if status!=0:
+        status = subprocess.call(command, stdout=open('/tmp/test', 'w'),
+                                 stderr=None, shell=True)
+        if status != 0:
             print 'This command failed'
             import sys
-            #sys.exit(status)
+            # sys.exit(status)
         print "Files uploaded."
 
 
@@ -1313,7 +1316,7 @@ class alea_upload(Command):
         ('package=', None, ""),
         ('release=', None, ""),
 
-        ]
+    ]
 
     def initialize_options(self):
         self.username = None
@@ -1340,9 +1343,9 @@ class alea_upload(Command):
             if os.path.exists(rc):
                 self.announce('Using PyPI login from %s' % rc)
                 config = ConfigParser.ConfigParser({
-                        'username': '',
-                        'password': '',
-                        'repository': ''})
+                    'username': '',
+                    'password': '',
+                    'repository': ''})
                 config.read(rc)
                 if not self.repository:
                     self.repository = config.get('server-login', 'repository')
@@ -1353,24 +1356,27 @@ class alea_upload(Command):
 
     def run(self):
         if not self.distribution.dist_files:
-            raise DistutilsOptionError("No dist file created in earlier command")
+            raise DistutilsOptionError(
+                "No dist file created in earlier command")
 
         import gforge
 
         print "Login...."
         server = gforge.GForgeProxy()
 
-        server.login(self.username, self. password)
+        server.login(self.username, self.password)
 
         # Check package
         if (server.get_package_id(self.project, self.package) < 0):
             server.add_package(self.project, self.package)
 
         # Check release
-        if (server.get_release_id(self.project, self.package, self.release) < 0):
+        if (server.get_release_id(self.project, self.package,
+                                  self.release) < 0):
             notes = ""
             changes = ""
-            server.add_release(self.project, self.package, self.release, notes, changes)
+            server.add_release(self.project, self.package, self.release, notes,
+                               changes)
 
         for command, pyversion, filename in self.distribution.dist_files:
             self.upload_file(server, command, pyversion, filename)
@@ -1411,6 +1417,6 @@ class clean(old_clean):
             print 'No SConstruct found. Skipping "scons -c" command.'
 
         if self.all:
-            for egginfo in glob.glob( pj("src", "*.egg-info") ):
+            for egginfo in glob.glob(pj("src", "*.egg-info")):
                 print "removing", egginfo
                 shutil.rmtree(egginfo)

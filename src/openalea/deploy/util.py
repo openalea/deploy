@@ -26,15 +26,15 @@ OPENALEA_PI = "http://openalea.gforge.inria.fr/pi"
 OPENALEA_REPOLIST = "http://openalea.gforge.inria.fr/repolist"
 OPENALEA_RECOMMENDED_PKG = "http://openalea.gforge.inria.fr/pkg_prefix"
 
-
 # Precedence
-INSTALL_DIST = [pkg_resources.EGG_DIST, 
-                pkg_resources.BINARY_DIST, 
-                pkg_resources.SOURCE_DIST, 
-                pkg_resources.CHECKOUT_DIST,]
+INSTALL_DIST = [pkg_resources.EGG_DIST,
+                pkg_resources.BINARY_DIST,
+                pkg_resources.SOURCE_DIST,
+                pkg_resources.CHECKOUT_DIST, ]
 
 DEV_DIST = [pkg_resources.DEVELOP_DIST]
 ALL_DIST = DEV_DIST + INSTALL_DIST
+
 
 # EGG Management
 
@@ -73,10 +73,10 @@ def get_metainfo(pkg_name, info):
 
     for line in dist._get_metadata('PKG-INFO'):
         if line.lower().startswith(info.lower() + ':'):
-            val = line.split(':',1)[1].strip()
+            val = line.split(':', 1)[1].strip()
             return val
 
-    raise ValueError("Unknown info %s"%(info,))
+    raise ValueError("Unknown info %s" % (info,))
 
 
 def get_lib_dirs(pkg_name):
@@ -111,17 +111,17 @@ def get_eggs(namespace=None, precedence=ALL_DIST):
 
     env = pkg_resources.Environment()
 
-    for project_name in env: 
+    for project_name in env:
 
-        if(precedence):
+        if (precedence):
             pkg = pkg_resources.get_distribution(project_name)
-            if(pkg.precedence not in precedence):
+            if (pkg.precedence not in precedence):
                 continue
 
-        if(namespace and namespace+'.' in project_name):
+        if (namespace and namespace + '.' in project_name):
             yield project_name
 
-        elif(not namespace):
+        elif (not namespace):
             yield project_name
 
 
@@ -137,7 +137,7 @@ def get_all_lib_dirs(namespace=None, precedence=ALL_DIST):
         location = get_base_dir(e)
 
         for sh in get_lib_dirs(e):
-            if(os.path.isabs(sh)):
+            if (os.path.isabs(sh)):
                 full_location = sh
             else:
                 full_location = pj(location, sh)
@@ -156,12 +156,11 @@ def get_all_bin_dirs(namespace=None, precedence=ALL_DIST):
         location = get_base_dir(e)
 
         for sh in get_bin_dirs(e):
-            if(os.path.isabs(sh)):
+            if (os.path.isabs(sh)):
                 full_location = sh
             else:
                 full_location = pj(location, sh)
             yield os.path.normpath(full_location)
-
 
 
 # System config
@@ -174,6 +173,7 @@ def merge_uniq(list1, list2):
     full_list = list(list1)
     full_list.extend([elt for elt in list2 if elt not in list1])
     return full_list
+
 
 def check_system():
     """
@@ -213,7 +213,7 @@ def check_system():
                 bin.append(lib)
 
             paths = [d.lower() for d in in_env['PATH'].split(';')]
-            libs = merge_uniq(bin, paths) 
+            libs = merge_uniq(bin, paths)
 
             out_env['PATH'] = ';'.join(libs)
         # Mac 
@@ -224,15 +224,16 @@ def check_system():
             
             libs = [get_dyn_lib_dir()]
 
-            #The environment variable ("DYLD_FRAMEWORK_PATH") is not set with the sudo commands.
-            #If "DYLD_LIBRARY_PATH" is in os.environ, we try to run the merge 
+            # The environment variable ("DYLD_FRAMEWORK_PATH") is not set with the sudo commands.
+            # If "DYLD_LIBRARY_PATH" is in os.environ, we try to run the merge
             try:
-                libs = merge_uniq(libs, in_env['DYLD_FRAMEWORK_PATH'].split(':'))
+                libs = merge_uniq(libs,
+                                  in_env['DYLD_FRAMEWORK_PATH'].split(':'))
                 libs = merge_uniq(libs, in_env['DYLD_LIBRARY_PATH'].split(':'))
 
             except:
-                pass 
-            # update the environment
+                pass
+                # update the environment
             out_env['DYLD_LIBRARY_PATH'] = ':'.join(libs)
             out_env['DYLD_FRAMEWORK_PATH'] = ':'.join(libs)
             out_env['PATH'] = ':'.join(paths)
@@ -259,7 +260,6 @@ def get_repo_list():
     except Exception, e:
         print e
         return [OPENALEA_PI]
-
 
 
 def get_recommended_prefix():
@@ -292,7 +292,6 @@ def is_conda_env():
 
     import os
     return ('CONDA_ENV_PATH' in os.environ)
-   
 
 
 def get_metadata(name):
@@ -309,4 +308,3 @@ def get_metadata(name):
     import pkg_resources
     dist = pkg_resources.get_distribution(name)
     return dist._get_metadata('PKG-INFO')
- 
