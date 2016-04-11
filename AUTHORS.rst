@@ -1,12 +1,8 @@
-=======
-Credits
-=======
-
 Development Lead
 ----------------
 
 
-* base.author_name <base.author_email>
+* OpenAlea consortium: http://openalea.gforge.inria.fr
 
 
 Contributors
