@@ -1,5 +1,4 @@
 {
-    "./.DS_Store": [], 
     "./.gitignore": [], 
     "./AUTHORS.rst": [], 
     "./AUTHORS.txt": [], 
@@ -16,7 +15,6 @@
     "./README.rst": [
         "NpInImcdK7HQFLVdzLlDEZbA9uAEZaKM6lTCUCfQi5aOf93nTfnCh9DJp9Dr0ZWsxXLXTQrH3g+rbgh7kRECnA=="
     ], 
-    "./README.rst.bak": [], 
     "./debian/changelog": [], 
     "./debian/compat": [], 
     "./debian/control": [], 
@@ -33,7 +31,7 @@
     "./doc.bak/user/overview.txt": [], 
     "./doc/authors.rst": [], 
     "./doc/conf.py": [
-        "ZnWcB+5AIquZ6lqoF3ZRwN5vvLGdk574LD5TiO20eejEWGOTXhBh65S+JJiSxMGgBTmrJhIlS/rkhNy3cGl+hA=="
+        "q5sJf9EauNeHSK9orwGtxy3svwNCYkP9WOzGN6RDr8kgdVWbhMBO9+ulHky+0OGZZfDf0PfZvyMTW9mfufi9og=="
     ], 
     "./doc/contributing.rst": [], 
     "./doc/history.rst": [], 
@@ -45,7 +43,7 @@
     "./doc/readme.rst": [], 
     "./doc/usage.rst": [], 
     "./dvlpt_requirements.txt": [
-        "RDscEFReGHGpd9DAevFMhOFQWm6RnUhfBSFxvPM1TSGuVQw/tKqqK4FA4AVs1gZ07XI7/lV+8hKqoCpYhq3exg=="
+        "CC2icwIcDf0IDA7tHTp3M+1ImwGS43fMRryBNsZMniGZe+YOPuKIeUUtF4QUrK19oqeiaAp2mKptjKf9sIhL+A=="
     ], 
     "./example/build_zip.py": [], 
     "./example/create_scons_egg.py": [], 
@@ -62,7 +60,7 @@
     "./ez_setup.py": [], 
     "./metainfo.ini": [], 
     "./requirements.txt": [
-        "vmiIOMqGhuXJBom/KrWFzvETfJmbSMcLkvZ6XDTcFWl7XRHJgu1tcb4eHn97TgcziEqpfD96M5qO0DV3z3S+CQ=="
+        "AWuoxM/eZa+Zy1+ouKN+Lrc/SBs640mRZm3y4E/rbAOGZuvR7CtvYjlndWAzxwLd5fQj99R6tu0YJ/9TeDcx9w=="
     ], 
     "./scripts/winInstallers/LICENSE.txt": [], 
     "./scripts/winInstallers/__init__.py": [], 
@@ -97,7 +95,7 @@
     "./scripts/winInstallers/vplants_test.py": [], 
     "./scripts/winInstallers/vplogo.bmp": [], 
     "./setup.cfg": [
-        "GyWsYmTXzqT4QqEztPUWafAgmrF5a+LDmdXtzJU1n7Xbx6O7G+IPtS5LLvfZ9W57Gon6rs/dSwKpPtzIEGXx6Q=="
+        "QYCnUVMayyDRu7c/wBEMVaGu9NHjEMOS/UhuN7hNdyAPOqPIZjW7dRKEMuIhm8twpcIXxHhMNmGsxWodD3fqgg=="
     ], 
     "./setup.cfg.bak": [], 
     "./setup.py": [
@@ -105,8 +103,6 @@
         "6tA9s9cbDHz4mx0PGt+gMLM9HamuOYqFGjwc7LYZcM72XjiUaG0A7g6hNS+gy8cS0FyZDnf46GLNwx0mNZUs7Q=="
     ], 
     "./setup.py.bak": [], 
-    "./shared-lib.pth": [], 
-    "./src/.DS_Store": [], 
     "./src/OpenAlea.Deploy.egg-info/PKG-INFO": [], 
     "./src/OpenAlea.Deploy.egg-info/SOURCES.txt": [], 
     "./src/OpenAlea.Deploy.egg-info/dependency_links.txt": [], 
@@ -114,7 +110,6 @@
     "./src/OpenAlea.Deploy.egg-info/namespace_packages.txt": [], 
     "./src/OpenAlea.Deploy.egg-info/not-zip-safe": [], 
     "./src/OpenAlea.Deploy.egg-info/top_level.txt": [], 
-    "./src/openalea/.DS_Store": [], 
     "./src/openalea/__init__.py": [], 
     "./src/openalea/deploy/__init__.py": [
         "bXi4YRtInDLkaTvGi4V/ZIZpKXGCIgIw/Qm7wX5YZ+tM5kkkAAGCzzuDhxJDzcpoWKBE1UxDj7mT+40YH1DZQA==", 

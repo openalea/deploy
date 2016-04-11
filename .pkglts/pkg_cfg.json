@@ -30,7 +30,9 @@
             "27"
         ]
     }, 
-    "sphinx": {}, 
+    "sphinx": {
+        "theme": "default"
+    }, 
     "test": {}, 
     "version": {
         "major": 2, 
