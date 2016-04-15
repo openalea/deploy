@@ -1,14 +1,11 @@
 {
     "./.gitignore": [], 
     "./AUTHORS.rst": [], 
-    "./AUTHORS.txt": [], 
     "./CONTRIBUTING.rst": [], 
-    "./ChangeLog.txt": [], 
     "./HISTORY.rst": [], 
     "./LICENSE": [
         "K+/cXPOoUd3kCV74oh3eAd4jEM1Zl5ycOadeYhk++UgVDTAptzaSeEuVaeT1wD8qp3mxw2UXkNVnXY9uD0bEtg=="
     ], 
-    "./LICENSE.txt": [], 
     "./MANIFEST.in": [
         "YTUhuNoVK2IXgwJI+cP4BUzbgzMOnHhc40N8Q9cw1rJVtKJq8xlQNaYwxt2Y8p+scpKOU4S445VaPOqWsEF6+Q=="
     ], 
@@ -21,17 +18,12 @@
     "./debian/copyright": [], 
     "./debian/rules": [], 
     "./debian/source/format": [], 
-    "./doc.bak/Makefile": [], 
-    "./doc.bak/conf.py": [], 
-    "./doc.bak/contents.rst": [], 
-    "./doc.bak/make.bat": [], 
-    "./doc.bak/user/autosum.rst": [], 
-    "./doc.bak/user/index.rst": [], 
-    "./doc.bak/user/manual.rst": [], 
-    "./doc.bak/user/overview.txt": [], 
+    "./doc/Makefile": [
+        "fCpQbGBjkltJc0kS1o3WrQeqpsOzMhUa8FlGTCab3LI4yYuTq7VnoQHXV7clRKyfu2105FRS7JfCEoePiVkMpQ=="
+    ], 
     "./doc/authors.rst": [], 
     "./doc/conf.py": [
-        "q5sJf9EauNeHSK9orwGtxy3svwNCYkP9WOzGN6RDr8kgdVWbhMBO9+ulHky+0OGZZfDf0PfZvyMTW9mfufi9og=="
+        "Pz+DnMCo3mSpmTAoa0Cxgc1JNWry4s/tSQYoXtyAM1KnArQa+S+zjXCHxxrMx5QSvsJI+7f3x4e68H+RUlaevg=="
     ], 
     "./doc/contributing.rst": [], 
     "./doc/history.rst": [], 
@@ -42,6 +34,10 @@
     ], 
     "./doc/readme.rst": [], 
     "./doc/usage.rst": [], 
+    "./doc/user/autosum.rst": [], 
+    "./doc/user/index.rst": [], 
+    "./doc/user/manual.rst": [], 
+    "./doc/user/overview.txt": [], 
     "./dvlpt_requirements.txt": [
         "CC2icwIcDf0IDA7tHTp3M+1ImwGS43fMRryBNsZMniGZe+YOPuKIeUUtF4QUrK19oqeiaAp2mKptjKf9sIhL+A=="
     ], 
@@ -58,7 +54,6 @@
     "./example/setup_qhull.py": [], 
     "./example/setup_scons.py": [], 
     "./ez_setup.py": [], 
-    "./metainfo.ini": [], 
     "./requirements.txt": [
         "AWuoxM/eZa+Zy1+ouKN+Lrc/SBs640mRZm3y4E/rbAOGZuvR7CtvYjlndWAzxwLd5fQj99R6tu0YJ/9TeDcx9w=="
     ], 
@@ -97,25 +92,24 @@
     "./setup.cfg": [
         "QYCnUVMayyDRu7c/wBEMVaGu9NHjEMOS/UhuN7hNdyAPOqPIZjW7dRKEMuIhm8twpcIXxHhMNmGsxWodD3fqgg=="
     ], 
-    "./setup.cfg.bak": [], 
     "./setup.py": [
         "H3oailwOgujygdU3YWo9T73hcu6c5uSHY3vKaoNa9jBtvRlNrnzpIrzF3OVRqXAZVx5kF5pqHy2y8ehFSTDH6Q==", 
         "6tA9s9cbDHz4mx0PGt+gMLM9HamuOYqFGjwc7LYZcM72XjiUaG0A7g6hNS+gy8cS0FyZDnf46GLNwx0mNZUs7Q=="
     ], 
-    "./setup.py.bak": [], 
-    "./src/OpenAlea.Deploy.egg-info/PKG-INFO": [], 
-    "./src/OpenAlea.Deploy.egg-info/SOURCES.txt": [], 
-    "./src/OpenAlea.Deploy.egg-info/dependency_links.txt": [], 
-    "./src/OpenAlea.Deploy.egg-info/entry_points.txt": [], 
-    "./src/OpenAlea.Deploy.egg-info/namespace_packages.txt": [], 
-    "./src/OpenAlea.Deploy.egg-info/not-zip-safe": [], 
-    "./src/OpenAlea.Deploy.egg-info/top_level.txt": [], 
+    "./shared-lib.pth": [], 
+    "./src/openalea.deploy.egg-info/PKG-INFO": [
+        "lTSqKH85koV1jYSQt+7J9xGs6sga0QiZ52rzuIQUBbbdv/MDjktaPUuaQYFgJwExmc/knDDcCGz0VyEb13qYqQ=="
+    ], 
+    "./src/openalea.deploy.egg-info/SOURCES.txt": [], 
+    "./src/openalea.deploy.egg-info/dependency_links.txt": [], 
+    "./src/openalea.deploy.egg-info/entry_points.txt": [], 
+    "./src/openalea.deploy.egg-info/not-zip-safe": [], 
+    "./src/openalea.deploy.egg-info/top_level.txt": [], 
     "./src/openalea/__init__.py": [], 
     "./src/openalea/deploy/__init__.py": [
         "bXi4YRtInDLkaTvGi4V/ZIZpKXGCIgIw/Qm7wX5YZ+tM5kkkAAGCzzuDhxJDzcpoWKBE1UxDj7mT+40YH1DZQA==", 
         "vmiIOMqGhuXJBom/KrWFzvETfJmbSMcLkvZ6XDTcFWl7XRHJgu1tcb4eHn97TgcziEqpfD96M5qO0DV3z3S+CQ=="
     ], 
-    "./src/openalea/deploy/__init__.py.bak": [], 
     "./src/openalea/deploy/alea_config.py": [], 
     "./src/openalea/deploy/alea_install.py": [], 
     "./src/openalea/deploy/alea_update.py": [], 
