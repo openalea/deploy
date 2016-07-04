@@ -142,22 +142,28 @@ def set_win_env(vars):
             qvalue, type_id = _winreg.QueryValueEx(qkey, qname)
             return qvalue
 
+        name, value = newvar.split('=')
+            
         regpath = r'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
         reg = _winreg.ConnectRegistry(None, _winreg.HKEY_LOCAL_MACHINE)
         try:
             key = _winreg.OpenKey(reg, regpath, 0, _winreg.KEY_ALL_ACCESS)
-        except:
+        except  WindowsError, we:
+            print "Cannot set "+repr(name)+" for all users. Set for current user."
+            _winreg.CloseKey(reg)
             regpath = r'Environment'
             reg = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
             key = _winreg.OpenKey(reg, regpath, 0, _winreg.KEY_ALL_ACCESS)
             
 
-        name, value = newvar.split('=')
-
         # Specific treatment for PATH variable
         if name.upper() == 'PATH':
             value = os.path.normpath(value)
-            actualpath = queryValue(key, name)
+            try:
+                actualpath = queryValue(key, name)
+            except:
+                print 'No PATH variable found'
+                actualpath = ''
 
             listpath = actualpath.split(';')
             if not (value in listpath):
