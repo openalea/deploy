@@ -2,14 +2,12 @@
 openalea.deploy
 ========================
 
-.. {{pkglts doc,
+.. {# pkglts, doc
 
+.. #}
 
+OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools. 
 
-
-
-
-.. }}
 **Authors** : S. Dufour-Kowalski, C. Pradal
 
 **Contributors** : OpenAlea Consortium

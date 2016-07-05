@@ -1,153 +1,52 @@
 {
-    "./.gitignore": [], 
-    "./AUTHORS.rst": [], 
-    "./CONTRIBUTING.rst": [], 
-    "./HISTORY.rst": [], 
-    "./LICENSE": [
-        "K+/cXPOoUd3kCV74oh3eAd4jEM1Zl5ycOadeYhk++UgVDTAptzaSeEuVaeT1wD8qp3mxw2UXkNVnXY9uD0bEtg=="
-    ], 
-    "./MANIFEST.in": [
-        "YTUhuNoVK2IXgwJI+cP4BUzbgzMOnHhc40N8Q9cw1rJVtKJq8xlQNaYwxt2Y8p+scpKOU4S445VaPOqWsEF6+Q=="
-    ], 
-    "./README.rst": [
-        "NpInImcdK7HQFLVdzLlDEZbA9uAEZaKM6lTCUCfQi5aOf93nTfnCh9DJp9Dr0ZWsxXLXTQrH3g+rbgh7kRECnA=="
-    ], 
-    "./debian/changelog": [], 
-    "./debian/compat": [], 
-    "./debian/control": [], 
-    "./debian/copyright": [], 
-    "./debian/rules": [], 
-    "./debian/source/format": [], 
-    "./doc/Makefile": [
-        "fCpQbGBjkltJc0kS1o3WrQeqpsOzMhUa8FlGTCab3LI4yYuTq7VnoQHXV7clRKyfu2105FRS7JfCEoePiVkMpQ=="
-    ], 
-    "./doc/authors.rst": [], 
-    "./doc/conf.py": [
-        "Pz+DnMCo3mSpmTAoa0Cxgc1JNWry4s/tSQYoXtyAM1KnArQa+S+zjXCHxxrMx5QSvsJI+7f3x4e68H+RUlaevg=="
-    ], 
-    "./doc/contributing.rst": [], 
-    "./doc/history.rst": [], 
-    "./doc/index.rst": [], 
-    "./doc/installation.rst": [], 
-    "./doc/make.bat": [
-        "Tk/+eZHH7Ss0u6nDShjeISQZmDwP2+T79T9iaBXwWtSC2AJBYjifliRsFaupRval8lXgd0Jg4jNRMcDOC31oaw=="
-    ], 
-    "./doc/readme.rst": [], 
-    "./doc/usage.rst": [], 
-    "./doc/user/autosum.rst": [], 
-    "./doc/user/index.rst": [], 
-    "./doc/user/manual.rst": [], 
-    "./doc/user/overview.txt": [], 
-    "./dvlpt_requirements.txt": [
-        "CC2icwIcDf0IDA7tHTp3M+1ImwGS43fMRryBNsZMniGZe+YOPuKIeUUtF4QUrK19oqeiaAp2mKptjKf9sIhL+A=="
-    ], 
-    "./example/build_zip.py": [], 
-    "./example/create_scons_egg.py": [], 
-    "./example/create_scons_egg.sh": [], 
-    "./example/qtpatch.py": [], 
-    "./example/setup_bisonflex.py": [], 
-    "./example/setup_boost.py": [], 
-    "./example/setup_mingw.py": [], 
-    "./example/setup_numsci.py": [], 
-    "./example/setup_pil.py": [], 
-    "./example/setup_pyqglviewer.py": [], 
-    "./example/setup_qhull.py": [], 
-    "./example/setup_scons.py": [], 
-    "./ez_setup.py": [], 
-    "./requirements.txt": [
-        "AWuoxM/eZa+Zy1+ouKN+Lrc/SBs640mRZm3y4E/rbAOGZuvR7CtvYjlndWAzxwLd5fQj99R6tu0YJ/9TeDcx9w=="
-    ], 
-    "./scripts/winInstallers/LICENSE.txt": [], 
-    "./scripts/winInstallers/__init__.py": [], 
-    "./scripts/winInstallers/alinea_conf.py": [], 
-    "./scripts/winInstallers/ann_test.py": [], 
-    "./scripts/winInstallers/bisonflex_test.py": [], 
-    "./scripts/winInstallers/boost_test.py": [], 
-    "./scripts/winInstallers/cgal_test.py": [], 
-    "./scripts/winInstallers/gnuplot_test.py": [], 
-    "./scripts/winInstallers/makeWinInstaller.py": [], 
-    "./scripts/winInstallers/matplotlib_test.py": [], 
-    "./scripts/winInstallers/networkx_test.py": [], 
-    "./scripts/winInstallers/numpy_test.py": [], 
-    "./scripts/winInstallers/oalogo.bmp": [], 
-    "./scripts/winInstallers/openalea_conf.py": [], 
-    "./scripts/winInstallers/openalea_test.py": [], 
-    "./scripts/winInstallers/pil_test.py": [], 
-    "./scripts/winInstallers/pylsm_test.py": [], 
-    "./scripts/winInstallers/pyopengl_test.py": [], 
-    "./scripts/winInstallers/pyqglviewer_test.py": [], 
-    "./scripts/winInstallers/pyqt_test.py": [], 
-    "./scripts/winInstallers/pywin32_test.py": [], 
-    "./scripts/winInstallers/qhull_test.py": [], 
-    "./scripts/winInstallers/qt4_test.py": [], 
-    "./scripts/winInstallers/r_test.py": [], 
-    "./scripts/winInstallers/rpy2_test.py": [], 
-    "./scripts/winInstallers/scipy_test.py": [], 
-    "./scripts/winInstallers/scons_test.py": [], 
-    "./scripts/winInstallers/setuptools_test.py": [], 
-    "./scripts/winInstallers/template_win_inst.iss.in": [], 
-    "./scripts/winInstallers/vplants_conf.py": [], 
-    "./scripts/winInstallers/vplants_test.py": [], 
-    "./scripts/winInstallers/vplogo.bmp": [], 
-    "./setup.cfg": [
-        "QYCnUVMayyDRu7c/wBEMVaGu9NHjEMOS/UhuN7hNdyAPOqPIZjW7dRKEMuIhm8twpcIXxHhMNmGsxWodD3fqgg=="
-    ], 
-    "./setup.py": [
-        "H3oailwOgujygdU3YWo9T73hcu6c5uSHY3vKaoNa9jBtvRlNrnzpIrzF3OVRqXAZVx5kF5pqHy2y8ehFSTDH6Q==", 
-        "6tA9s9cbDHz4mx0PGt+gMLM9HamuOYqFGjwc7LYZcM72XjiUaG0A7g6hNS+gy8cS0FyZDnf46GLNwx0mNZUs7Q=="
-    ], 
-    "./shared-lib.pth": [], 
-    "./src/openalea.deploy.egg-info/PKG-INFO": [
-        "lTSqKH85koV1jYSQt+7J9xGs6sga0QiZ52rzuIQUBbbdv/MDjktaPUuaQYFgJwExmc/knDDcCGz0VyEb13qYqQ=="
-    ], 
-    "./src/openalea.deploy.egg-info/SOURCES.txt": [], 
-    "./src/openalea.deploy.egg-info/dependency_links.txt": [], 
-    "./src/openalea.deploy.egg-info/entry_points.txt": [], 
-    "./src/openalea.deploy.egg-info/not-zip-safe": [], 
-    "./src/openalea.deploy.egg-info/top_level.txt": [], 
-    "./src/openalea/__init__.py": [], 
-    "./src/openalea/deploy/__init__.py": [
-        "bXi4YRtInDLkaTvGi4V/ZIZpKXGCIgIw/Qm7wX5YZ+tM5kkkAAGCzzuDhxJDzcpoWKBE1UxDj7mT+40YH1DZQA==", 
-        "vmiIOMqGhuXJBom/KrWFzvETfJmbSMcLkvZ6XDTcFWl7XRHJgu1tcb4eHn97TgcziEqpfD96M5qO0DV3z3S+CQ=="
-    ], 
-    "./src/openalea/deploy/alea_config.py": [], 
-    "./src/openalea/deploy/alea_install.py": [], 
-    "./src/openalea/deploy/alea_update.py": [], 
-    "./src/openalea/deploy/autosum_generator.py": [], 
-    "./src/openalea/deploy/binary_deps.py": [], 
-    "./src/openalea/deploy/command.py": [], 
-    "./src/openalea/deploy/console.py": [], 
-    "./src/openalea/deploy/doc_tools.py": [], 
-    "./src/openalea/deploy/environ_var.py": [], 
-    "./src/openalea/deploy/gforge.py": [], 
-    "./src/openalea/deploy/gforge_util.py": [], 
-    "./src/openalea/deploy/install_lib.py": [], 
-    "./src/openalea/deploy/list_modules.py": [], 
-    "./src/openalea/deploy/metainfo.py": [], 
-    "./src/openalea/deploy/setup.py": [], 
-    "./src/openalea/deploy/shared_data.py": [], 
-    "./src/openalea/deploy/shortcut.py": [], 
-    "./src/openalea/deploy/system_dependencies/__init__.py": [], 
-    "./src/openalea/deploy/system_dependencies/ann_mgw.patch": [], 
-    "./src/openalea/deploy/system_dependencies/dependency.py": [], 
-    "./src/openalea/deploy/system_dependencies/dependency_builder.py": [], 
-    "./src/openalea/deploy/system_dependencies/deploy_system.py": [], 
-    "./src/openalea/deploy/system_dependencies/deploy_system2.py": [], 
-    "./src/openalea/deploy/system_dependencies/distributions.py": [], 
-    "./src/openalea/deploy/system_dependencies/egg_rules.py": [], 
-    "./src/openalea/deploy/system_dependencies/patch.py": [], 
-    "./src/openalea/deploy/system_dependencies/project_rules.py": [], 
-    "./src/openalea/deploy/system_dependencies/qmake_main.cpp.sub": [], 
-    "./src/openalea/deploy/system_dependencies/qt-4.8.0.patch": [], 
-    "./src/openalea/deploy/system_dependencies/qtpatch.py": [], 
-    "./src/openalea/deploy/system_dependencies/rpy2.patch": [], 
-    "./src/openalea/deploy/system_dependencies/rpy2_setup.py": [], 
-    "./src/openalea/deploy/system_dependencies/setup.py.in": [], 
-    "./src/openalea/deploy/system_dependencies/sip_build.patch": [], 
-    "./src/openalea/deploy/system_dependencies/ubuntu_release.py": [], 
-    "./src/openalea/deploy/util.py": [], 
-    "./src/openalea/deploy/version.py": [
-        "xCBxzzQlI4Yb21xMWROcaOUAKjfWfpKafqO1mHqr/orf/KRMZd0ZdFmTUToo9aPzDXMzYQNwR07wX3ukhDnBww=="
-    ], 
-    "./test/__init__.py": []
+  ".gitignore": {
+    "github": "PphBqiMKxF8DR59MJbCJ+W1Y6U+9J3QMWIFgEFj4oJpstJqPpS6P/qCJ1rSBb8ihe55ZtlkRUs9+2IzvuISxlA=="
+  }, 
+  "AUTHORS.rst": {
+    "doc": "soNB+1s1EYp8zUNBRb0hmgb3ZhPHyUnuQ/P5vp6RhxhIrRjPrnzQjClyllP+im0sT+FriTZ99ByI1tyW3I9irg=="
+  }, 
+  "CONTRIBUTING.rst": {}, 
+  "HISTORY.rst": {}, 
+  "LICENSE": {
+    "license": "21ExMhSzB2uXQuU1VoH7++nrb4u6TbesqGtJDpM39OLPWft9SJ2tJ956R6foYmkI9VuJay7SUrhFLPxxMEHLxg=="
+  }, 
+  "MANIFEST.in": {
+    "pysetup": "vzgcfdwg7fafu0G3HEmFsZnC8jB8sa4zeSFQ2ReZO+pUfGeynOcw4+CIzP/ZV7n5nmpGGI7xqcdcPtOFfoivdQ=="
+  }, 
+  "README.rst": {
+    "doc": "z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg=="
+  }, 
+  "doc/Makefile": {
+    "sphinx": "C58jxdu8XJNOoaWOw7VWy4LwFmS8lTQt/JeZLt5JozMSJ503plOZchucx+vAEzELbx/Czs/h9pshe9s+9HeOeQ=="
+  }, 
+  "doc/authors.rst": {}, 
+  "doc/conf.py": {
+    "sphinx": "P95kZGls4qIlbYQByVsw/UvTGRhF601hDeeEJWom9hEwUF4B1khqO7p9SH8rYdSoDCqdWuo1mSKE5Ab8J7bQ/g=="
+  }, 
+  "doc/contributing.rst": {}, 
+  "doc/history.rst": {}, 
+  "doc/index.rst": {}, 
+  "doc/installation.rst": {}, 
+  "doc/make.bat": {
+    "sphinx": "oA67PK7JSR3w9u1V0gOXFZAb8qgfgUJ0wQ46cVXu7M3iJyAbLf76WkEqw6Y1r5Q6EvHAogcjmImdGsOpiYZ22g=="
+  }, 
+  "doc/readme.rst": {}, 
+  "doc/usage.rst": {}, 
+  "dvlpt_requirements.txt": {
+    "pysetup": "nT4HVSSvUTcypIiUr232+4FNeGJ3z9LO9FhJ8TOaGjc1xpOkkL+vVAYMwRgaF8XCAOfBbCcB7bJc7m1fXzoLKQ=="
+  }, 
+  "requirements.txt": {
+    "pysetup": "z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg=="
+  }, 
+  "setup.cfg": {
+    "pysetup": "1iCSDvs9xY0GOgde2dHQdpu5siqLRSbSiVZr6vEMin886x1NKrTLw0f1AJuSUwPfsoXa1a1EfRsDFadXx3Qy8A=="
+  }, 
+  "setup.py": {}, 
+  "src/openalea/deploy/__init__.py": {
+    "base": "gR33dW0qqYmsV9NSNB+DD8XmuxnC2t0mKjnMoU5728qh97fSER6MbX+3QKxpZDLByZToaAay4xhx8acxketJmA=="
+  }, 
+  "src/openalea/deploy/version.py": {
+    "version": "gTCIeWNNmBdua8c9OaCnjZX3E8INsa5qbxUTzF4Htp9NXmlSJW5pdi3IyHkGZkOinh6e+BErjZmuJ++tlgSYQw=="
+  }, 
+  "test/__init__.py": {}
 }

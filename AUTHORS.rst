@@ -1,9 +1,13 @@
+=======
+Credits
+=======
+
 Development Lead
 ----------------
 
-
-* OpenAlea consortium: http://openalea.gforge.inria.fr
-
+{# pkglts, doc
+* openalea, <openalea@inria.fr>* Christophe Pradal, <christophe dot pradal at cirad dot fr>* revesansparole, <revesansparole@gmail.com>
+#}
 
 Contributors
 ------------

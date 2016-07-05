@@ -1,6 +1,6 @@
-# {{pkglts pysetup.dvlpt_requirements,
-sphinx
-nose
-mock
+# {# pkglts, pysetup
 
-# }}
+mock
+nose
+sphinx
+# #}
