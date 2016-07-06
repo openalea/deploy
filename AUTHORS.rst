@@ -6,7 +6,11 @@ Development Lead
 ----------------
 
 {# pkglts, doc
-* openalea, <openalea@inria.fr>* Christophe Pradal, <christophe dot pradal at cirad dot fr>* revesansparole, <revesansparole@gmail.com>
+
+* openalea, <openalea@inria.fr>
+* Christophe Pradal, <christophe dot pradal at cirad dot fr>
+* Samuel Dufour-Kowalski, <dufourko at cirad dot fr>
+* revesansparole, <revesansparole@gmail.com>
 #}
 
 Contributors

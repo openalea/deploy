@@ -294,7 +294,7 @@ texinfo_documents = [
      u'deploy Documentation',
      u'openalea',
      'deploy',
-     'OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools. ',
+     'OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools.',
      'Miscellaneous'),
 ]
 

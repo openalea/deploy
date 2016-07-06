@@ -16,6 +16,10 @@
         "christophe dot pradal at cirad dot fr"
       ], 
       [
+        "Samuel Dufour-Kowalski",
+        "dufourko at cirad dot fr"
+      ],
+      [
         "revesansparole", 
         "revesansparole@gmail.com"
       ]
@@ -25,7 +29,7 @@
     "url": "https://openalea.gforge.inria.fr"
   }, 
   "doc": {
-    "description": "OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools. ", 
+    "description": "OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools.",
     "keywords": [
       "setuptools", 
       "openalea"
