@@ -20,7 +20,7 @@ def binary_deps(pkg, verbose=True):
     except:
         warnings.warn("package '" + pkg + "' not found.")
         return pkg
-   
+
     deps = pkg + '==' + dists[0].version
     
     if verbose:

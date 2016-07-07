@@ -24,10 +24,11 @@ from openalea.core.path import path
 __license__ = "Cecill-C"
 __revision__ = " $Id: gforge.py 2243 2010-02-08 17:08:47Z cokelaer $ "
 
-
 _share_path = pj('share', 'data')
 
-def shared_data(package_path, filename=None, pattern=None, share_path=_share_path):
+
+def shared_data(package_path, filename=None, pattern=None,
+                share_path=_share_path):
     """Return a valid pathname pointing to a shared-data directory or a shared-data file.
 
     :Parameters:
@@ -73,7 +74,7 @@ def shared_data(package_path, filename=None, pattern=None, share_path=_share_pat
         else:
             package_path = package_path[0]
     package_path = path(package_path)
-    ff = package_path/share_path
+    ff = package_path / share_path
     ff = ff.realpath()
     shared_data_path = None
     if ff.isdir():
@@ -84,17 +85,20 @@ def shared_data(package_path, filename=None, pattern=None, share_path=_share_pat
                 if l:
                     shared_data_path = l
         else:
-            ff = ff/filename
+            ff = ff / filename
             ff = ff.realpath()
             if ff.isfile():
                 shared_data_path = ff
 
-    if shared_data_path is None and (package_path/'__init__.py').isfile():
-        shared_data_path = shared_data(package_path.parent, filename, pattern, share_path)
+    if shared_data_path is None and (package_path / '__init__.py').isfile():
+        shared_data_path = shared_data(package_path.parent, filename, pattern,
+                                       share_path)
         if shared_data_path is None:
-            shared_data_path = shared_data(package_path.parent.parent, filename, pattern, share_path)
+            shared_data_path = shared_data(package_path.parent.parent, filename,
+                                           pattern, share_path)
     
     return shared_data_path
+
 
 # Backward compatibility
 get_shared_data_path = shared_data
