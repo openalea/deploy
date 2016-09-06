@@ -26,26 +26,25 @@ OPENALEA_PI = "http://openalea.gforge.inria.fr/pi"
 OPENALEA_REPOLIST = "http://openalea.gforge.inria.fr/repolist"
 OPENALEA_RECOMMENDED_PKG = "http://openalea.gforge.inria.fr/pkg_prefix"
 
-
 # Precedence
 INSTALL_DIST = [pkg_resources.EGG_DIST,
                 pkg_resources.BINARY_DIST,
                 pkg_resources.SOURCE_DIST,
-                pkg_resources.CHECKOUT_DIST,]
+                pkg_resources.CHECKOUT_DIST, ]
 
 DEV_DIST = [pkg_resources.DEVELOP_DIST]
 ALL_DIST = DEV_DIST + INSTALL_DIST
 
+
 # EGG Management
 
 def get_base_dir(pkg_name):
-    """ Return the base directory of a pkg """
+    """Return the base directory of a pkg."""
     return pkg_resources.get_distribution(pkg_name).location
 
 
 def get_egg_info(pkg_name, info_key):
-    """ Return as a generator the egg-infos contained in info_key"""
-
+    """Return as a generator the egg-infos contained in info_key."""
     dist = pkg_resources.get_distribution(pkg_name)
     try:
         lstr = dist.get_metadata(info_key)
@@ -56,7 +55,7 @@ def get_egg_info(pkg_name, info_key):
 
 
 def get_metainfo(pkg_name, info):
-    """ Return the metainfo of a package named pkg_name
+    """Return the metainfo of a package named pkg_name.
 
     Available info are:
       - name
@@ -73,55 +72,50 @@ def get_metainfo(pkg_name, info):
 
     for line in dist._get_metadata('PKG-INFO'):
         if line.lower().startswith(info.lower() + ':'):
-            val = line.split(':',1)[1].strip()
+            val = line.split(':', 1)[1].strip()
             return val
 
-    raise ValueError("Unknown info %s"%(info,))
+    raise ValueError("Unknown info %s" % (info,))
 
 
 def get_lib_dirs(pkg_name):
-    """ Return a generator which lists the shared lib directory """
-
+    """Return a generator which lists the shared lib directory."""
     return get_egg_info(pkg_name, 'lib_dirs.txt')
 
 
 def get_bin_dirs(pkg_name):
-    """ Return a generator which lists the shared lib directory """
-
+    """Return a generator which lists the shared lib directory."""
     return get_egg_info(pkg_name, 'bin_dirs.txt')
 
 
 def get_inc_dirs(pkg_name):
-    """ Return a generator which lists the shared lib directory """
-
+    """Return a generator which lists the shared lib directory."""
     return get_egg_info(pkg_name, 'inc_dirs.txt')
 
 
 def get_postinstall_scripts(pkg_name):
-    """ Return a generator which lists the post_install scripts (as string) """
-
+    """Return a generator which lists the post_install scripts (as string)."""
     return get_egg_info(pkg_name, 'postinstall_scripts.txt')
 
 
 def get_eggs(namespace=None, precedence=ALL_DIST):
-    """ Return as a generator the list of the name of all EGGS in
+    """Return as a generator the list of the name of all EGGS in
     a particular namespace (optional)
     select only egg with a particular precedence
     """
-
     env = pkg_resources.Environment()
 
     for project_name in env:
 
-        if(precedence):
+        if (precedence):
             pkg = pkg_resources.get_distribution(project_name)
-            if(pkg.precedence not in precedence):
+            if (pkg.precedence not in precedence):
                 continue
 
-        if(namespace and namespace+'.' in project_name):
+        if (namespace and namespace + '.' in project_name):
             yield project_name
 
-        elif(not namespace):
+        elif (not namespace):
             yield project_name
 
 
@@ -137,7 +131,7 @@ def get_all_lib_dirs(namespace=None, precedence=ALL_DIST):
         location = get_base_dir(e)
 
         for sh in get_lib_dirs(e):
-            if(os.path.isabs(sh)):
+            if (os.path.isabs(sh)):
                 full_location = sh
             else:
                 full_location = pj(location, sh)
@@ -156,12 +150,11 @@ def get_all_bin_dirs(namespace=None, precedence=ALL_DIST):
         location = get_base_dir(e)
 
         for sh in get_bin_dirs(e):
-            if(os.path.isabs(sh)):
+            if (os.path.isabs(sh)):
                 full_location = sh
             else:
                 full_location = pj(location, sh)
             yield os.path.normpath(full_location)
-
 
 
 # System config
@@ -174,6 +167,7 @@ def merge_uniq(list1, list2):
     full_list = list(list1)
     full_list.extend([elt for elt in list2 if elt not in list1])
     return full_list
+
 
 def check_system():
     """
@@ -224,14 +218,16 @@ def check_system():
 
             libs = [get_dyn_lib_dir()]
 
-            #The environment variable ("DYLD_FRAMEWORK_PATH") is not set with the sudo commands.
-            #If "DYLD_LIBRARY_PATH" is in os.environ, we try to run the merge
+            # The environment variable ("DYLD_FRAMEWORK_PATH") is not set with the sudo commands.
+            # If "DYLD_LIBRARY_PATH" is in os.environ, we try to run the merge
             try:
-                libs = merge_uniq(libs, in_env['DYLD_FRAMEWORK_PATH'].split(':'))
+                libs = merge_uniq(libs,
+                                  in_env['DYLD_FRAMEWORK_PATH'].split(':'))
                 libs = merge_uniq(libs, in_env['DYLD_LIBRARY_PATH'].split(':'))
 
             except:
                 pass
+
             # update the environment
             out_env['DYLD_LIBRARY_PATH'] = ':'.join(libs)
             out_env['DYLD_FRAMEWORK_PATH'] = ':'.join(libs)
@@ -259,7 +255,6 @@ def get_repo_list():
     except Exception, e:
         print e
         return [OPENALEA_PI]
-
 
 
 def get_recommended_prefix():
@@ -290,8 +285,7 @@ def is_conda_env():
     The CONDA_ENVPATH environment variable is set by the activate conda script.
     """
 
-    return ('CONDA_DEFAULT_ENV' in os.environ)
-
+    return ('CONDA_ENV_PATH' in os.environ)
 
 
 def get_metadata(name):
@@ -308,4 +302,3 @@ def get_metadata(name):
     import pkg_resources
     dist = pkg_resources.get_distribution(name)
     return dist._get_metadata('PKG-INFO')
-

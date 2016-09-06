@@ -12,11 +12,10 @@ The global shared dir can be set by this command.
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
 
-#from install_lib import get_default_dyn_lib
+# from install_lib import get_default_dyn_lib
 from install_lib import get_dyn_lib_dir
 # from util import check_system
 from command import set_env
-
 from optparse import OptionParser
 
 
@@ -38,10 +37,11 @@ def main():
     if options.printdir:
         print get_dyn_lib_dir()
 
-    if(options.lib_dir or not options.printdir):
+    if (options.lib_dir or not options.printdir):
         set_env(options.lib_dir)
 
-#     env = check_system()
+
+# env = check_system()
 
 #     if('posix' in os.name):
 #         for k, v in env.items():

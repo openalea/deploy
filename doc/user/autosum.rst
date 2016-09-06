@@ -116,35 +116,6 @@ Download the source file :download:`../../src/openalea/deploy/environ_var.py`.
 
 .. currentmodule:: openalea.deploy.gforge
 
-:mod:`openalea.deploy.gforge` module
-====================================
-
-Download the source file :download:`../../src/openalea/deploy/gforge.py`.
-
-
-.. automodule:: openalea.deploy.gforge
-    :members:
-    :undoc-members:
-    :inherited-members:
-    :show-inheritance:
-    :synopsis: INRIA GForge SOAP python API wrappers (based on SOAPpy)
-
-
-.. currentmodule:: openalea.deploy.gforge_util
-
-:mod:`openalea.deploy.gforge_util` module
-=========================================
-
-Download the source file :download:`../../src/openalea/deploy/gforge_util.py`.
-
-
-.. automodule:: openalea.deploy.gforge_util
-    :members:
-    :undoc-members:
-    :inherited-members:
-    :show-inheritance:
-    :synopsis: Utility script to upload package on the Gforge
-
 
 .. currentmodule:: openalea.deploy.install_lib
 

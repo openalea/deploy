@@ -30,17 +30,16 @@ usage: %(script)s [options] requirement_or_url ...
             distutils.core.gen_usage = old_gen_usage
 
     class DistributionWithoutHelpCommands(Distribution):
-        def _show_help(self,*args,**kw):
-            with_ei_usage(lambda: Distribution._show_help(self,*args,**kw))
+        def _show_help(self, *args, **kw):
+            with_ei_usage(lambda: Distribution._show_help(self, *args, **kw))
 
     if argv is None:
         argv = sys.argv[1:]
 
     with_ei_usage(lambda:
-        setup(
-            script_args = ['-q','alea_install', '-v'] + argv,
-            script_name = sys.argv[0] or 'alea_install',
-            distclass=DistributionWithoutHelpCommands, **kw
-        )
-    )
-
+                  setup(
+                      script_args=['-q', 'alea_install', '-v'] + argv,
+                      script_name=sys.argv[0] or 'alea_install',
+                      distclass=DistributionWithoutHelpCommands, **kw
+                  )
+                  )
