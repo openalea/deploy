@@ -22,13 +22,13 @@ The egm file describes the directory the dynamic library is originated from.
 
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
+EGG_MARKER_EXTENSION = ".egm"
 
 import os
 import shutil
 import glob
 from os.path import join
 
-EGG_MARKER_EXTENSION = ".egm"
 
 from openalea.deploy.util import get_all_lib_dirs, get_base_dir, INSTALL_DIST
 from openalea.deploy.util import is_virtual_env, is_conda_env
@@ -37,8 +37,7 @@ from distutils.sysconfig import get_python_lib
 
 
 def get_default_dyn_lib():
-    """ Return the default path for dynamic library """
-
+    """Return the default path for dynamic library."""
     basedir = get_python_lib()
 
     # Virtual environment
@@ -51,7 +50,7 @@ def get_default_dyn_lib():
 
     # Conda environment
     if is_conda_env():
-        env_dir = os.path.abspath(os.environ['CONDA_ENV_PATH'])
+        env_dir = os.path.abspath(os.environ['PREFIX'])
         dyn_dir = os.path.join(env_dir, 'lib')
         return dyn_dir
 
@@ -68,6 +67,8 @@ def get_dyn_lib_dir(use_default=True):
     Return the shared lib directory
     if use_default : return default directory if not defined
     """
+    if is_conda_env():
+        return get_default_dyn_lib()
 
     bdir = get_base_dir("openalea.deploy")
     up_dir = os.path.abspath(join(bdir, os.path.pardir))
@@ -205,11 +206,18 @@ def install_lib(lib_dir):
     if None, use previous dir or default
     Return real lib_dir
     """
-    if (not lib_dir):
+
+    # Conda environment
+    if is_conda_env():
+        env_dir = os.path.abspath(os.environ['PREFIX'])
+        dyn_dir = os.path.join(env_dir, 'lib')
+        return dyn_dir
+
+    if not lib_dir:
         lib_dir = get_dyn_lib_dir()
 
     # Create directory
-    if (not os.path.exists(lib_dir)):
+    if not os.path.exists(lib_dir):
         mkpath(lib_dir)
 
     old_lib_dir = get_dyn_lib_dir(False)

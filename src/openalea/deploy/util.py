@@ -39,13 +39,12 @@ ALL_DIST = DEV_DIST + INSTALL_DIST
 # EGG Management
 
 def get_base_dir(pkg_name):
-    """ Return the base directory of a pkg """
+    """Return the base directory of a pkg."""
     return pkg_resources.get_distribution(pkg_name).location
 
 
 def get_egg_info(pkg_name, info_key):
-    """ Return as a generator the egg-infos contained in info_key"""
-
+    """Return as a generator the egg-infos contained in info_key."""
     dist = pkg_resources.get_distribution(pkg_name)
     try:
         lstr = dist.get_metadata(info_key)
@@ -56,8 +55,8 @@ def get_egg_info(pkg_name, info_key):
 
 
 def get_metainfo(pkg_name, info):
-    """ Return the metainfo of a package named pkg_name
-    
+    """Return the metainfo of a package named pkg_name.
+
     Available info are:
       - name
       - version
@@ -80,35 +79,30 @@ def get_metainfo(pkg_name, info):
 
 
 def get_lib_dirs(pkg_name):
-    """ Return a generator which lists the shared lib directory """
-
+    """Return a generator which lists the shared lib directory."""
     return get_egg_info(pkg_name, 'lib_dirs.txt')
 
 
 def get_bin_dirs(pkg_name):
-    """ Return a generator which lists the shared lib directory """
-
+    """Return a generator which lists the shared lib directory."""
     return get_egg_info(pkg_name, 'bin_dirs.txt')
 
 
 def get_inc_dirs(pkg_name):
-    """ Return a generator which lists the shared lib directory """
-
+    """Return a generator which lists the shared lib directory."""
     return get_egg_info(pkg_name, 'inc_dirs.txt')
 
 
 def get_postinstall_scripts(pkg_name):
-    """ Return a generator which lists the post_install scripts (as string) """
-
+    """Return a generator which lists the post_install scripts (as string)."""
     return get_egg_info(pkg_name, 'postinstall_scripts.txt')
 
 
 def get_eggs(namespace=None, precedence=ALL_DIST):
-    """ Return as a generator the list of the name of all EGGS in
-    a particular namespace (optional) 
+    """Return as a generator the list of the name of all EGGS in
+    a particular namespace (optional)
     select only egg with a particular precedence
     """
-
     env = pkg_resources.Environment()
 
     for project_name in env:
@@ -145,8 +139,8 @@ def get_all_lib_dirs(namespace=None, precedence=ALL_DIST):
 
 
 def get_all_bin_dirs(namespace=None, precedence=ALL_DIST):
-    """ 
-    Return the iterator of the directories corresponding to the shared lib 
+    """
+    Return the iterator of the directories corresponding to the shared lib
     Select only egg with a particular precedence
     """
 
@@ -196,7 +190,7 @@ def check_system():
 
             paths = list(get_all_bin_dirs())
             paths = merge_uniq(paths, in_env['PATH'].split(':'))
-            
+
             libs = [get_dyn_lib_dir()]
             libs = merge_uniq(libs, in_env['LD_LIBRARY_PATH'].split(':'))
 
@@ -216,12 +210,12 @@ def check_system():
             libs = merge_uniq(bin, paths)
 
             out_env['PATH'] = ';'.join(libs)
-        # Mac 
+        # Mac
         elif "darwin" in sys.platform.lower():
 
             paths = list(get_all_bin_dirs())
             paths = merge_uniq(paths, in_env['PATH'].split(':'))
-            
+
             libs = [get_dyn_lib_dir()]
 
             # The environment variable ("DYLD_FRAMEWORK_PATH") is not set with the sudo commands.
@@ -233,7 +227,8 @@ def check_system():
 
             except:
                 pass
-                # update the environment
+
+            # update the environment
             out_env['DYLD_LIBRARY_PATH'] = ':'.join(libs)
             out_env['DYLD_FRAMEWORK_PATH'] = ':'.join(libs)
             out_env['PATH'] = ':'.join(paths)
@@ -290,7 +285,6 @@ def is_conda_env():
     The CONDA_ENVPATH environment variable is set by the activate conda script.
     """
 
-    import os
     return ('CONDA_ENV_PATH' in os.environ)
 
 

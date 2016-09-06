@@ -1,4 +1,4 @@
-###############################################################################
+    ###############################################################################
 # -*- python -*-
 #
 #       OpenAlea.Deploy : OpenAlea setuptools extension
@@ -22,7 +22,7 @@ __revision__ = " $Id$"
 
 import os
 import sys
-
+from openalea.deploy.util import is_conda_env
 
 def set_lsb_env(name, vars):
     """
@@ -32,6 +32,8 @@ def set_lsb_env(name, vars):
     :param name: file name string without extension
     :param vars: ['VAR1=VAL1', 'VAR2=VAL2', 'LIBRARY_PATH=SOMEPATH']
     """
+    if is_conda_env():
+        return
 
     if (not 'posix' in os.name):
         return
@@ -66,7 +68,7 @@ def set_lsb_env(name, vars):
         filename = '/etc/profile.d/' + name + '.sh'
         filehandle = open(filename, 'w')
     except:
-        # On Mac, we set the /etc/profile file (there is not .bashrc file)    
+        # On Mac, we set the /etc/profile file (there is not .bashrc file)
         if "darwin" in sys.platform.lower():
             filename = os.path.join(os.path.expanduser('~'), ".profile")
         else:
@@ -144,7 +146,7 @@ def set_win_env(vars):
             return qvalue
 
         name, value = newvar.split('=')
-            
+
         regpath = r'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
         reg = _winreg.ConnectRegistry(None, _winreg.HKEY_LOCAL_MACHINE)
         try:
