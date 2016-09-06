@@ -33,7 +33,7 @@ def set_lsb_env(name, vars):
     :param vars: ['VAR1=VAL1', 'VAR2=VAL2', 'LIBRARY_PATH=SOMEPATH']
     """
 
-    if(not 'posix' in os.name):
+    if (not 'posix' in os.name):
         return
 
     # Build string
@@ -44,25 +44,26 @@ def set_lsb_env(name, vars):
         vname, value = newvar.split('=')
 
         # Exception
-        lib_names = ['LD_LIBRARY_PATH', 'DYLD_FALLBACK_LIBRARY_PATH', 'DYLD_FRAMEWORK_PATH']
+        lib_names = ['LD_LIBRARY_PATH', 'DYLD_FALLBACK_LIBRARY_PATH',
+                     'DYLD_FRAMEWORK_PATH']
         if (vname in lib_names and
-           (value in ["/usr/local/lib", "/opt/local/lib", "/usr/lib"])):
+                (value in ["/usr/local/lib", "/opt/local/lib", "/usr/lib"])):
             continue
 
-        if(((vname in lib_names) or (vname== "PATH")) and value):
-            exportstr += 'if [ -z "$%s" ]; then\n'%(vname)
-            exportstr += '  export %s=%s\n'%(vname, value, )
+        if (((vname in lib_names) or (vname == "PATH")) and value):
+            exportstr += 'if [ -z "$%s" ]; then\n' % (vname)
+            exportstr += '  export %s=%s\n' % (vname, value,)
             exportstr += 'else\n'
-            exportstr +='   export %s=%s:$%s\n'%(vname, value, vname, )
+            exportstr += '   export %s=%s:$%s\n' % (vname, value, vname,)
             exportstr += 'fi\n\n'
 
-        elif(vname and value):
-            exportstr += 'export %s=%s\n\n'%(vname, value)
+        elif (vname and value):
+            exportstr += 'export %s=%s\n\n' % (vname, value)
 
     exportstr += "############ Configuration END ########"
 
     try:
-        filename = '/etc/profile.d/'+name+'.sh'
+        filename = '/etc/profile.d/' + name + '.sh'
         filehandle = open(filename, 'w')
     except:
         # On Mac, we set the /etc/profile file (there is not .bashrc file)    
@@ -71,19 +72,19 @@ def set_lsb_env(name, vars):
         else:
             filename = os.path.join(os.path.expanduser('~'), ".bashrc")
 
-        print "Warning : Cannot create /etc/profile.d/%s.sh"%(name)
+        print "Warning : Cannot create /etc/profile.d/%s.sh" % (name)
         print "Trying to setup environment in %s" % filename
 
         # If profile.d directory is not writable, try to update $HOM/.bashrc
         try:
-            script_name = ".%s.sh"%(name)
+            script_name = ".%s.sh" % (name)
 
             filehandle = open(filename, 'r')
             bashrc = filehandle.read()
             filehandle.close()
 
             # create the string to look for : "source ~/.openalea.sh"
-            bashrc_cmd = "source ~/%s"%(script_name, )
+            bashrc_cmd = "source ~/%s" % (script_name,)
 
             # post processing: remove all commented lines to avoid to consider
             # these lines as valid; in particular :"#source ~/.bashrc
@@ -96,7 +97,7 @@ def set_lsb_env(name, vars):
             # search for the "source ~/.openalea.sh" string
             if not bashrc_cmd in bashrc:
                 filehandle = open(filename, 'a+')
-                filehandle.write('\n'+bashrc_cmd)
+                filehandle.write('\n' + bashrc_cmd)
                 filehandle.close()
 
             # create the openalea shell script
@@ -107,14 +108,14 @@ def set_lsb_env(name, vars):
             print e
             raise
 
-    print "Creating %s"%(filename, )
+    print "Creating %s" % (filename,)
 
     filehandle.write(exportstr)
 
     filehandle.close()
-    #cmdstr = "(echo $SHELL|grep bash>/dev/null)&&. %s
-    #||source %s"%(filename,filename)
-    cmdstr = ". %s"%(filename, )
+    # cmdstr = "(echo $SHELL|grep bash>/dev/null)&&. %s
+    # ||source %s"%(filename,filename)
+    cmdstr = ". %s" % (filename,)
     print "To enable new OpenAlea config, open a new shell or type"
     print '  $ %s' % (bashrc_cmd)
 
@@ -126,7 +127,7 @@ def set_win_env(vars):
     :param vars: ['VAR1=VAL1', 'VAR2=VAL2', 'PATH=SOMEPATH']
     """
 
-    if(not 'win32' in sys.platform):
+    if (not 'win32' in sys.platform):
         return
 
     for newvar in vars:
@@ -154,7 +155,6 @@ def set_win_env(vars):
             regpath = r'Environment'
             reg = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
             key = _winreg.OpenKey(reg, regpath, 0, _winreg.KEY_ALL_ACCESS)
-            
 
         # Specific treatment for PATH variable
         if name.upper() == 'PATH':
@@ -168,25 +168,25 @@ def set_win_env(vars):
             listpath = actualpath.split(';')
             if not (value in listpath):
                 value = actualpath + ';' + value
-                print "ADD %s to PATH" % (value, )
+                print "ADD %s to PATH" % (value,)
             else:
                 value = actualpath
 
             # TEST SIZE
-            if(len(value) >= 8191):
+            if (len(value) >= 8191):
                 print "!!ERROR!! : PATH variable cannot contain more than 8191 characters"
                 print "!!ERROR!! : Please : remove unused value in your environement"
                 value = actualpath
 
-        if(name and value):
+        if (name and value):
 
             expand = _winreg.REG_SZ
             # Expand variable if necessary
-            if("%" in value):
+            if ("%" in value):
                 expand = _winreg.REG_EXPAND_SZ
 
             _winreg.SetValueEx(key, name, 0, expand, value)
-            #os.environ[name] = value #not necessary
+            # os.environ[name] = value #not necessary
 
         _winreg.CloseKey(key)
         _winreg.CloseKey(reg)
@@ -200,10 +200,10 @@ def set_win_env(vars):
 
         import win32gui
         res1, res2 = win32gui.SendMessageTimeout(HWND_BROADCAST,
-            WM_SETTINGCHANGE, 0, sParam, SMTO_ABORTIFHUNG, 100)
+                                                 WM_SETTINGCHANGE, 0, sParam,
+                                                 SMTO_ABORTIFHUNG, 100)
         if not res1:
             print ("result %s, %s from SendMessageTimeout" % (bool(res1), res2))
 
     except Exception, e:
         print e
-

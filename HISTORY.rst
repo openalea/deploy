@@ -1,3 +1,5 @@
+.. :changelog:
+
 OpenAlea.Deploy 2.0.0
 ---------------------
 
