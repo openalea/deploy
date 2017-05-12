@@ -285,7 +285,7 @@ def is_conda_env():
     The CONDA_ENVPATH environment variable is set by the activate conda script.
     """
 
-    return ('CONDA_ENV_PATH' in os.environ)
+    return ('CONDA_PREFIX' in os.environ)
 
 
 def get_metadata(name):
