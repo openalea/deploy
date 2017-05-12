@@ -3,7 +3,7 @@
     "auto_install": true, 
     "install_front_end": "stdout", 
     "use_prompts": false, 
-    "version": 2
+    "version": 3
   }, 
   "base": {
     "authors": [
@@ -16,9 +16,9 @@
         "christophe dot pradal at cirad dot fr"
       ], 
       [
-        "Samuel Dufour-Kowalski",
+        "Samuel Dufour-Kowalski", 
         "dufourko at cirad dot fr"
-      ],
+      ], 
       [
         "revesansparole", 
         "revesansparole@gmail.com"
@@ -29,7 +29,7 @@
     "url": "https://openalea.gforge.inria.fr"
   }, 
   "doc": {
-    "description": "OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools.",
+    "description": "OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools.", 
     "keywords": [
       "setuptools", 
       "openalea"
@@ -49,7 +49,8 @@
   "pysetup": {
     "intended_versions": [
       "27"
-    ]
+    ], 
+    "require": []
   }, 
   "sphinx": {
     "autodoc_dvlpt": true, 
@@ -58,7 +59,7 @@
   "test": {}, 
   "version": {
     "major": 2, 
-    "minor": 0, 
+    "minor": 1, 
     "post": 0
   }
 }
