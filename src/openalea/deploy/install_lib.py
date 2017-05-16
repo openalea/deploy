@@ -209,7 +209,10 @@ def install_lib(lib_dir):
 
     # Conda environment
     if is_conda_env():
-        env_dir = os.path.abspath(os.environ['PREFIX'])
+        if 'CONDA_BUILD' in os.environ:
+            env_dir = os.path.abspath(os.environ['PREFIX'])
+        else:
+            env_dir = os.path.abspath(os.environ['CONDA_PREFIX'])
         dyn_dir = os.path.join(env_dir, 'lib')
         return dyn_dir
 
