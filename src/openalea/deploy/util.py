@@ -282,10 +282,33 @@ def is_virtual_env():
 def is_conda_env():
     """ Return True if we are in a conda env
 
-    The CONDA_ENVPATH environment variable is set by the activate conda script.
+    The CONDA_PREFIX environment variable is set by the activate conda script.
     """
 
     return ('CONDA_PREFIX' in os.environ)
+
+
+def conda_prefix():
+    """ Return the conda prefix
+
+    The prefix is the path where libs, bins and includes need to be installed.
+    Use this function only in a conda environment (is_conda_env() is True)
+    """
+    if 'CONDA_BUILD' in os.environ:
+        prefix = os.environ['PREFIX']
+    else:
+        prefix = os.environ['CONDA_PREFIX']
+
+    return os.path.abspath(prefix)
+
+def is_conda_build():
+    """ Return True if we are in a conda env
+
+    The CONDA_BUILD environment variable is set by the activate conda script.
+
+    ..seealso:: `Conda Environment Variables <https://conda.io/docs/using/envs.html>`_
+    """
+    return ('CONDA_BUILD' in os.environ)
 
 
 def get_metadata(name):

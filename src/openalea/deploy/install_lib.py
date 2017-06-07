@@ -31,7 +31,7 @@ from os.path import join
 
 
 from openalea.deploy.util import get_all_lib_dirs, get_base_dir, INSTALL_DIST
-from openalea.deploy.util import is_virtual_env, is_conda_env
+from openalea.deploy.util import is_virtual_env, is_conda_env, conda_prefix
 from distutils.dir_util import mkpath
 from distutils.sysconfig import get_python_lib
 
@@ -50,7 +50,7 @@ def get_default_dyn_lib():
 
     # Conda environment
     if is_conda_env():
-        env_dir = os.path.abspath(os.environ['PREFIX'])
+        env_dir = conda_prefix()
         dyn_dir = os.path.join(env_dir, 'lib')
         return dyn_dir
 
@@ -117,6 +117,7 @@ def is_lib(filename):
     for pat in (".dll", ".so", ".a", ".lib", ".dylib", ".la", ".framework"):
         if filename.endswith(pat):
             return True
+
     # Add linux libraries lib.so.1.3.4
     if '.so.' in filename:
         try:
@@ -209,10 +210,7 @@ def install_lib(lib_dir):
 
     # Conda environment
     if is_conda_env():
-        if 'CONDA_BUILD' in os.environ:
-            env_dir = os.path.abspath(os.environ['PREFIX'])
-        else:
-            env_dir = os.path.abspath(os.environ['CONDA_PREFIX'])
+        env_dir = conda_prefix()
         dyn_dir = os.path.join(env_dir, 'lib')
         return dyn_dir
 

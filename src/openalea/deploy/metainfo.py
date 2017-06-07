@@ -1,6 +1,6 @@
 """Functionalities to parse configuration file"""
 
-from .console import nocolor, color_terminal, green
+from console import nocolor, color_terminal, green
 
 compulsary_words = ['project', 'version', 'authors', 'package', 'release']
 

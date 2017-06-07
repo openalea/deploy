@@ -104,6 +104,8 @@ entry_points = {
 
 }
 setup_kwds["entry_points"] = entry_points
+setup_kwds["namespace_packages"] = ["openalea"]
+setup_kwds["include_package_data"] = True
 
 # do not change things below
 # {{pkglts pysetup.call,

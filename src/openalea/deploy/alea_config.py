@@ -17,6 +17,7 @@ from install_lib import get_dyn_lib_dir
 # from util import check_system
 from command import set_env
 from optparse import OptionParser
+from util import is_conda_env
 
 
 def main():
@@ -33,6 +34,9 @@ def main():
                       help="Show dynamic lib directory", )
 
     (options, _) = parser.parse_args()
+
+    if is_conda_env():
+        print 'WARNING: Do not use alea_config in a conda environment.'
 
     if options.printdir:
         print get_dyn_lib_dir()

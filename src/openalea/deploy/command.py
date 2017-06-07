@@ -55,7 +55,7 @@ import ConfigParser
 from util import get_all_lib_dirs, get_all_bin_dirs, DEV_DIST
 from install_lib import get_dyn_lib_dir
 from util import get_base_dir, get_repo_list, OPENALEA_PI
-from util import is_virtual_env, is_conda_env
+from util import is_virtual_env, is_conda_env, is_conda_build, conda_prefix
 from environ_var import set_lsb_env, set_win_env
 import install_lib
 
@@ -198,6 +198,10 @@ class build_ext(old_build_ext):
         # Add lib_dirs and include_dirs in packages
         # Copy the directories containing the files generated
         # by scons and the like.
+        if is_conda_build():
+            print 'Building directly with conda. Skip the bin, include and lib dirs.'
+            return old_build_ext.run(self)
+
         for d in (self.distribution.lib_dirs,
                   self.distribution.inc_dirs,
                   self.distribution.bin_dirs,
