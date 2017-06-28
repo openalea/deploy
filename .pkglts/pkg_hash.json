@@ -1,53 +1,56 @@
 {
   ".gitignore": {
-    "github": "PphBqiMKxF8DR59MJbCJ+W1Y6U+9J3QMWIFgEFj4oJpstJqPpS6P/qCJ1rSBb8ihe55ZtlkRUs9+2IzvuISxlA=="
-  }, 
+    "github": "YAjSHH+c+Q5KVsboKYSxqkMJFVsI+n4PuYrUe43/bcqEtNV5qH/zdKnKjWu4+E2ToReknaQq2EtFNh7rXMzywg=="
+  },
   "AUTHORS.rst": {
     "doc": "mr4dDvb808KCdcLSRWe9brxcIBamJp3DMpFzoEhHCeSLmr7Q0QfrNRZ79dnneEyWHgcs2srtibLIZlGOq1S0rQ=="
-  }, 
-  "CONTRIBUTING.rst": {}, 
-  "HISTORY.rst": {}, 
+  },
+  "CONTRIBUTING.rst": {},
+  "HISTORY.rst": {},
   "LICENSE": {
     "license": "21ExMhSzB2uXQuU1VoH7++nrb4u6TbesqGtJDpM39OLPWft9SJ2tJ956R6foYmkI9VuJay7SUrhFLPxxMEHLxg=="
-  }, 
+  },
   "MANIFEST.in": {
     "pysetup": "vzgcfdwg7fafu0G3HEmFsZnC8jB8sa4zeSFQ2ReZO+pUfGeynOcw4+CIzP/ZV7n5nmpGGI7xqcdcPtOFfoivdQ=="
-  }, 
+  },
   "README.rst": {
     "doc": "z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg=="
-  }, 
+  },
   "doc/Makefile": {
     "sphinx": "C58jxdu8XJNOoaWOw7VWy4LwFmS8lTQt/JeZLt5JozMSJ503plOZchucx+vAEzELbx/Czs/h9pshe9s+9HeOeQ=="
-  }, 
-  "doc/_static/nonempty.txt": {}, 
-  "doc/authors.rst": {}, 
+  },
+  "doc/_static/nonempty.txt": {},
+  "doc/authors.rst": {},
   "doc/conf.py": {
-    "sphinx": "L2BgoD4RtluNyBy0I7xJvIdvrswg9S4TNQvRWIc9VLtmFOAwMLV3eqxQowQOGYCqLlRxigfl63xDkYU6tWxTfg=="
-  }, 
-  "doc/contributing.rst": {}, 
-  "doc/history.rst": {}, 
-  "doc/index.rst": {}, 
-  "doc/installation.rst": {}, 
+    "sphinx": "yYIpO/VXqhdm3/IPx1gHFXq5MSAYJ/FAbcoQuRdo24pE8Oix0GmdaxLy9j2tnHIhb2PhVyZu/AwBFNVJvlCTEQ=="
+  },
+  "doc/contributing.rst": {},
+  "doc/history.rst": {},
+  "doc/index.rst": {},
+  "doc/installation.rst": {},
   "doc/make.bat": {
     "sphinx": "oA67PK7JSR3w9u1V0gOXFZAb8qgfgUJ0wQ46cVXu7M3iJyAbLf76WkEqw6Y1r5Q6EvHAogcjmImdGsOpiYZ22g=="
-  }, 
-  "doc/readme.rst": {}, 
-  "doc/usage.rst": {}, 
+  },
+  "doc/readme.rst": {},
+  "doc/usage.rst": {},
   "dvlpt_requirements.txt": {
-    "pysetup": "iVZzb/1gNMgo9kQ5ZWaIE2HrO9m4aClusQCdtA1zgxu2zmzOke81noQxg7d0TBCD/YAUaJtu7pqYz8fihmyURg=="
-  }, 
+    "pysetup": "iQPToDK+CjXdj5CD0ifn+Y4yttoE1opIGZQNnH6j7XEln77ieCD0G/pXH1yrzouhtS7KrOZEf31N4xzWfGiyhg=="
+  },
   "requirements.txt": {
     "pysetup": "/5djJXLbrvuFk7LIgtfgYR8RnQrY5BEmOB4zEd0PrKeswR/8sQkzj4yKy7Zl3LAdRzYjPDhWiRkS1oMCG4FX7Q=="
-  }, 
+  },
   "setup.cfg": {
-    "pysetup": "1iCSDvs9xY0GOgde2dHQdpu5siqLRSbSiVZr6vEMin886x1NKrTLw0f1AJuSUwPfsoXa1a1EfRsDFadXx3Qy8A=="
-  }, 
-  "setup.py": {}, 
+    "pysetup": "UBpSe3JlrOFObrL3QayO3NwddsNJ9n66U7v2aMLJDbK3iALpYizIMuyjmghzMNBBIGdo0pOZMEHtGgrslXRsvA=="
+  },
+  "setup.py": {
+    "pysetup.call": "2wHuP94SpWKZpqOzExkQGTxnhGPgBHK3qOdPn0Ncstj5FkZ7FBGGM/inqAXaI4QLKQtTNlOUYRGSkYUWAUcf1w==",
+    "pysetup.kwds": "mqRI1B0Z1W32d1bS51xcE1oAu6yOcz0yzaRC6Q61UAKVFwqC9miHgFVKysk5LPX1HImpZ0M3NEcEFJLwnNiW1Q=="
+  },
   "src/openalea/deploy/__init__.py": {
     "base": "gR33dW0qqYmsV9NSNB+DD8XmuxnC2t0mKjnMoU5728qh97fSER6MbX+3QKxpZDLByZToaAay4xhx8acxketJmA=="
-  }, 
+  },
   "src/openalea/deploy/version.py": {
     "version": "2F7YJ8P0ABYiKJOsZS/50qMvpV2vqXSe0GUillb/VnTMebRbk+Vgdb4TpNZiLBY1MAVo81vLLnIRcJN/67g5JA=="
-  }, 
+  },
   "test/__init__.py": {}
 }

@@ -3,7 +3,7 @@
     "auto_install": true,
     "install_front_end": "stdout",
     "use_prompts": false,
-    "version": 3
+    "version": 5
   },
   "base": {
     "authors": [
@@ -25,6 +25,7 @@
       ]
     ],
     "namespace": "openalea",
+    "namespace_method": "setuptools",
     "pkgname": "deploy",
     "url": "https://openalea.gforge.inria.fr"
   },
@@ -56,7 +57,9 @@
     "autodoc_dvlpt": true,
     "theme": "default"
   },
-  "test": {},
+  "test": {
+    "suite_name": "nose"
+  },
   "version": {
     "major": 2,
     "minor": 1,

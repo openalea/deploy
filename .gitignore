@@ -80,8 +80,6 @@ target/
 
 # svn
 .svn
-
-
 # sphinx autogen file
 doc/_dvlpt/
 

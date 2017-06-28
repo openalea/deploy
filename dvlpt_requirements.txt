@@ -1,6 +1,7 @@
 # {# pkglts, pysetup
 mock
 nose
+pytest
 sphinx
 
 # #}
