@@ -39,9 +39,7 @@ setup_kwds = dict(
     install_requires=[
         ],
     tests_require=[
-        "mock",
         "nose",
-        "pytest",
         "sphinx",
         ],
     entry_points={},

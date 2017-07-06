@@ -34,7 +34,7 @@
   "doc/readme.rst": {},
   "doc/usage.rst": {},
   "dvlpt_requirements.txt": {
-    "pysetup": "iQPToDK+CjXdj5CD0ifn+Y4yttoE1opIGZQNnH6j7XEln77ieCD0G/pXH1yrzouhtS7KrOZEf31N4xzWfGiyhg=="
+    "pysetup": "8eNpamm1PyQIOW7x+U6Yga2/u9XOa1sFh1eWkDR8IUQEbiPaBvZbqg73T0ygFqrGUtRWKXgRdDCFzS+SY5NjUA=="
   },
   "requirements.txt": {
     "pysetup": "/5djJXLbrvuFk7LIgtfgYR8RnQrY5BEmOB4zEd0PrKeswR/8sQkzj4yKy7Zl3LAdRzYjPDhWiRkS1oMCG4FX7Q=="
@@ -44,7 +44,7 @@
   },
   "setup.py": {
     "pysetup.call": "2wHuP94SpWKZpqOzExkQGTxnhGPgBHK3qOdPn0Ncstj5FkZ7FBGGM/inqAXaI4QLKQtTNlOUYRGSkYUWAUcf1w==",
-    "pysetup.kwds": "mqRI1B0Z1W32d1bS51xcE1oAu6yOcz0yzaRC6Q61UAKVFwqC9miHgFVKysk5LPX1HImpZ0M3NEcEFJLwnNiW1Q=="
+    "pysetup.kwds": "nQ3Q7qQkqYHF9A9dWo2FluhKpLeErH/SmTLVeyWzMotc/Sg2guRwzxsOFrP2ehlBCLn1QgOL2lzRiQL9t3j3aw=="
   },
   "src/openalea/deploy/__init__.py": {
     "base": "gR33dW0qqYmsV9NSNB+DD8XmuxnC2t0mKjnMoU5728qh97fSER6MbX+3QKxpZDLByZToaAay4xhx8acxketJmA=="
