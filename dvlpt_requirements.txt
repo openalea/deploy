@@ -1,5 +1,6 @@
 # {# pkglts, pysetup
-nose
-sphinx
+mock # conda install mock
+nose # conda install nose
+sphinx # conda install sphinx
 
 # #}

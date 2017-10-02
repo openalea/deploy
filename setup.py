@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 
 short_descr = "OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools."
 readme = open('README.rst').read()
-history = open('HISTORY.rst').read().replace('.. :changelog:', '')
+history = open('HISTORY.rst').read()
 
 
 # find version number in src/openalea/deploy/version.py
@@ -25,8 +25,8 @@ setup_kwds = dict(
     version=version["__version__"],
     description=short_descr,
     long_description=readme + '\n\n' + history,
-    author="openalea, Christophe Pradal, Samuel Dufour-Kowalski, revesansparole, ",
-    author_email="openalea@inria.fr, christophe dot pradal at cirad dot fr, dufourko at cirad dot fr, revesansparole@gmail.com, ",
+    author="openalea",
+    author_email="openalea@inria.fr",
     url='https://openalea.gforge.inria.fr',
     license='cecill-c',
     zip_safe=False,
@@ -39,6 +39,7 @@ setup_kwds = dict(
     install_requires=[
         ],
     tests_require=[
+        "mock",
         "nose",
         "sphinx",
         ],
