@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Package (Undefined, 'deploy') documentation build configuration file, created by
+# Package deploy documentation build configuration file, created by
 # sphinx-quickstart on Tue Jul  9 22:26:36 2013.
 #
 # This file is execfile()d with the current directory set to its
@@ -86,7 +86,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'openalea.deploy'
-copyright = u'2015, openalea.deploy'
+copyright = u'2016-2017, openalea.deploy'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout

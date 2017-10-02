@@ -1,68 +1,70 @@
 {
   "_pkglts": {
-    "auto_install": true,
-    "install_front_end": "stdout",
-    "use_prompts": false,
-    "version": 6
-  },
+    "auto_install": true, 
+    "install_front_end": "stdout", 
+    "use_prompts": false, 
+    "version": 8
+  }, 
   "base": {
     "authors": [
       [
-        "openalea",
+        "openalea", 
         "openalea@inria.fr"
-      ],
+      ], 
       [
-        "Christophe Pradal",
+        "Christophe Pradal", 
         "christophe dot pradal at cirad dot fr"
-      ],
+      ], 
       [
-        "Samuel Dufour-Kowalski",
+        "Samuel Dufour-Kowalski", 
         "dufourko at cirad dot fr"
-      ],
+      ], 
       [
-        "revesansparole",
+        "revesansparole", 
         "revesansparole@gmail.com"
       ]
-    ],
-    "namespace": "openalea",
-    "namespace_method": "setuptools",
-    "pkgname": "deploy",
+    ], 
+    "namespace": "openalea", 
+    "namespace_method": "setuptools", 
+    "pkgname": "deploy", 
     "url": "https://openalea.gforge.inria.fr"
-  },
+  }, 
   "doc": {
-    "description": "OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools.",
+    "description": "OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools.", 
+    "fmt": "rst", 
     "keywords": [
-      "setuptools",
+      "setuptools", 
       "openalea"
     ]
-  },
+  }, 
   "github": {
-    "owner": "{{ base.authors[0][0] }}",
-    "project": "{{ base.pkgname }}",
+    "owner": "{{ base.authors[0][0] }}", 
+    "project": "{{ base.pkgname }}", 
     "url": "https://github.com/{{ github.owner }}/{{ github.project }}"
-  },
+  }, 
   "license": {
-    "name": "cecill-c",
-    "organization": "CIRAD/Inria",
-    "project": "{{ base.pkgname }}",
+    "name": "cecill-c", 
+    "organization": "CIRAD/Inria", 
+    "project": "{{ base.pkgname }}", 
     "year": "2016-2017"
-  },
+  }, 
   "pysetup": {
     "intended_versions": [
       "27"
-    ],
+    ], 
     "require": []
-  },
+  }, 
   "sphinx": {
-    "autodoc_dvlpt": true,
+    "autodoc_dvlpt": true, 
+    "build_dir": "build/sphinx", 
     "theme": "default"
-  },
+  }, 
   "test": {
     "suite_name": "nose"
-  },
+  }, 
   "version": {
-    "major": 2,
-    "minor": 1,
-    "post": 3
+    "major": 2, 
+    "minor": 1, 
+    "post": 4
   }
 }
