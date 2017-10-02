@@ -376,7 +376,7 @@ class scons(Command):
                      'External parameters to pass to scons.'),
                     ('scons-path=',
                      None,
-                     'Optional scons executable path. eg : C:\Python27\scons.bat for windows.')]
+                     'Optional scons executable path. eg : C:\Python27\scons.bat for windows.'),]
 
     def initialize_options(self):
         self.outfiles = None
@@ -385,6 +385,7 @@ class scons(Command):
         self.build_dir = None  # build directory
         self.scons_ext_param = None  # scons external parameters
         self.scons_path = None
+        self.scons_install = None # install in conda env
 
     def finalize_options(self):
 
@@ -397,6 +398,12 @@ class scons(Command):
 
         if (not self.scons_parameters):
             self.scons_parameters = ""
+
+        if not self.scons_install:
+            if is_conda_env():
+                self.scons_install = True
+
+
 
         self.set_undefined_options('build_ext',
                                    ('build_lib', 'build_dir'),
@@ -436,6 +443,14 @@ class scons(Command):
 
                 # External parameters (from the command line)
                 externp = self.scons_ext_param
+
+                # Install in the conda prefix
+                if self.scons_install:
+                    print "Run SCONS install in conda environment"
+
+                    prefix = conda_prefix()
+                    externp += 'build_libdir=%s/lib build_bindir=%s/bin build_includedir=%s/include'%(prefix, prefix, prefix)
+
 
                 if (self.scons_path):
                     command = self.scons_path
@@ -747,6 +762,7 @@ class alea_install(old_easy_install):
 
     def set_system(self):
         """ Set environment """
+
         if ("win32" in sys.platform):
             # install pywin32
             try:
@@ -822,6 +838,7 @@ def set_env(dyn_lib=None):
     if condaenv:
         # print "CONDA Environment Detected. set_env do something:", dyn_lib
         dyn_lib = install_lib.install_lib(dyn_lib)
+
         # print list(get_all_lib_dirs(precedence=DEV_DIST))
         return
 
