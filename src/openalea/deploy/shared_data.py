@@ -20,7 +20,7 @@ import types
 import os
 from os.path import join as pj
 from os.path import realpath, isdir, isfile
-from openalea.core.path import path
+from path import path
 
 __license__ = "Cecill-C"
 __revision__ = " $Id: gforge.py 2243 2010-02-08 17:08:47Z cokelaer $ "
