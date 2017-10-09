@@ -3,7 +3,7 @@
 #
 #       OpenAlea.Deploy : OpenAlea setuptools extension
 #
-#       Copyright 2006-2015 INRIA - CIRAD - INRA
+#       Copyright 2006-2017 INRIA - CIRAD - INRA
 #
 #       File author(s): Samuel Dufour-Kowalski <samuel.dufour@sophia.inria.fr>
 #                       Christophe Pradal <christophe.prada@cirad.fr>

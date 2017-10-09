@@ -448,8 +448,9 @@ class scons(Command):
                 if self.scons_install:
                     print "Run SCONS install in conda environment"
 
-                    prefix = conda_prefix()
-                    externp += 'build_libdir=%s/lib build_bindir=%s/bin build_includedir=%s/include'%(prefix, prefix, prefix)
+                    if is_conda_build():
+                        prefix = conda_prefix()
+                        externp += 'build_libdir=%s/lib build_bindir=%s/bin build_includedir=%s/include'%(prefix, prefix, prefix)
 
 
                 if (self.scons_path):

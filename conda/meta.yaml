@@ -1,4 +1,4 @@
-{% set version = "2.1.4" %}
+{% set version = "2.1.5" %}
 
 package:
   name: openalea.deploy
@@ -21,6 +21,7 @@ requirements:
     - python
     - setuptools
     - pywin32 # [win]
+    - path.py
 
 test:
   imports:

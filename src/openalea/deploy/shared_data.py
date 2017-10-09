@@ -20,7 +20,16 @@ import types
 import os
 from os.path import join as pj
 from os.path import realpath, isdir, isfile
-from openalea.core.path import path
+try:
+    from path import Path
+except ImportError:
+    try:
+        from path import path as Path
+    except ImportError:
+        try:
+            from openalea.core.path import path as Path
+        except ImportError:
+            from IPython.external.path import path as Path
 
 __license__ = "Cecill-C"
 __revision__ = " $Id: gforge.py 2243 2010-02-08 17:08:47Z cokelaer $ "
@@ -74,7 +83,7 @@ def shared_data(package_path, filename=None, pattern=None,
             return None
         else:
             package_path = package_path[0]
-    package_path = path(package_path)
+    package_path = Path(package_path)
     ff = package_path / share_path
     ff = ff.realpath()
     shared_data_path = None
