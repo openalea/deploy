@@ -36,6 +36,15 @@ from distutils.dir_util import mkpath
 from distutils.sysconfig import get_python_lib
 
 
+def get_conda_dyn_lib():
+    """ Return the path for dynamic library in conda environment """
+    env_dir = conda_prefix()
+    if ("posix" in os.name):
+        dyn_dir = os.path.join(env_dir, 'lib')
+    else : # Windows
+        dyn_dir = os.path.join(env_dir, 'Library', 'lib')
+    return dyn_dir
+
 def get_default_dyn_lib():
     """Return the default path for dynamic library."""
     basedir = get_python_lib()
@@ -50,9 +59,7 @@ def get_default_dyn_lib():
 
     # Conda environment
     if is_conda_env():
-        env_dir = conda_prefix()
-        dyn_dir = os.path.join(env_dir, 'lib')
-        return dyn_dir
+        return get_conda_dyn_lib()
 
     # Standard environment
     if ("posix" in os.name):
@@ -209,10 +216,8 @@ def install_lib(lib_dir):
     """
 
     # Conda environment
-    if is_conda_env():
-        env_dir = conda_prefix()
-        dyn_dir = os.path.join(env_dir, 'lib')
-        return dyn_dir
+    #if is_conda_env():
+    #    return get_conda_dyn_lib()
 
     if not lib_dir:
         lib_dir = get_dyn_lib_dir()
@@ -238,7 +243,6 @@ def install_lib(lib_dir):
 
     # install lib
     for d in egglibdirs:
-
         try:
             src_dir = os.path.abspath(d)
             dst_dir = os.path.abspath(lib_dir)
