@@ -449,8 +449,13 @@ class scons(Command):
                     print "Run SCONS install in conda environment"
 
                     if is_conda_build():
+                        # Fred remarks : Is it realy usefull ? Scons can be parameterized to find such repository
                         prefix = conda_prefix()
-                        externp += 'build_libdir=%s/lib build_bindir=%s/bin build_includedir=%s/include'%(prefix, prefix, prefix)
+                        if not ("posix" in os.name): prefix = os.path.join(prefix, 'Library')
+                        externp += 'libdir=%s/lib bindir=%s/bin includedir=%s/include'%(prefix, prefix, prefix)
+
+                    # To have scons installation, it should be called with the install target. By default it is 'build'
+                    externp+= ' install' 
 
 
                 if (self.scons_path):
