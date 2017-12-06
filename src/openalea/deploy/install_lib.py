@@ -3,7 +3,7 @@
 #
 #       OpenAlea.Deploy : OpenAlea setuptools extension
 #
-#       Copyright 2006-2015 INRIA - CIRAD - INRA
+#       Copyright 2006-2017 INRIA - CIRAD - INRA
 #
 #       File author(s): Samuel Dufour-Kowalski <samuel.dufour@sophia.inria.fr>
 #                       Christophe Pradal <christophe.prada@cirad.fr>
@@ -22,28 +22,36 @@ The egm file describes the directory the dynamic library is originated from.
 
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
+EGG_MARKER_EXTENSION = ".egm"
 
 import os
 import shutil
 import glob
 from os.path import join
 
-EGG_MARKER_EXTENSION = ".egm"
 
 from openalea.deploy.util import get_all_lib_dirs, get_base_dir, INSTALL_DIST
-from openalea.deploy.util import is_virtual_env, is_conda_env
+from openalea.deploy.util import is_virtual_env, is_conda_env, conda_prefix
 from distutils.dir_util import mkpath
 from distutils.sysconfig import get_python_lib
 
 
-def get_default_dyn_lib():
-    """ Return the default path for dynamic library """
+def get_conda_dyn_lib():
+    """ Return the path for dynamic library in conda environment """
+    env_dir = conda_prefix()
+    if ("posix" in os.name):
+        dyn_dir = os.path.join(env_dir, 'lib')
+    else : # Windows
+        dyn_dir = os.path.join(env_dir, 'Library', 'lib')
+    return dyn_dir
 
+def get_default_dyn_lib():
+    """Return the default path for dynamic library."""
     basedir = get_python_lib()
 
     # Virtual environment
-    if(is_virtual_env()):
-        if("posix" in os.name):
+    if (is_virtual_env()):
+        if ("posix" in os.name):
             return os.path.abspath(
                 os.path.join(basedir, '../../lib'))
         else:
@@ -51,12 +59,10 @@ def get_default_dyn_lib():
 
     # Conda environment
     if is_conda_env():
-        env_dir = os.path.abspath(os.environ['CONDA_ENV_PATH'])
-        dyn_dir = os.path.join(env_dir, 'lib')
-        return dyn_dir
+        return get_conda_dyn_lib()
 
     # Standard environment
-    if("posix" in os.name):
+    if ("posix" in os.name):
         return "/usr/local/lib"
     else:
         basedir = get_python_lib()
@@ -68,6 +74,8 @@ def get_dyn_lib_dir(use_default=True):
     Return the shared lib directory
     if use_default : return default directory if not defined
     """
+    if is_conda_env():
+        return get_default_dyn_lib()
 
     bdir = get_base_dir("openalea.deploy")
     up_dir = os.path.abspath(join(bdir, os.path.pardir))
@@ -80,7 +88,7 @@ def get_dyn_lib_dir(use_default=True):
 
     except Exception:
 
-        if(use_default):
+        if (use_default):
             lib_dir = get_default_dyn_lib()
         else:
             lib_dir = None
@@ -116,6 +124,7 @@ def is_lib(filename):
     for pat in (".dll", ".so", ".a", ".lib", ".dylib", ".la", ".framework"):
         if filename.endswith(pat):
             return True
+
     # Add linux libraries lib.so.1.3.4
     if '.so.' in filename:
         try:
@@ -149,17 +158,17 @@ def link_lib(src, dst):
         f.close()
 
         # File is identical : return
-        if(mark == src and os.path.exists(dst)):
+        if (mark == src and os.path.exists(dst)):
             return False
     except:
         pass
 
     # copy
     print "Installing %s -> %s" % (src, dst)
-    if(os.path.exists(dst)):
+    if (os.path.exists(dst)):
         os.unlink(dst)
 
-    if(hasattr(os, 'symlink')):
+    if (hasattr(os, 'symlink')):
         os.symlink(src, dst)
     else:
         shutil.copy2(src, dst)
@@ -183,7 +192,7 @@ def clean_lib(lib_dir, clean_all=False):
         srcfile = f.read()
         f.close()
 
-        if(not os.path.exists(srcfile) or clean_all):
+        if (not os.path.exists(srcfile) or clean_all):
             libfile = egm[:- len(EGG_MARKER_EXTENSION)]
 
             try:
@@ -205,11 +214,16 @@ def install_lib(lib_dir):
     if None, use previous dir or default
     Return real lib_dir
     """
-    if(not lib_dir):
+
+    # Conda environment
+    #if is_conda_env():
+    #    return get_conda_dyn_lib()
+
+    if not lib_dir:
         lib_dir = get_dyn_lib_dir()
 
     # Create directory
-    if(not os.path.exists(lib_dir)):
+    if not os.path.exists(lib_dir):
         mkpath(lib_dir)
 
     old_lib_dir = get_dyn_lib_dir(False)
@@ -217,10 +231,10 @@ def install_lib(lib_dir):
     clean_all = (changed and old_lib_dir)
 
     # remove unused lib
-    if(old_lib_dir):
+    if (old_lib_dir):
         clean_lib(old_lib_dir, clean_all)
 
-    if(changed):
+    if (changed):
         set_dyn_lib_dir(lib_dir)
 
     # get all the intial package lib_dirs before the copy of the sh lib.
@@ -229,7 +243,6 @@ def install_lib(lib_dir):
 
     # install lib
     for d in egglibdirs:
-
         try:
             src_dir = os.path.abspath(d)
             dst_dir = os.path.abspath(lib_dir)

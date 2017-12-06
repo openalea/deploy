@@ -1,5 +1,3 @@
-.. testsetup::
-
 Developper Documentation
 ========================
 

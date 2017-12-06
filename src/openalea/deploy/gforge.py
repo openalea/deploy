@@ -25,8 +25,8 @@ and args into valid soap request and return results into Python.
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
-#import pkg_resources
-#pkg_resources.require('soappy')
+# import pkg_resources
+# pkg_resources.require('soappy')
 
 import os
 from SOAPpy import SOAPProxy
@@ -45,44 +45,39 @@ class GForgeProxy(object):
 
     def __init__(self):
         # SOAP proxy 
-        self.server = SOAPProxy(self.url, namespace=self.namespace, 
-                                encoding='ISO-8859-1') 
+        self.server = SOAPProxy(self.url, namespace=self.namespace,
+                                encoding='ISO-8859-1')
 
-        #Uncomment the following lines for SOAP Debug informations
-        #self.server.config.dumpSOAPOut = 1
-        #self.server.config.dumpSOAPIn = 1
+        # Uncomment the following lines for SOAP Debug informations
+        # self.server.config.dumpSOAPOut = 1
+        # self.server.config.dumpSOAPIn = 1
 
         # Global session id
         self.session = None
         self.userid = None
         self.passwd = None
 
-
-
-
     def login(self, userid=None, passwd=None):
         """  Open a session """
         import gforge_util
         rc_userid, rc_passwd = gforge_util.find_login_passwd()
         userid = userid or rc_userid
-        passwd = passwd or rc_passwd       
+        passwd = passwd or rc_passwd
 
         try:
             self.session = self.server.login(userid, passwd)
             self.userid = userid
             self.passwd = passwd
 
-        except Exception,e :
+        except Exception, e:
             print e
-        
-            return self.session
 
+            return self.session
 
     def logout(self):
         """ Close the session """
         self.server.logout(self.session)
         self.session = None
-
 
     def get_project_id(self, project_name):
         """ 
@@ -91,26 +86,24 @@ class GForgeProxy(object):
         """
         try:
             ret = self.server.getGroupsByName(self.session, [project_name])
-            id = ret[0]['group_id'] 
+            id = ret[0]['group_id']
             return id
 
         except Exception:
             return -1
-
 
     def get_project_details(self, project_id):
         """ 
         Return the project details in a dictionary
         @param project_id : a number or a name
         """
-    
+
         project_id = self.convert_to_id(project_id)
         
         ret = self.server.getGroups(self.session, [project_id])
         id = ret[0]
 
         return id
-
 
     def get_packages(self, project_id):
         """ 
@@ -120,8 +113,7 @@ class GForgeProxy(object):
 
         (project_id,) = self.convert_to_id(project_id)
         pkgs = self.server.getPackages(self.session, project_id)
-        return [ pkg['name'] for pkg in pkgs ]
-                     
+        return [pkg['name'] for pkg in pkgs]
 
     def get_package_id(self, project_id, pkg_name):
         """ 
@@ -135,14 +127,13 @@ class GForgeProxy(object):
             pkgs = self.server.getPackages(self.session, project_id)
 
             for pkg in pkgs:
-                if(pkg['name'].lower() == pkg_name):
+                if (pkg['name'].lower() == pkg_name):
                     return pkg['package_id']
 
         except:
             pass
 
         return -1
-
 
     def get_releases(self, project_id, package_id):
         """ 
@@ -153,8 +144,7 @@ class GForgeProxy(object):
         project_id, package_id = self.convert_to_id(project_id, package_id)
 
         rels = self.server.getReleases(self.session, project_id, package_id)
-        return [ rel['name'] for rel in rels ]
-
+        return [rel['name'] for rel in rels]
 
     def get_release_id(self, project_id, package_id, release_name):
         """ 
@@ -166,16 +156,16 @@ class GForgeProxy(object):
         project_id, package_id = self.convert_to_id(project_id, package_id)
 
         try:
-            releases = self.server.getReleases(self.session, project_id, package_id)
+            releases = self.server.getReleases(self.session, project_id,
+                                               package_id)
 
             for rel in releases:
-                if(rel['name'].lower() == release_name):
+                if (rel['name'].lower() == release_name):
                     return rel['release_id']
         except:
             pass
 
         return -1
-
 
     def get_release_details(self, project_id, package_id, release_id):
         """ 
@@ -189,13 +179,13 @@ class GForgeProxy(object):
             self.convert_to_id(project_id, package_id, release_id)
 
         try:
-            releases = self.server.getReleases(self.session, 
+            releases = self.server.getReleases(self.session,
                                                project_id, package_id)
 
             for rel in releases:
                 id = rel['release_id']
 
-                if(id == release_id):
+                if (id == release_id):
                     name = rel["name"]
                     date = rel["release_date"]
                     notes = rel["notes"]
@@ -208,7 +198,6 @@ class GForgeProxy(object):
         
         return (None, None, None, None,)
 
-
     def get_files(self, project_id, package_id, release_id):
         """ 
         Return a list of package_name 
@@ -220,9 +209,9 @@ class GForgeProxy(object):
         project_id, package_id, release_id = \
             self.convert_to_id(project_id, package_id, release_id)
 
-        files = self.server.getFiles(self.session, project_id, package_id, release_id)
-        return [ f['name'] for f in files ]
-
+        files = self.server.getFiles(self.session, project_id, package_id,
+                                     release_id)
+        return [f['name'] for f in files]
 
     def get_file_id(self, project_id, package_id, release_id, file_name):
         """ 
@@ -235,13 +224,14 @@ class GForgeProxy(object):
             self.convert_to_id(project_id, package_id, release_id)
 
         try:
-            files = self.server.getFiles(self.session, project_id, package_id, release_id)
+            files = self.server.getFiles(self.session, project_id, package_id,
+                                         release_id)
 
             for f in files:
                 name = f['name']
                 id = f['file_id']
-            
-                if(name.lower() == file_name):
+
+                if (name.lower() == file_name):
                     return id
 
         except:
@@ -249,8 +239,8 @@ class GForgeProxy(object):
 
         return -1
 
-
-    def get_file(self, project_id, package_id, release_id, file_id, filename=None):
+    def get_file(self, project_id, package_id, release_id, file_id,
+                 filename=None):
         """ 
         Download a file given its id 
         If filename is not None, write file in filename
@@ -264,20 +254,21 @@ class GForgeProxy(object):
         project_id, package_id, release_id, file_id = \
             self.convert_to_id(project_id, package_id, release_id, file_id)
 
-
-        if(not filename):
-            files = self.server.getFiles(self.session, project_id, package_id, release_id)
+        if (not filename):
+            files = self.server.getFiles(self.session, project_id, package_id,
+                                         release_id)
 
             for f in files:
                 name = f['name']
                 id = f['file_id']
-                if(id == file_id):
+                if (id == file_id):
                     filename = name
 
-        if(not filename):
+        if (not filename):
             raise RuntimeError("Unknown file_id")
 
-        filestr = self.server.getFile(self.session, project_id, package_id, release_id, file_id)
+        filestr = self.server.getFile(self.session, project_id, package_id,
+                                      release_id, file_id)
 
         # convert to binary structure
         binstr = base64.b64decode(filestr)
@@ -289,9 +280,7 @@ class GForgeProxy(object):
 
         return filename
 
-
-    
-    def convert_to_id(self, project_id=None, package_id=None, 
+    def convert_to_id(self, project_id=None, package_id=None,
                       release_id=None, file_id=None):
         """
         Utility function : Convert full names to id(s)
@@ -303,61 +292,58 @@ class GForgeProxy(object):
         """
 
         ret = []
-        if(project_id and isinstance(project_id, str)):
+        if (project_id and isinstance(project_id, str)):
             project_id = self.get_project_id(project_id)
-            
-        if(package_id and isinstance(package_id, str)):
+
+        if (package_id and isinstance(package_id, str)):
             package_id = self.get_package_id(project_id, package_id)
 
-        if(release_id and isinstance(release_id, str)):
+        if (release_id and isinstance(release_id, str)):
             release_id = self.get_release_id(project_id, package_id, release_id)
 
-        if(file_id and isinstance(file_id, str)):
-            file_id = self.get_file_id(project_id, package_id, release_id, file_id)
+        if (file_id and isinstance(file_id, str)):
+            file_id = self.get_file_id(project_id, package_id, release_id,
+                                       file_id)
 
         for id in project_id, package_id, release_id, file_id:
-            if(not id): break
+            if (not id): break
             ret.append(id)
 
         return ret
 
-
-################################################################################
+    ################################################################################
     def add_package(self, project_id, package_name, public=True):
         """ 
         Create a new package 
         @param project_id : a number or a name
         """
-    
+
         (project_id,) = self.convert_to_id(project_id)
-    
+
         try:
-            return self.server.addPackage(self.session, 
+            return self.server.addPackage(self.session,
                                           project_id, package_name, int(public))
         except Exception, e:
             print e
 
-
-    def add_release(self, project_id, package_id, release_name, 
+    def add_release(self, project_id, package_id, release_name,
                     notes, changes):
         """ 
         Create a new release 
         @param project_id : a number or a name
         @param package_id : a number or a name
         """
-    
-        project_id, package_id = self.convert_to_id(project_id, package_id,)
+
+        project_id, package_id = self.convert_to_id(project_id, package_id, )
 
         try:
-            return self.server.addRelease(self.session, project_id, package_id, 
+            return self.server.addRelease(self.session, project_id, package_id,
                                           release_name, notes, changes)
         except Exception, e:
             print e
-        
 
-
-    def add_big_file(self, project_id, package_id, release_id, filename, 
-                 proc_type="any", file_type="other"):
+    def add_big_file(self, project_id, package_id, release_id, filename,
+                     proc_type="any", file_type="other"):
         """ 
         Add a file in a particular release (for big file)
         @param project_id : a number or a name
@@ -374,20 +360,20 @@ class GForgeProxy(object):
         type = type_id.get(file_type, type_id['other'])
         processor = proc_id.get(proc_type, proc_id['any'])
 
-        print "Uploading %s..."%(name,)
+        print "Uploading %s..." % (name,)
 
         try:
             import gforge_util
             gforge_util.gforge_login(self.userid, self.passwd)
-            gforge_util.upload_file(filename, project_id, package_id, release_id, type, processor)
+            gforge_util.upload_file(filename, project_id, package_id,
+                                    release_id, type, processor)
 
             print "Done."
-            
+
         except Exception, e:
             print e
 
-    
-    def add_file(self, project_id, package_id, release_id, filename, 
+    def add_file(self, project_id, package_id, release_id, filename,
                  proc_type="any", file_type="other"):
         """ 
         Add a file in a particular release 
@@ -403,7 +389,7 @@ class GForgeProxy(object):
 
         # convert file contents
         f = open(filename, "rb")
-        binstr =  f.read()
+        binstr = f.read()
         f.close()
         filestr = base64.b64encode(binstr)
 
@@ -413,19 +399,20 @@ class GForgeProxy(object):
 
         release_time = int(time.mktime(time.localtime()))
 
-        print "Uploading %s..."%(name,),
+        print "Uploading %s..." % (name,),
 
         try:
             
-            ret = self.server.addFile(self.session, _project_id, _package_id, _release_id,
-                                 name, filestr, type, processor, release_time)
+            ret = self.server.addFile(self.session, _project_id, _package_id,
+                                      _release_id,
+                                      name, filestr, type, processor,
+                                      release_time)
             print "Done."
             return ret
         
         except Exception, e:
-            return self.add_big_file(project_id,package_id, release_id, 
-                filename, proc_type, file_type)
-
+            return self.add_big_file(project_id, package_id, release_id,
+                                     filename, proc_type, file_type)
 
     def remove_package(self, project_id, package_id):
         """
@@ -439,8 +426,6 @@ class GForgeProxy(object):
         gforge_util.gforge_login(self.userid, self.passwd)
         gforge_util.delete_package(project_id, package_id)
 
-
-
     def remove_release(self, project_id, package_id, release_id):
         """
         Remove a package
@@ -453,7 +438,6 @@ class GForgeProxy(object):
         gforge_util.gforge_login(self.userid, self.passwd)
         gforge_util.delete_release(project_id, package_id, release_id)
 
-
     def remove_file(self, project_id, package_id, release_id, file_id):
         """remove a file"""
         project_id, package_id, release_id, file_id = \
@@ -461,56 +445,49 @@ class GForgeProxy(object):
         
         import gforge_util
         gforge_util.gforge_login(self.userid, self.passwd)
-        print 'Trying to delete file %s'%file_id,
+        print 'Trying to delete file %s' % file_id,
         gforge_util.delete_file(project_id, package_id, release_id, file_id)
         print 'Done.'
 
 
-
 # CONST
 
-proc_id = { "i386" : 1000,
-            "ppc": 2000,
-            "mips" : 3000,
-            "sparc" : 4000,
-            "ultrasparc": 5000,
-            "ia64": 6000,
-            "alpha" : 7000,
-            "any" : 8000,
-            "other" : 9999,
-            }
+proc_id = {"i386": 1000,
+           "ppc": 2000,
+           "mips": 3000,
+           "sparc": 4000,
+           "ultrasparc": 5000,
+           "ia64": 6000,
+           "alpha": 7000,
+           "any": 8000,
+           "other": 9999,
+           }
 
-               
+type_id = {".deb": 1000,
+           ".rpm": 2000,
+           ".zip": 3000,
+           ".bz2": 3100,
+           ".gz": 3110,
+           "src .zip": 5000,
+           "src .bz2": 5010,
+           "src .gz": 5020,
+           "tar.gz": 5020,
+           "src .rpm": 5100,
+           "src other": 5900,
+           ".jpg": 8000,
+           ".txt": 8100,
+           ".html": 8200,
+           ".pdf": 8300,
+           ".dmg": 4000,
+           ".pkg": 4010,
+           "other": 9999,
+           "Other": 9999,
 
-              
-
-type_id = { ".deb" : 1000,
-            ".rpm": 2000,
-            ".zip" : 3000,
-            ".bz2" : 3100,
-            ".gz" : 3110,
-            "src .zip" : 5000,
-            "src .bz2" : 5010,
-            "src .gz" : 5020,
-            "tar.gz" : 5020,
-            "src .rpm" : 5100,
-            "src other" : 5900,	
-            ".jpg" : 8000,
-            ".txt" : 8100,
-            ".html" : 8200,
-            ".pdf" : 8300,
-            ".dmg" : 4000,
-            ".pkg" : 4010,
-            "other" : 9999,
-            "Other" : 9999,
-
-            }
-            
-            
-				
+           }
 
 ################################################################################
 import sys
+
 if __name__ == "__main__" or "nose" in sys.argv[0]:
 
     def test_login():
@@ -547,22 +524,23 @@ if __name__ == "__main__" or "nose" in sys.argv[0]:
         assert server.get_package_id(79, "openalea.deploy") == 1176
 
         assert server.get_package_id("openalea", "openalea.deploy") == \
-            server.get_package_id(79, "openalea.deploy")
+               server.get_package_id(79, "openalea.deploy")
     
-        
+
     def test_release():
         server = GForgeProxy()
-            
+
         assert len(server.get_releases(79, 1176)) > 0
-        assert server.get_releases(79, 1176) == server.get_releases("openalea", "openalea.deploy")
+        assert server.get_releases(79, 1176) == server.get_releases("openalea",
+                                                                    "openalea.deploy")
         
-        assert server.get_release_id(79, 1176, "0.3" ) == 1304
-        assert server.get_release_id(79, 1176, "0.3" ) == \
-            server.get_release_id("openalea", "openalea.deploy", "0.3")
+        assert server.get_release_id(79, 1176, "0.3") == 1304
+        assert server.get_release_id(79, 1176, "0.3") == \
+               server.get_release_id("openalea", "openalea.deploy", "0.3")
 
         assert server.get_release_details(79, 1176, 1304)[1] == 1185961860
         assert server.get_release_details(79, 1176, 1304) == \
-            server.get_release_details("openalea", "openalea.deploy", "0.3")
+               server.get_release_details("openalea", "openalea.deploy", "0.3")
 
 
     def test_file():
@@ -570,16 +548,20 @@ if __name__ == "__main__" or "nose" in sys.argv[0]:
 
         assert len(server.get_files(79, 1176, 1304)) > 0
         assert server.get_files(79, 1176, 1304) == \
-            server.get_files("openalea", "openalea.deploy", "0.3")
-                                                 
-        assert server.get_file_id(79, 1176, 1304, 'OpenAlea.Deploy-0.3.3.tar.gz') == 3698
+               server.get_files("openalea", "openalea.deploy", "0.3")
 
-        assert server.get_file_id(79, 1176, 1304, 'OpenAlea.Deploy-0.3.3.tar.gz') == \
-            server.get_file_id("openalea", "openalea.deploy", "0.3", 'OpenAlea.Deploy-0.3.3.tar.gz')
+        assert server.get_file_id(79, 1176, 1304,
+                                  'OpenAlea.Deploy-0.3.3.tar.gz') == 3698
+
+        assert server.get_file_id(79, 1176, 1304,
+                                  'OpenAlea.Deploy-0.3.3.tar.gz') == \
+               server.get_file_id("openalea", "openalea.deploy", "0.3",
+                                  'OpenAlea.Deploy-0.3.3.tar.gz')
 
         filename = server.get_file(79, 1176, 1304, 3698)
         assert server.get_file(79, 1176, 1304, 3698) == \
-            server.get_file("openalea", "openalea.deploy", "0.3", 'OpenAlea.Deploy-0.3.3.tar.gz')
+               server.get_file("openalea", "openalea.deploy", "0.3",
+                               'OpenAlea.Deploy-0.3.3.tar.gz')
 
         assert filename
 
@@ -601,11 +583,12 @@ if __name__ == "__main__" or "nose" in sys.argv[0]:
         server.add_release("openalea", "test_pkg", "0.1", "notes", "changes")
         assert server.get_release_id("openalea", "test_pkg", "0.1") > 0
 
-
-        server.add_file("openalea", "test_pkg", "0.1", "./core.tgz", file_type="srcgz")
+        server.add_file("openalea", "test_pkg", "0.1", "./core.tgz",
+                        file_type="srcgz")
         assert server.get_file_id("openalea", "test_pkg", "0.1", "core.tgz") > 0
 
-    def test_remove():    
+
+    def test_remove():
 
         server = GForgeProxy()
         server.login()
@@ -615,12 +598,11 @@ if __name__ == "__main__" or "nose" in sys.argv[0]:
             pass
 
         try:
-            server.add_release("openalea", "test_pkg", "test_release", "Test", "")
+            server.add_release("openalea", "test_pkg", "test_release", "Test",
+                               "")
         except:
             pass
-
 
         assert server.get_release_id("openalea", "test_pkg", "test_release") > 0
         server.remove_release("openalea", "test_pkg", "test_release")
         server.remove_package("openalea", "test_pkg")
-
