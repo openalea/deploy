@@ -1,5 +1,14 @@
+.. image:: https://img.shields.io/badge/License-GPL-blue.svg
+   :target: https://opensource.org/licenses/GPL-3.0
+
+.. image:: https://travis-ci.org/openalea/deploy.svg?branch=master
+    :target: https://travis-ci.org/openalea/deploy
+
+.. image:: https://ci.appveyor.com/api/projects/status/8d3qs5f00wriryo2/branch/master?svg=true
+   :target: https://ci.appveyor.com/project/fredboudon/deploy
+
 ========================
-openalea.deploy
+Openalea.Deploy
 ========================
 
 .. {# pkglts, doc
