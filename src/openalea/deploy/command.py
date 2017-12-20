@@ -479,18 +479,22 @@ class scons(Command):
                     # To have scons installation, it should be called with the install target. By default it is 'build'
                     externp+= ' install' 
 
-                command_param = ' '.join([file_param, build_param,
+                    command_param = ' '.join([file_param, build_param,
                                           param, externp])
-                commandstr = command + ' ' + command_param
+                    commandstr = command + ' ' + command_param
 
-                print commandstr
+                    print commandstr
 
-                # Run SCons
-                if (subprocess_enabled):
-                    retval = subprocess.call(commandstr, shell=True)
-                else:
-                    retval = os.system(commandstr)
+                    # Run SCons
+                    if (subprocess_enabled):
+                        retval = subprocess.call(commandstr, shell=True)
+                    else:
+                        retval = os.system(commandstr)
 
+                    # Test if command success with return value
+                    if (retval != 0):
+                        raise SconsError()
+                    
             except SconsError, i:
                 print i, " Failure..."
                 sys.exit(1)
