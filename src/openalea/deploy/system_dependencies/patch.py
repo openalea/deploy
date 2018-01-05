@@ -19,8 +19,8 @@ import copy
 import logging
 import re
 # cStringIO doesn't support unicode in 2.5
-from StringIO import StringIO
-import urllib2
+from io import StringIO
+import urllib.request, urllib.error, urllib.parse
 
 from os.path import exists, isfile, abspath
 from os import unlink
@@ -70,7 +70,7 @@ def fromstring(s):
 def fromurl(url):
   """ Read patch from URL
   """
-  return Patch( urllib2.urlopen(url) )
+  return Patch( urllib.request.urlopen(url) )
 
 
 class Hunk(object):
@@ -155,14 +155,14 @@ class Patch(object):
         self._lineno = False     # after end of stream equal to the num of lines
         self._line = False       # will be reset to False after end of stream
 
-      def next(self):
+      def __next__(self):
         """Try to read the next line and return True if it is available,
            False if end of stream is reached."""
         if self._exhausted:
           return False
 
         try:
-          self._lineno, self._line = super(wrapumerate, self).next()
+          self._lineno, self._line = next(super(wrapumerate, self))
         except StopIteration:
           self._exhausted = True
           self._line = False
@@ -198,7 +198,7 @@ class Patch(object):
     # start of main cycle
     # each parsing block already has line available in fe.line
     fe = wrapumerate(stream)
-    while fe.next():
+    while next(fe):
 
       # -- deciders: these only switch state to decide who should process
       # --           line fetched at the start of this cycle
@@ -217,7 +217,7 @@ class Patch(object):
         header = ''
         while not fe.is_empty and not fe.line.startswith("--- "):
             header += fe.line
-            fe.next()
+            next(fe)
         if fe.is_empty:
             if len(self.source) == 0:
               warning("warning: no patch data is found")

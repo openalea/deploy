@@ -47,7 +47,7 @@ openalea_meta
     #secondnature
     #openalea_dev
 
-    pkgs = filter(None, pkgs.split('\n'))
+    pkgs = [_f for _f in pkgs.split('\n') if _f]
     pkgs = OrderedDict.fromkeys(pkgs,VERSION)
     return pkgs
 
@@ -69,7 +69,7 @@ image
 pylab
 openalea
 """
-    pkgs = filter(None, pkgs.split('\n'))
+    pkgs = [_f for _f in pkgs.split('\n') if _f]
 
     return pkgs
 
@@ -100,7 +100,7 @@ aml2py
 """
     #TODO: flowerdemo
 
-    pkgs = filter(None, pkgs.split('\n'))
+    pkgs = [_f for _f in pkgs.split('\n') if _f]
     pkgs = OrderedDict.fromkeys(pkgs,VERSION)
     pkgs['PlantGL']="2.16.1~ppa3"
     pkgs['lpy']="2.1.0~ppa3"
@@ -116,7 +116,7 @@ svgdraw
 mechanics
 physics
 """
-    pkgs = filter(None, pkgs.split('\n'))
+    pkgs = [_f for _f in pkgs.split('\n') if _f]
     pkgs = OrderedDict.fromkeys(pkgs,VERSION)
     return pkgs
 
@@ -131,7 +131,7 @@ tissueview
 vmanalysis
 tissue_meta
 """
-    pkgs = filter(None, pkgs.split('\n'))
+    pkgs = [_f for _f in pkgs.split('\n') if _f]
     pkgs = OrderedDict.fromkeys(pkgs,VERSION)
     return pkgs
 
@@ -146,7 +146,7 @@ pyratp
 topvine
 alinea_meta
 """
-    pkgs = filter(None, pkgs.split('\n'))
+    pkgs = [_f for _f in pkgs.split('\n') if _f]
     pkgs = OrderedDict.fromkeys(pkgs,VERSION)
     pkgs['caribu']="6.0.3~ppa1"
     return pkgs
@@ -175,7 +175,7 @@ aml2py
 vplants
 """
     # TODO: vplants_dev, flowerdemo
-    pkgs_name = filter(None, pkgs_name.split('\n'))
+    pkgs_name = [_f for _f in pkgs_name.split('\n') if _f]
     return pkgs_name
 
 def my_dch(packages, my_path='.', distribution = 'precise', dry_run=False):
@@ -184,10 +184,10 @@ def my_dch(packages, my_path='.', distribution = 'precise', dry_run=False):
     """
     cwd = os.getcwd()
     os.chdir(my_path)
-    for p, version in packages.iteritems():
+    for p, version in packages.items():
         os.chdir(p)
         cmd = cmd_dch%(distribution,version)
-        print "%s: \n"%p + '\t'+cmd
+        print("%s: \n"%p + '\t'+cmd)
         if not dry_run:
             os.system(cmd)
         os.chdir('..')
@@ -201,7 +201,7 @@ def my_debuild(packages, my_path='.', dry_run=False):
     os.chdir(my_path)
     for p in packages:
         os.chdir(p)
-        print "%s: \n"%p + '\t'+cmd_debuild
+        print("%s: \n"%p + '\t'+cmd_debuild)
         if not dry_run:
             os.system(cmd_debuild)
         os.chdir('..')
@@ -217,21 +217,21 @@ def my_dput(packages, dist = 'openalea', my_path='.', dry_run=False):
         files = d.files('*%s_*.changes'%p)
         changes = sorted([str(f) for f in files])
         if not changes:
-            print "ERROR: %s not found"%p
+            print("ERROR: %s not found"%p)
             errors.append(p)
             continue
-        print '\n ', p
-        print changes
+        print('\n ', p)
+        print(changes)
         my_file = changes[-1]
-        print my_file
+        print(my_file)
 
         cmd = cmd_dput%(dist,) + my_file
-        print cmd 
+        print(cmd) 
         if not dry_run:
             os.system(cmd)
-        print '#####################'
+        print('#####################')
 
-    print '\n'.join(errors)
+    print('\n'.join(errors))
     os.chdir(cwd)
     return
 

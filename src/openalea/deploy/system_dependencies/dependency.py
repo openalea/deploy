@@ -53,9 +53,8 @@ class MSingleton(type):
 
 
 
-class BaseOsFactory(object):
+class BaseOsFactory(object, metaclass=MSingleton):
     """Base class for foactories that create objects depending on the operating system"""
-    __metaclass__ = MSingleton
 
     @classmethod
     def get_platform(cls):
@@ -136,7 +135,7 @@ class OsInterfaceFactory(BaseOsFactory):
         self.__oses[osname] = osinterface
 
     def get_platforms(self):
-        return self.__oses.keys()
+        return list(self.__oses.keys())
 
 
 
@@ -170,7 +169,7 @@ class OsInterface(object):
         command += " "+ package
 
         if fake:
-            print command
+            print(command)
         else:
             subprocess.call(command.strip().split(" "))
 
@@ -186,15 +185,15 @@ class DistributionPackageFactory(BaseOsFactory):
         self.__distPkgs = {}
 
     def register(self, cls):
-        assert isinstance(type(cls), types.TypeType)
+        assert isinstance(type(cls), type)
         name = cls.__name__
         name = name[:name.find("_PackageNames")].replace("_", " ").lower()
-        print "registering:", name
+        print("registering:", name)
         self.__distPkgs[name] = cls
 
     def create(self, platform=None, conflictSolve=lambda x: x[0]):
         assert platform is not None
-        maxIntersectionDistrib = self.intersect_and_solve(platform, self.__distPkgs.keys(), conflictSolve)
+        maxIntersectionDistrib = self.intersect_and_solve(platform, list(self.__distPkgs.keys()), conflictSolve)
         cls = self.__distPkgs.get(maxIntersectionDistrib, None)
         if cls: return cls()
 
@@ -207,9 +206,8 @@ class DistributionPackageNames(dict):
         dict.__init__(self)
         self.update(packages)
     def update(self, other):
-        ks, vs = zip(*other.iteritems())
-        other = dict(zip(ks,map(lambda x: BaseDependency(x) if isinstance(x,str) else x,
-                                vs)))
+        ks, vs = list(zip(*iter(other.items())))
+        other = dict(list(zip(ks,[BaseDependency(x) if isinstance(x,str) else x for x in vs])))
         dict.update(self, other)
 
 
@@ -269,20 +267,20 @@ class DependencySolver(object):
 
     def __str__(self):
         return "canonical->%s\ndistribution->%s\ncompensated->%s"%(str(self.__canonical_deps),
-                                                                 str(self.__translation.values()),
+                                                                 str(list(self.__translation.values())),
                                                                  str(self.other_packages()))
 
     def packages(self):
         return self.__canonical_deps
 
     def runtime_distribution_packages(self):
-        return [dep for canoDep, dep in self.__translation.iteritems() if canoDep[-4:] != "-dev"]
+        return [dep for canoDep, dep in self.__translation.items() if canoDep[-4:] != "-dev"]
 
     def development_distribution_packages(self):
-        return [dep for canoDep, dep in self.__translation.iteritems() if canoDep[-4:] == "-dev"]
+        return [dep for canoDep, dep in self.__translation.items() if canoDep[-4:] == "-dev"]
 
     def other_packages(self):
-        return [dep for canoDep, dep in self.__translation.iteritems() if not dep.is_base()]
+        return [dep for canoDep, dep in self.__translation.items() if not dep.is_base()]
 
     ############################################################
     # Dependency solving and distribution translation follows: #
@@ -305,7 +303,7 @@ class DependencySolver(object):
         while currentPkg:
             hasChilds = True
             child = None
-            try: child = currentPkgChilds.next()
+            try: child = next(currentPkgChilds)
             except: hasChilds = False
             if hasChilds:
                 ancestors.append(currentPkg)
@@ -338,7 +336,7 @@ class DependencySolver(object):
                     if pkg not in self.__dep_tree__:
                         self.__translation[pkg] = distribCls[pkg]
         else:
-            print "No decanonification"
+            print("No decanonification")
 
 
 

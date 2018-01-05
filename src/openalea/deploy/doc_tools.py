@@ -69,7 +69,7 @@ def execfile_partial(local_vars, filename,
     f.close()
 
     # execfile
-    execfile(tmp, local_vars)
+    exec(compile(open(tmp).read(), tmp, 'exec'), local_vars)
 
     # clean file
     remove(tmp)

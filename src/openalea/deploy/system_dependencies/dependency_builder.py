@@ -52,8 +52,8 @@ import platform
 import os
 import sys
 import shutil
-import urllib2
-import urllib
+import urllib.request, urllib.error, urllib.parse
+import urllib.request, urllib.parse, urllib.error
 import subprocess
 import glob
 import time
@@ -67,11 +67,12 @@ import datetime
 import zipfile
 import tarfile
 import ctypes
-import patch
-import ConfigParser #used by some project builders
+from . import patch
+import configparser #used by some project builders
 from os.path import join as pj, splitext, getsize, exists, abspath, split, dirname, realpath
 from collections import namedtuple, OrderedDict, defaultdict
 from re import compile as re_compile
+from functools import reduce
 
 #################################
 # Some Utilities - Path Joining #
@@ -153,7 +154,7 @@ def get_python_dll():
         py_path = ctypes.wstring_at(path)
     else:
         raise OSError("Couldn't determine python%d%d.dll path"%pyver)
-    return pj(py_path, u"python%d%d.dll"%pyver)
+    return pj(py_path, "python%d%d.dll"%pyver)
 
 def get_python_scripts_dirs():
     dirs = []
@@ -184,7 +185,7 @@ def get_python_scripts_dirs():
 ###############################
 # Some functions to strip away html tags from html documents.
 # from http://stackoverflow.com/questions/753052/strip-html-from-strings-in-python
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 class MLStripper(HTMLParser):
     def __init__(self):
         self.reset()
@@ -211,7 +212,7 @@ def into_subdir(base, pattern):
 def download(url, easy_name, arch_path):
     def download_reporter(bk, bksize, bytes):
         if bytes == 0:
-            raise urllib2.URLError("Url doesn't point to an existing resource.")
+            raise urllib.error.URLError("Url doesn't point to an existing resource.")
         progress= float(bk)/(bytes/bksize) * 100
         presentation_url = url[:]
         if len(presentation_url) >= 100:
@@ -222,7 +223,7 @@ def download(url, easy_name, arch_path):
     # get the size of the ressource we're about to download
     remote_sz = float("inf")
     try:
-        remote    = urllib.urlopen(url)
+        remote    = urllib.request.urlopen(url)
         # the content type shouldn' be text/*,
         # but application/*. text/* == error
         if remote.info().getheaders("Content-Type")[0].startswith("application"):
@@ -230,7 +231,7 @@ def download(url, easy_name, arch_path):
             if len(c_len):
                 remote_sz = int(remote.info().getheaders("Content-Length")[0])
             else:
-                print "Unknown content length, cannot determine if download can be skipped..."
+                print("Unknown content length, cannot determine if download can be skipped...")
                 remote_sz = float("inf")
         elif remote.info().getheaders("Content-Type")[0].startswith("text/html"):
             raise IOError( strip_tags(remote.read()) )
@@ -251,7 +252,7 @@ def download(url, easy_name, arch_path):
             raise os.error
     except os.error:
         try:
-            urllib.urlretrieve(url, arch_path, download_reporter)
+            urllib.request.urlretrieve(url, arch_path, download_reporter)
         except:
             traceback.print_exc()
             ret = False
@@ -260,7 +261,7 @@ def download(url, easy_name, arch_path):
 def unpack(arch, where):
     arch = arch
     base, ext = splitext( arch )
-    print "unpacking", arch
+    print("unpacking", arch)
     # TODO : verify that there is no absolute path inside zip.
     if ext == ".zip":
         zipf = zipfile.ZipFile( arch, "r" )
@@ -271,7 +272,7 @@ def unpack(arch, where):
     elif ext == ".tar":
         tarf = tarfile.open( arch, "r")
         tarf.extractall( path=where )
-    print "done"
+    print("done")
     return True
 
 #####################
@@ -292,13 +293,13 @@ except:
 def download_egg(eggname, dir_):
     """Download an egg to a specific place"""
     if can_egg_download:
-        print "Downloading %s"%eggname
+        print("Downloading %s"%eggname)
         if BE.options.get("gforge"):
             add_private_gforge_repositories(BE.options.get("login"), BE.options.get("passwd"))
         log.set_verbosity(1)
         return pi.download(eggname, dir_)
     else:
-        print "Oups: Egg download in not available cause setuptools (or distribute) is not installed"
+        print("Oups: Egg download in not available cause setuptools (or distribute) is not installed")
         return False
 
 ##################################
@@ -311,7 +312,7 @@ def merge_list_dict(li):
     d = defaultdict(list)
     for k, v in li:
         d[k].extend(v)
-    return dict( (k, sj(v)) for k,v in d.iteritems() )
+    return dict( (k, sj(v)) for k,v in d.items() )
 
 CompiledRe = type(re_compile(""))
 def recursive_glob(dir_, patterns=None, strip_dir_=False, levels=-1):
@@ -367,7 +368,7 @@ def makedirs(pth, verbose=False):
     try:
         os.makedirs( pth )
         #print "ok"
-    except os.error, e:
+    except os.error as e:
         #print "already exists or access denied"
         if verbose:
             traceback.print_exc()
@@ -410,7 +411,7 @@ def ascii_file_replace(fname, oldstr, newstr):
 
     if patch:
         with open(fname, "w") as f:
-            print "patching", fname
+            print("patching", fname)
             f.write(txt)
 
 
@@ -485,9 +486,7 @@ def memoize(attr):
 #############################
 # A micro build environment #
 #############################
-class Tool(object):
-    __metaclass__ = MTool
-
+class Tool(object, metaclass=MTool):
     class PyExecPaths(object):
         """Include this symbol in the default_paths
         list to add the python "scripts" folder to
@@ -538,10 +537,10 @@ class Tool(object):
     def get_path(self, no_install=False):
         verbose = BE.verbose
         if verbose:
-            print "Looking for %s path"%self.name
+            print("Looking for %s path"%self.name)
         pth = self._get_path(no_install)
         if pth and verbose:
-            print "\tGot it:", pth
+            print("\tGot it:", pth)
         return pth
 
     def _get_path(self, no_install=False):
@@ -556,7 +555,7 @@ class Tool(object):
                 try:
                     subprocess.call(exe_path, stdout=NullOutput, stderr=NullOutput)
                 except OSError:
-                    print "\tCalling", exe_path, "failed: bad path"
+                    print("\tCalling", exe_path, "failed: bad path")
                     return False
                 else:
                     return True
@@ -570,7 +569,7 @@ class Tool(object):
 
         # Look in default_paths:
         if self.default_paths is None or not len(self.default_paths):
-            print "\tNo default paths given, skipping"
+            print("\tNo default paths given, skipping")
         else:
             # 1) - Expand PyExecPaths and OriginalSystemPaths placeholders
             if Tool.PyExecPaths in self.default_paths:
@@ -603,18 +602,18 @@ class Tool(object):
 
         # Haven't found it yet, let's install it in wdr
         if self.url is None:
-            print "\tNo url to download tool from, skipping"
+            print("\tNo url to download tool from, skipping")
             return None
         if not self.__prompt_user():
-            print "\tUser refused download"
+            print("\tUser refused download")
             return None
 
-        print "\tWill now install %s to %s"%(self.name, wp)
+        print("\tWill now install %s to %s"%(self.name, wp))
         if not download(self.url, self.arch_name, archpath):
-            print "\tCouldn't download", self.name
+            print("\tCouldn't download", self.name)
             return None
         if not unpack(archpath, toolpath):
-            print "\tCouldn't unpack", self.name
+            print("\tCouldn't unpack", self.name)
             return None
 
         pth = into_subdir(toolpath, self.archive_subdir)
@@ -626,7 +625,7 @@ class Tool(object):
         delay = 5000
         def ask_user_if_download():
             try:
-                do_dl = raw_input().lower() == "y"
+                do_dl = input().lower() == "y"
             except:
                 do_dl = True
 
@@ -649,9 +648,7 @@ class Tool(object):
 
 
 
-class Compiler_(object):
-    __metaclass__ = MSingleton
-
+class Compiler_(object, metaclass=MSingleton):
     default_32_comp = "https://gforge.inria.fr/frs/download.php/29029/MinGW-5.1.4_2-win32.egg"
 
     def __init__(self):
@@ -666,24 +663,24 @@ class Compiler_(object):
             compiler = os.path.join(self.get_bin_path(),"gcc.exe")
 
             subprocess.call(compiler+" --version", stdout=NullOutput)
-        except OSError, e:
-            print e
-            print "No MingW compiler found, you can specify its path with -c"
-            print "or install a default MingW compiler."
-            if raw_input("Install a default MingW? (Y/N). :").lower() == "y":
+        except OSError as e:
+            print(e)
+            print("No MingW compiler found, you can specify its path with -c")
+            print("or install a default MingW compiler.")
+            if input("Install a default MingW? (Y/N). :").lower() == "y":
                 self.install()
             else:
-                print "Cannot compile, continuing anyway..."
+                print("Cannot compile, continuing anyway...")
 
     def install(self):
-        print "Will now install a default 32 bits MingW compiler to c:\mingw"
-        print "Make sure you have to rights to do so and that the directory does NOT exist"
-        if raw_input("Proceed? (Y/N):").lower() == "y":
+        print("Will now install a default 32 bits MingW compiler to c:\mingw")
+        print("Make sure you have to rights to do so and that the directory does NOT exist")
+        if input("Proceed? (Y/N):").lower() == "y":
             ez_name  = "mingw.zip"
             archpath = pj(BE.working_path, ez_name)
             if download(default_32_comp, ez_name, archpath):
                 if not unpack(archpath, "c:\\mingw"):
-                    print "Couldn't install MingW32, continuing anyway..."
+                    print("Couldn't install MingW32, continuing anyway...")
 
     @memoize("comp_bin_path")
     def get_bin_path(self):
@@ -706,11 +703,11 @@ class Compiler_(object):
                 if f.location.lower().startswith(base):
                     v = pj(f.location, "bin")
             raise Exception("Mingw not found")
-        except Exception, e:
+        except Exception as e:
             v = r"c:\mingw\bin"
 
         if BE.verbose:
-            print "Using MingW path:", v
+            print("Using MingW path:", v)
         return v
 
     def version_gt(self, version):
@@ -765,9 +762,7 @@ Compiler = Compiler_()
 
 
 
-class BuildEnvironment(object):
-    __metaclass__ = MSingleton
-
+class BuildEnvironment(object, metaclass=MSingleton):
     def __init__(self):
         self.options = {}
         # self.proj_builders = None
@@ -806,27 +801,27 @@ class BuildEnvironment(object):
         self.__fix_sys_path()
 
         if is_64bits_python():
-            if self.verbose: print "Doing a 64 bits compilation because we are using a 64 bits Python."
+            if self.verbose: print("Doing a 64 bits compilation because we are using a 64 bits Python.")
             if not Compiler.get_default_target() == 64:
-                print "Compiler is not a 64 bits compiler. Can it cross-compile?"
+                print("Compiler is not a 64 bits compiler. Can it cross-compile?")
                 if not Compiler.can_cross_compile():
-                    print "Cannot cross compile."
+                    print("Cannot cross compile.")
                     raise Exception("No compiler found for Windows 64 bits")
         else:
-            if self.verbose: print "Doing a 32 bits compilation because we are using a 32 bits Python."
+            if self.verbose: print("Doing a 32 bits compilation because we are using a 32 bits Python.")
             if not Compiler.get_default_target() == 32:
-                print "Compiler is not a 32 bits compiler"
+                print("Compiler is not a 32 bits compiler")
                 raise Exception("No compiler found for Windows 64 bits")
 
     # -- context manager protocol --
     def __enter__(self):
         try:
-            print self.proc_file_path
+            print(self.proc_file_path)
             with open(self.proc_file_path, "rb") as f:
                 txt  = f.read()
                 self.done_tasks = eval(txt)
         except:
-            print "%s not found, let's start from the very beginning"%self.proc_file_path
+            print("%s not found, let's start from the very beginning"%self.proc_file_path)
             self.done_tasks = {}
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -845,7 +840,7 @@ class BuildEnvironment(object):
         # list because we still want to process unskippable actions
         # of the other builders because they can extend os.env["PATH"]
         # or sys.path.
-        for buildercls in ( cls for meta in self.metabuilders for cls in meta.builders.itervalues() ):
+        for buildercls in ( cls for meta in self.metabuilders for cls in meta.builders.values() ):
             builder = buildercls()
             if builder.has_pending and builder.enabled:
 
@@ -943,14 +938,14 @@ class BuildEnvironment(object):
             path = sj( [self.original_path, path] )
 
         if path.endswith("\""):
-            print "Removing trailing PATH quotes as mingw32-make doesn't like them"
+            print("Removing trailing PATH quotes as mingw32-make doesn't like them")
             path = path.replace("\"", "")
         os.environ["PATH"] = path
 
     def __fix_sys_path(self):
         """Clean sys.path for this process so that we don't import
         existing eggs or site-installed thingys."""
-        our_egg_names = [name.strip("egg_") for name in MEgg.builders.iterkeys()]
+        our_egg_names = [name.strip("egg_") for name in MEgg.builders.keys()]
         for pth in sys.path[:] :
             pth_p = pth.lower()
             for egg_name in our_egg_names:
@@ -970,10 +965,10 @@ class BuildEnvironment(object):
 
         if not exists( dst ):
             if exists( src ):
-                print "Using PExports to create %s"%dst
+                print("Using PExports to create %s"%dst)
                 if not os.system( "pexports.exe %s > %s"%(src, dstdef) ):
                     if not os.system("dlltool -U -d %s -l %s"%(dstdef, dst) ):
-                        print "Created %s"%dst
+                        print("Created %s"%dst)
                     else:
                         raise Exception("Can't create %s, dlltool error: Python link will fail"%dst)
                 else:
@@ -981,7 +976,7 @@ class BuildEnvironment(object):
             else:
                 raise Exception("Can't create %s, %s not found: Python link will fail"%(dst,src))
         else:
-            print "Python lib is ok"
+            print("Python lib is ok")
 
 #a shorthand:
 BE=BuildEnvironment()
@@ -1012,7 +1007,7 @@ def in_dir(directory):
         calls f and moves back to BuildEnvironment.get_working_path()"""
         def wrapper(self, *args, **kwargs):
             d_ = rgetattr(self, directory)
-            print "changing to", d_, "for", f.__name__
+            print("changing to", d_, "for", f.__name__)
             os.chdir(d_)
             ret = f(self, *args, **kwargs)
             os.chdir(self.env.get_working_path())
@@ -1044,7 +1039,7 @@ def option_to_sys_path(option):
                 ret = f(self, *args, **kwargs)
                 os.environ["PATH"] = prev_pth
             else:
-                print "option_to_sys_path:", option, "not provided"
+                print("option_to_sys_path:", option, "not provided")
                 ret = f(self, *args, **kwargs)
             return ret
         return wrapper
@@ -1071,7 +1066,7 @@ def option_to_python_path(option):
                 sys.path = prev_pth
                 os.environ["PYTHONPATH"] = prev_py_pth
             else:
-                print "option_to_python_path:", option, "not provided"
+                print("option_to_python_path:", option, "not provided")
                 ret = f(self, *args, **kwargs)
             return ret
         return wrapper
@@ -1155,9 +1150,9 @@ class BaseBuilder(object):
         forced_tasks = self.options.get(self.name, "")
 
         proc_str  = "Processing " + self.name
-        print "\n",proc_str
-        print "="*len(proc_str)
-        print "forced tasks are:", forced_tasks        
+        print("\n",proc_str)
+        print("="*len(proc_str))
+        print("forced tasks are:", forced_tasks)        
 
         for task, task_func, skippable in self.pending:        
             if skippable and not should_process:
@@ -1165,15 +1160,15 @@ class BaseBuilder(object):
             # doing unskippable actions like extending python or env PATH.
             # or we should_process is True
             nice_func = task_func.strip("_")
-            print "\t-->performing %s for %s"%(nice_func, self.name)
+            print("\t-->performing %s for %s"%(nice_func, self.name))
             success = getattr(self, task_func)()
             if success == Later:
-                print "\t-->%s for %s we be done later"%(nice_func, self.name)
+                print("\t-->%s for %s we be done later"%(nice_func, self.name))
             elif success == False:
-                print "\t-->%s for %s failed"%(nice_func, self.name)
+                print("\t-->%s for %s failed"%(nice_func, self.name))
                 if not should_process:
-                    print "-o %s was specified, ignoring error on package %s"% \
-                         (self.options.get("only"), self.name)
+                    print("-o %s was specified, ignoring error on package %s"% \
+                         (self.options.get("only"), self.name))
                     continue
                 return False
             else:
@@ -1184,11 +1179,7 @@ class BaseBuilder(object):
 
 
 
-class BaseProjectBuilder(BaseBuilder, object):
-    __metaclass__ = MProject
-
-    # The URL to fetch the sources from
-    # A None url implies the download has already done by someone else
+class BaseProjectBuilder(BaseBuilder, object, metaclass=MProject):
     url = None
     # Name of the  local archive
     download_name  = None
@@ -1210,7 +1201,7 @@ class BaseProjectBuilder(BaseBuilder, object):
     # swallow stdout for these tasks:
     silent_tasks    = "fxy"
     # Only execute these tasks:
-    supported_tasks = "".join(all_tasks.keys())
+    supported_tasks = "".join(list(all_tasks.keys()))
 
     def __init__(self):
         BaseBuilder.__init__(self)
@@ -1235,21 +1226,21 @@ class BaseProjectBuilder(BaseBuilder, object):
         # the sources are already here because some
         # other proj installed it.
         if self.url is None:
-            print 'No url'
+            print('No url')
             return True
         if exists(self.sourcedir):
-            print 'already unpacked in '+repr(self.sourcedir)
+            print('already unpacked in '+repr(self.sourcedir))
             return True
         arch = arch or self.archname
         return unpack(arch, self.sourcedir)
 
     def fix_source_dir(self):
         try:
-            print "fixing sourcedir", self.sourcedir,
+            print("fixing sourcedir", self.sourcedir, end=' ')
             self.sourcedir = into_subdir(self.sourcedir, self.archive_subdir)
             if self.sourcedir is None:
                 raise Exception("Subdir should exist but doesn't, archive has probably not been unpacked")
-            print self.sourcedir
+            print(self.sourcedir)
         except:
             traceback.print_exc()
             return False
@@ -1310,7 +1301,7 @@ class BaseProjectBuilder(BaseBuilder, object):
         raise NotImplementedError
     def build(self):
         cmd = "mingw32-make -j " + str(self.options["jobs"])
-        print cmd
+        print(cmd)
         return subprocess.call( cmd ) == 0
     def patch(self):
         return True
@@ -1322,8 +1313,7 @@ class BaseProjectBuilder(BaseBuilder, object):
 class TemplateStr(string.Template):
     delimiter = "@"
 
-class BaseEggBuilder(BaseBuilder, object):
-    __metaclass__  = MEgg
+class BaseEggBuilder(BaseBuilder, object, metaclass=MEgg):
     __oldsyspath__ = sys.path[:]
     # The egg depends on the Python version (allows correct egg naming)
     py_dependent   = True
@@ -1336,7 +1326,7 @@ class BaseEggBuilder(BaseBuilder, object):
                                   ("g",("_copy_egg_in_dir",True)),
                                  ])
     # Only execute these tasks:
-    supported_tasks = "".join(all_tasks.keys())
+    supported_tasks = "".join(list(all_tasks.keys()))
 
     def __init__(self,**kwargs):
         BaseBuilder.__init__(self, **kwargs)
@@ -1393,7 +1383,7 @@ class BaseEggBuilder(BaseBuilder, object):
              open( self.setup_out_name, "w") as output:
             conf = self.default_substitutions.copy()
             conf.update(self.script_substitutions())
-            conf = dict( (k,repr(v)) for k,v in conf.iteritems() )
+            conf = dict( (k,repr(v)) for k,v in conf.items() )
             template = TemplateStr(input.read())
             output.write(template.substitute(conf))
         return True
@@ -1421,7 +1411,7 @@ class BaseEggBuilder(BaseBuilder, object):
             self.use_cfg_login = True
             ret = self.upload_egg()
             if not ret:
-                print "No login or passwd provided, skipping egg upload"
+                print("No login or passwd provided, skipping egg upload")
                 return Later
             return ret
         return self.upload_egg()
@@ -1431,15 +1421,15 @@ class BaseEggBuilder(BaseBuilder, object):
     def _copy_egg_in_dir(self):
         dest_dir = self.options.get("dest_egg_dir")
         if not dest_dir:
-            print "Will not place egg in a directory"
+            print("Will not place egg in a directory")
             return True
 
         eggname  = self._glob_egg()
         destname = pj(dest_dir, split(eggname)[1])
         if exists(destname):
-            print "removing", destname
+            print("removing", destname)
             os.remove(destname)
-        print "copying", eggname, "to", destname
+        print("copying", eggname, "to", destname)
         shutil.copyfile(eggname, destname)
         return True
 
@@ -1499,8 +1489,8 @@ class InstalledPackageEggBuilder(BaseEggBuilder, object):
         BaseEggBuilder.__init__(self)
         try:
             p = self.package
-        except Exception, e:
-            print self.name, "disabled:", e
+        except Exception as e:
+            print(self.name, "disabled:", e)
             self.enabled = False
         else:
             self.enabled = True
@@ -1539,8 +1529,8 @@ class InstalledPackageEggBuilder(BaseEggBuilder, object):
 
     def script_substitutions(self):
         py_modules = recursive_glob(self.install_dir, Pattern.pymod)
-        data_files = recursive_glob_as_dict(self.install_dir,
-                    ",".join(["*.example","*.txt",Pattern.pyext,"*.c",".1"])).items()
+        data_files = list(recursive_glob_as_dict(self.install_dir,
+                    ",".join(["*.example","*.txt",Pattern.pyext,"*.c",".1"])).items())
         packages, package_dirs = self.find_packages_and_directories()
 
         d = dict ( PACKAGES = packages,
@@ -1591,8 +1581,8 @@ class openalea_deploy(Tool):
 # -- MAIN LOOP AND RELATIVES -- #
 #################################
 def valid_builder(arg):
-    if arg in MProject.builders.keys() or \
-       arg in MEgg.builders.keys() :
+    if arg in list(MProject.builders.keys()) or \
+       arg in list(MEgg.builders.keys()) :
         return arg
     else:
         raise argparse.ArgumentError()
@@ -1602,7 +1592,7 @@ def build_epilog(metabuilders, dep_build_end=True):
     for mbuilder in metabuilders:
         m_name = mbuilder.ez_name
         epilog += "%s_ACTIONS are a concatenation of flags specifying what actions will be done:\n"%m_name.upper()
-        for proc, (funcname, skippable) in mbuilder.bases[0].all_tasks.iteritems():
+        for proc, (funcname, skippable) in mbuilder.bases[0].all_tasks.items():
             if skippable:
                 epilog += "\t%s : %s\n"%(proc, funcname.strip("_"))
         epilog += "\n"
@@ -1666,7 +1656,7 @@ def options_metabuilders(parser, metabuilders):
     for mbuilder in metabuilders:
         m_name = mbuilder.ez_name
         g = parser.add_argument_group("Options controlling %s builder actions to force"%m_name)
-        for name, builder in mbuilder.builders.iteritems():
+        for name, builder in mbuilder.builders.items():
             if not builder.enabled:
                 continue
             g.add_argument("--"+name, default="",
@@ -1678,7 +1668,7 @@ def options_metabuilders(parser, metabuilders):
                 tools |= set(builder.required_tools)
 
 
-    for bname, opt_list in pkg_options.iteritems():
+    for bname, opt_list in pkg_options.items():
         g = parser.add_argument_group("Options for " + bname + " builder")
         for opt_name, default, help in opt_list:
             g.add_argument("--"+opt_name, default=default, help=help)

@@ -176,7 +176,7 @@ def check_system():
     Return a dictionnary containing environment variables to be set.
     """
 
-    from install_lib import get_dyn_lib_dir
+    from .install_lib import get_dyn_lib_dir
 
     in_env = dict(os.environ)
     out_env = {}
@@ -234,8 +234,8 @@ def check_system():
             out_env['PATH'] = ':'.join(paths)
 
 
-    except Exception, e:
-        print e
+    except Exception as e:
+        print (e)
 
     return out_env
 
@@ -244,31 +244,31 @@ def check_system():
 
 def get_repo_list():
     """ Return the list of OpenAlea repository """
-    import urllib
+    import urllib.request, urllib.parse, urllib.error
     try:
         ret = []
-        u = urllib.urlopen(OPENALEA_REPOLIST)
+        u = urllib.request.urlopen(OPENALEA_REPOLIST)
         for i in u:
             ret.append(i.strip())
         return ret
 
-    except Exception, e:
-        print e
+    except Exception as e:
+        print (e)
         return [OPENALEA_PI]
 
 
 def get_recommended_prefix():
     """ Return the list of recommended package prefix """
-    import urllib
+    import urllib.request, urllib.parse, urllib.error
     try:
         ret = []
-        prefixes = urllib.urlopen(OPENALEA_RECOMMENDED_PKG)
+        prefixes = urllib.request.urlopen(OPENALEA_RECOMMENDED_PKG)
         for i in prefixes:
             ret.append(i.strip())
         return ret
 
-    except Exception, e:
-        print e
+    except Exception as e:
+        print (e)
         return ["openalea"]
 
 

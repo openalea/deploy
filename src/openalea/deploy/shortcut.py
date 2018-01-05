@@ -60,9 +60,9 @@ def create_win_shortcut(name, target, arguments="",
         win32dir = get_base_dir('pywin32')
         os.environ['PATH'] += ';' + os.path.join(win32dir, 'pywin32_system32')
         from win32com.shell import shell, shellcon
-    except Exception, e:
-        print e
-        print "ERROR : pywin32 is not installed. Cannot create shortcut."
+    except Exception as e:
+        print(e)
+        print("ERROR : pywin32 is not installed. Cannot create shortcut.")
         return
     
     import win32api
@@ -103,34 +103,34 @@ def set_win_reg(key, subkey, name, value):
         return
 
     try:
-        import _winreg
+        import winreg
 
-    except ImportError, e:
-        print "!!ERROR: Can not access to Windows registry."
+    except ImportError as e:
+        print("!!ERROR: Can not access to Windows registry.")
         return
 
-    keymap = {'HKEY_CLASSES_ROOT': _winreg.HKEY_CLASSES_ROOT,
-              'HKEY_CURRENT_CONFIG': _winreg.HKEY_CURRENT_CONFIG,
-              'HKEY_CURRENT_USER': _winreg.HKEY_CURRENT_USER,
-              'HKEY_DYN_DATA': _winreg.HKEY_DYN_DATA,
-              'HKEY_LOCAL_MACHINE': _winreg.HKEY_LOCAL_MACHINE,
-              'HKEY_PERFORMANCE_DATA': _winreg.HKEY_PERFORMANCE_DATA,
-              'HKEY_USERS': _winreg.HKEY_USERS,
-              'HKCR': _winreg.HKEY_CLASSES_ROOT,
-              'HKCC': _winreg.HKEY_CURRENT_CONFIG,
-              'HKCU': _winreg.HKEY_CURRENT_USER,
-              'HKDD': _winreg.HKEY_DYN_DATA,
-              'HKLM': _winreg.HKEY_LOCAL_MACHINE,
-              'HKPD': _winreg.HKEY_PERFORMANCE_DATA,
-              'HKU': _winreg.HKEY_USERS,
+    keymap = {'HKEY_CLASSES_ROOT': winreg.HKEY_CLASSES_ROOT,
+              'HKEY_CURRENT_CONFIG': winreg.HKEY_CURRENT_CONFIG,
+              'HKEY_CURRENT_USER': winreg.HKEY_CURRENT_USER,
+              'HKEY_DYN_DATA': winreg.HKEY_DYN_DATA,
+              'HKEY_LOCAL_MACHINE': winreg.HKEY_LOCAL_MACHINE,
+              'HKEY_PERFORMANCE_DATA': winreg.HKEY_PERFORMANCE_DATA,
+              'HKEY_USERS': winreg.HKEY_USERS,
+              'HKCR': winreg.HKEY_CLASSES_ROOT,
+              'HKCC': winreg.HKEY_CURRENT_CONFIG,
+              'HKCU': winreg.HKEY_CURRENT_USER,
+              'HKDD': winreg.HKEY_DYN_DATA,
+              'HKLM': winreg.HKEY_LOCAL_MACHINE,
+              'HKPD': winreg.HKEY_PERFORMANCE_DATA,
+              'HKU': winreg.HKEY_USERS,
               }
 
     if (name):
         subkey += '/' + name
     try:
-        _winreg.SetValue(keymap[key], subkey, _winreg.REG_SZ, value)
+        winreg.SetValue(keymap[key], subkey, winreg.REG_SZ, value)
     except:
-        print "Cannot set %s/%s/%s registery key" % (key, subkey, name)
+        print("Cannot set %s/%s/%s registery key" % (key, subkey, name))
 
 
 def create_fd_shortcut(name, target, arguments="", version="",

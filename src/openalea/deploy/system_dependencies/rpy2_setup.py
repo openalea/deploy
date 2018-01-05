@@ -16,7 +16,7 @@ if sys.platform == "win32":
         if ctypes.windll.kernel32.GetShortPathNameW(path, ctypes.pointer(out), nsize):
             return ctypes.wstring_at(path)
         else:
-            print ctypes.windll.kernel32.GetLastError()
+            print(ctypes.windll.kernel32.GetLastError())
 
 
 pack_name = 'rpy2'
@@ -163,7 +163,7 @@ class build_ext(_build_ext):
                       'LAPACK_LIBS', 'BLAS_LIBS'):
             config += get_rconfig(r_home, about)            
 
-        print(config.__repr__())
+        print((config.__repr__()))
 
         self.include_dirs.extend(config._include_dirs)
         self.libraries.extend(config._libraries)
@@ -270,7 +270,7 @@ class RConfig(object):
                     break
                 elif rconfig_m is None:
                     if allow_empty and (rconfig == ''):
-                        print(cmd + '\nreturned an empty string.\n')
+                        print((cmd + '\nreturned an empty string.\n'))
                         rc += RConfig()
                         ok = True
                         break
@@ -320,8 +320,8 @@ def get_rconfig(r_home, about, allow_empty = False):
         arch = 'i386'
         inc_dirs     = os.path.join(r_home, 'include')
         arch_inc_dir = os.path.join(r_home, 'etc', arch)
-        print os.path.join(r_home, 'include')
-        print arch_inc_dir
+        print(os.path.join(r_home, 'include'))
+        print(arch_inc_dir)
         d = get_makeconf_dict(r_home, arch)
         if about == "--cppflags":
             rconfig = d.get("ALL_CPPFLAGS") + r' -I"%s" -I"%s"'%(inc_dirs, arch_inc_dir)
@@ -340,7 +340,7 @@ def get_rconfig(r_home, about, allow_empty = False):
         if rconfig.startswith("WARNING"):
             rconfig = rp.readline()
         rp.close()
-    print rconfig
+    print(rconfig)
     rconfig = rconfig.strip()
     rc = RConfig.from_string(rconfig, allow_empty = allow_empty)
     return rc
@@ -406,7 +406,7 @@ def parse_make(makefile, initial_vars=None):
         vardict.update(initial_vars)
             
     # expand variables
-    for var, value in vardict.copy().iteritems():
+    for var, value in vardict.copy().items():
         expand = var_re2.search(value) #something to expand
         while (expand):
             value  = expand.group(1) + vardict.get(expand.group(2), "") + expand.group(3)  
@@ -510,7 +510,7 @@ if __name__ == '__main__':
     pack_dir = {pack_name: os.path.join(package_prefix, 'rpy')}
 
     import distutils.command.install
-    for scheme in distutils.command.install.INSTALL_SCHEMES.values():
+    for scheme in list(distutils.command.install.INSTALL_SCHEMES.values()):
         scheme['data'] = scheme['purelib']
 
     setup(
