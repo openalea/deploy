@@ -34,7 +34,11 @@ def read_metainfo(filename, section='metainfo', verbose=False):
 
     if verbose:
         print(green('Reading metainfo '))
-    import configparser
+    try:
+        import configparser
+    except:
+        import ConfigParser as configparser
+
     config = configparser.RawConfigParser()
     res = config.read(filename)
     if len(res) == 0:

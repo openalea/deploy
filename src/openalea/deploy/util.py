@@ -244,10 +244,15 @@ def check_system():
 
 def get_repo_list():
     """ Return the list of OpenAlea repository """
-    import urllib.request, urllib.parse, urllib.error
+    try:
+        # Python 3
+        from urllib.request import urlopen
+    except:
+        # Python 2
+        from urllib import urlopen
     try:
         ret = []
-        u = urllib.request.urlopen(OPENALEA_REPOLIST)
+        u = urlopen(OPENALEA_REPOLIST)
         for i in u:
             ret.append(i.strip())
         return ret
@@ -259,10 +264,15 @@ def get_repo_list():
 
 def get_recommended_prefix():
     """ Return the list of recommended package prefix """
-    import urllib.request, urllib.parse, urllib.error
+    try:
+        # Python 3
+        from urllib.request import urlopen
+    except:
+        # Python 2
+        from urllib import urlopen
     try:
         ret = []
-        prefixes = urllib.request.urlopen(OPENALEA_RECOMMENDED_PKG)
+        prefixes = urlopen(OPENALEA_RECOMMENDED_PKG)
         for i in prefixes:
             ret.append(i.strip())
         return ret

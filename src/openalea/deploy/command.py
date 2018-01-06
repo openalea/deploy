@@ -51,7 +51,13 @@ from distutils.errors import DistutilsSetupError
 from distutils.dir_util import mkpath
 import re
 import new
-import configparser
+try:
+    # Python 3
+    import configparser
+except:
+    # Python 2
+    import ConfigParser as configparser
+
 from .util import get_all_lib_dirs, get_all_bin_dirs, DEV_DIST
 from .install_lib import get_dyn_lib_dir
 from .util import get_base_dir, get_repo_list, OPENALEA_PI

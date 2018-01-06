@@ -201,7 +201,10 @@ def set_win_env(vars):
 
         from string import find
         try:
-            import winreg
+            if sys.version_info.major == 2:
+                import _winreg as winreg
+            else:
+                import winreg
         except ImportError as e:
             print("!!ERROR: Can not access to Windows registry.")
             return
@@ -270,7 +273,7 @@ def set_win_env(vars):
                                                  WM_SETTINGCHANGE, 0, sParam,
                                                  SMTO_ABORTIFHUNG, 100)
         if not res1:
-            print(("result %s, %s from SendMessageTimeout" % (bool(res1), res2)))
+            print("result %s, %s from SendMessageTimeout" % (bool(res1), res2))
 
     except Exception as e:
         print(e)

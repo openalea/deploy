@@ -103,7 +103,10 @@ def set_win_reg(key, subkey, name, value):
         return
 
     try:
-        import winreg
+        if sys.version_info.major == 2:
+            import _winreg as winreg
+        else:
+            import winreg
 
     except ImportError as e:
         print("!!ERROR: Can not access to Windows registry.")
