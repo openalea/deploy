@@ -399,7 +399,7 @@ class GForgeProxy(object):
 
         release_time = int(time.mktime(time.localtime()))
 
-        print("Uploading %s..." % (name,), end=' ')
+        print("Uploading %s..." % (name,))
 
         try:
             
@@ -445,7 +445,7 @@ class GForgeProxy(object):
         
         from . import gforge_util
         gforge_util.gforge_login(self.userid, self.passwd)
-        print('Trying to delete file %s' % file_id, end=' ')
+        print('Trying to delete file %s' % file_id)
         gforge_util.delete_file(project_id, package_id, release_id, file_id)
         print('Done.')
 

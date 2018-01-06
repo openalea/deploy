@@ -166,7 +166,7 @@ class build_py(old_build_py):
             if (not os.path.exists(self.build_lib)):
                 self.mkpath(self.build_lib)
 
-            for (name, dir) in list(share_dirs.items()):
+            for (name, dir) in share_dirs.items():
                 copy_data_tree(dir, pj(self.build_lib, name))
 
         ret = old_build_py.run(self)
@@ -220,7 +220,7 @@ class build_ext(old_build_ext):
             if (not os.path.exists(self.build_lib)):
                 self.mkpath(self.build_lib)
 
-            for (name, dir) in list(d.items()):
+            for (name, dir) in d.items():
                 copy_data_tree(dir, pj(self.build_lib, name))
 
         return old_build_ext.run(self)
@@ -502,8 +502,7 @@ class scons(Command):
                 sys.exit(1)
 
             except Exception as i:
-                print("!! Error : Cannot execute scons command:", i, end=' ')
-                print(" Failure...")
+                print("!! Error : Cannot execute scons command:", i, " Failure...")
                 sys.exit(1)
 
 
@@ -602,8 +601,7 @@ class cmake(Command):
                 sys.exit(1)
 
             except Exception as i:
-                print("!! Error : Cannot execute cmake command:", i, end=' ')
-                print(" Failure...")
+                print("!! Error : Cannot execute cmake command:", i, " Failure...")
                 sys.exit(1)
 
 
@@ -969,7 +967,7 @@ from %s.__init__ import *
                   ):
             if (not d):
                 continue
-            for dest_dir, src_dir in list(d.items()):
+            for dest_dir, src_dir in d.items():
                 # replace dest_dir by src_dir
                 adir = os.path.join(self.setup_path, src_dir)
                 d[adir] = adir

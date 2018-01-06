@@ -77,7 +77,7 @@ class MultipartPostHandler(BaseHandler):
             v_files = []
             v_vars = []
             try:
-                for (key, value) in list(data.items()):
+                for (key, value) in data.items():
                     if key == "userfile":
                         v_files.append((key, value))
                     else:
