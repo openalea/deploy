@@ -20,7 +20,8 @@
 __license__ = "Cecill-C"
 __revision__ = " $Id:$"
 
-from os import remove, tmpnam
+from os import remove
+import tempfile
 
 
 def execfile_partial(local_vars, filename,
@@ -61,15 +62,14 @@ def execfile_partial(local_vars, filename,
             end_ind += 1
 
     # write tmp file
-    tmp = "%s.tmp" % tmpnam()
-    f = open(tmp, 'w')
+    f = tempfile.TemporaryFile('w')
     for line in lines[start_ind:end_ind]:
         f.write(line)
 
     f.close()
 
     # execfile
-    execfile(tmp, local_vars)
+    exec(compile(open(tmp).read(), tmp, 'exec'), local_vars)
 
     # clean file
     remove(tmp)

@@ -13,11 +13,11 @@ __license__ = "Cecill-C"
 __revision__ = " $Id$"
 
 # from install_lib import get_default_dyn_lib
-from install_lib import get_dyn_lib_dir
+from .install_lib import get_dyn_lib_dir
 # from util import check_system
-from command import set_env
+from .command import set_env
 from optparse import OptionParser
-from util import is_conda_env
+from .util import is_conda_env
 
 
 def main():
@@ -36,10 +36,10 @@ def main():
     (options, _) = parser.parse_args()
 
     if is_conda_env():
-        print 'WARNING: Do not use alea_config in a conda environment.'
+        print('WARNING: Do not use alea_config in a conda environment.')
 
     if options.printdir:
-        print get_dyn_lib_dir()
+        print(get_dyn_lib_dir())
 
     if (options.lib_dir or not options.printdir):
         set_env(options.lib_dir)

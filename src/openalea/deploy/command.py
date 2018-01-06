@@ -51,13 +51,19 @@ from distutils.errors import DistutilsSetupError
 from distutils.dir_util import mkpath
 import re
 import new
-import ConfigParser
-from util import get_all_lib_dirs, get_all_bin_dirs, DEV_DIST
-from install_lib import get_dyn_lib_dir
-from util import get_base_dir, get_repo_list, OPENALEA_PI
-from util import is_virtual_env, is_conda_env, is_conda_build, conda_prefix
-from environ_var import set_lsb_env, set_win_env
-import install_lib
+try:
+    # Python 3
+    import configparser
+except:
+    # Python 2
+    import ConfigParser as configparser
+
+from .util import get_all_lib_dirs, get_all_bin_dirs, DEV_DIST
+from .install_lib import get_dyn_lib_dir
+from .util import get_base_dir, get_repo_list, OPENALEA_PI
+from .util import is_virtual_env, is_conda_env, is_conda_build, conda_prefix
+from .environ_var import set_lsb_env, set_win_env
+from . import install_lib
 
 
 # Utility
@@ -74,7 +80,7 @@ def copy_data_tree(src, dst, exclude_pattern=['(RCS|CVS|\.svn)', '.*\~']):
     outfiles = []
 
     for p in exclude_pattern:
-        names = filter(lambda x: not (re.match(p, x)), names)
+        names = [x for x in names if not (re.match(p, x))]
 
     for n in names:
         src_name = os.path.join(src, n)
@@ -199,7 +205,7 @@ class build_ext(old_build_ext):
         # Copy the directories containing the files generated
         # by scons and the like.
         if is_conda_build():
-            print 'Building directly with conda. Skip the bin, include and lib dirs.'
+            print('Building directly with conda. Skip the bin, include and lib dirs.')
             return old_build_ext.run(self)
 
         for d in (self.distribution.lib_dirs,
@@ -349,10 +355,10 @@ def write_keys_arg(cmd, basename, filename, force=False):
     argname = os.path.splitext(basename)[0]
     value = getattr(cmd.distribution, argname, None)
     if value is not None:
-        value = '\n'.join(value.keys()) + '\n'
+        value = '\n'.join(list(value.keys())) + '\n'
     cmd.write_or_delete_file(argname, filename, value, force)
     if is_conda_env():
-        print 'CONDA EGG WRITER: ', cmd, basename, filename, value
+        print('CONDA EGG WRITER: ', cmd, basename, filename, value)
         pass
 
 # SCons Management
@@ -453,7 +459,7 @@ class scons(Command):
                                           param, externp])
                 commandstr = command + ' ' + command_param
 
-                print commandstr
+                print(commandstr)
 
                 # Run SCons
                 if (subprocess_enabled):
@@ -468,7 +474,7 @@ class scons(Command):
                 # Run scons install in a seconde step
                 # Install in the conda prefix
                 if self.scons_install:
-                    print "Run SCONS install in conda environment"
+                    print("Run SCONS install in conda environment")
 
                     if is_conda_build():
                         # Fred remarks : Is it realy usefull ? Scons can be parameterized to find such repository
@@ -483,7 +489,7 @@ class scons(Command):
                                           param, externp])
                     commandstr = command + ' ' + command_param
 
-                    print commandstr
+                    print(commandstr)
 
                     # Run SCons
                     if (subprocess_enabled):
@@ -495,13 +501,12 @@ class scons(Command):
                     if (retval != 0):
                         raise SconsError()
                     
-            except SconsError, i:
-                print i, " Failure..."
+            except SconsError as i:
+                print(i, " Failure...")
                 sys.exit(1)
 
-            except Exception, i:
-                print "!! Error : Cannot execute scons command:", i,
-                print " Failure..."
+            except Exception as i:
+                print("!! Error : Cannot execute scons command:", i, " Failure...")
                 sys.exit(1)
 
 
@@ -563,7 +568,7 @@ class cmake(Command):
                 cmake_cmd_param = file_param
                 commandstr = cmake_cmd + ' ' + cmake_cmd_param
 
-                print commandstr
+                print(commandstr)
 
                 if not os.path.isdir('build-cmake'):
                     os.mkdir('build-cmake')
@@ -595,13 +600,12 @@ class cmake(Command):
 
                 os.chdir(os.pardir)
 
-            except CMakeError, i:
-                print i, " Failure..."
+            except CMakeError as i:
+                print(i, " Failure...")
                 sys.exit(1)
 
-            except Exception, i:
-                print "!! Error : Cannot execute cmake command:", i,
-                print " Failure..."
+            except Exception as i:
+                print("!! Error : Cannot execute cmake command:", i, " Failure...")
                 sys.exit(1)
 
 
@@ -666,7 +670,7 @@ except ImportError:
         """ Run command """
 
         for namespace in self.namespaces:
-            print "creating %s namespace" % (namespace)
+            print("creating %s namespace" % (namespace))
             self.create_empty_namespace(namespace)
 
 
@@ -694,7 +698,7 @@ class install(old_install):
         if (not self.install_dyn_lib):
             self.install_dyn_lib = get_dyn_lib_dir()
         self.install_dyn_lib = os.path.expanduser(self.install_dyn_lib)
-        print 'INSTALL LIB: ', self.install_dyn_lib
+        print('INSTALL LIB: ', self.install_dyn_lib)
         old_install.finalize_options(self)
 
     def do_egg_install(self):
@@ -814,7 +818,7 @@ class alea_install(old_easy_install):
 
     def postinstall(self, dist):
         """ call postinstall scripts """
-        print "Post installation"
+        print("Post installation")
 
         if (dist):
             pkg_resources.require(dist.project_name)
@@ -833,19 +837,19 @@ class alea_install(old_easy_install):
                 if (win32dir not in os.environ['PATH']):
                     os.environ['PATH'] += ";" + win32dir
             except:
-                print "!!Error : pywin32 package not found. Please install it before."
+                print("!!Error : pywin32 package not found. Please install it before.")
 
         # process postinstall
         for s in pkg_resources.yield_lines(lstr):
-            print "Executing %s" % (s)
+            print("Executing %s" % (s))
 
             try:
                 module = __import__(s, globals(), locals(), s.split('.'))
                 module.install()
 
-            except Exception, e:
-                print "Warning : Cannot execute %s" % (s,)
-                print e
+            except Exception as e:
+                print("Warning : Cannot execute %s" % (s,))
+                print(e)
 
 
 def set_env(dyn_lib=None):
@@ -864,22 +868,22 @@ def set_env(dyn_lib=None):
         # print list(get_all_lib_dirs(precedence=DEV_DIST))
         return
 
-    print "Install dynamic or share libs "
+    print("Install dynamic or share libs ")
 
     # lib_dirs = list(get_all_lib_dirs())
     dyn_lib = install_lib.install_lib(dyn_lib)
 
-    print "Setting environment variables"
+    print("Setting environment variables")
 
     # Get all the dirs containing shared libs of the devel pkg
     # plus the global shared lib directory.
     lib_dirs = list(get_all_lib_dirs(precedence=DEV_DIST)) + [dyn_lib]
     bin_dirs = list(get_all_bin_dirs())
 
-    print "The following directories contains shared library :", '\n'.join(
-        lib_dirs), '\n'
-    print "The following directories contains binaries :", '\n'.join(
-        bin_dirs), '\n'
+    print("The following directories contains shared library :", '\n'.join(
+        lib_dirs), '\n')
+    print("The following directories contains binaries :", '\n'.join(
+        bin_dirs), '\n')
 
     # To fix the lost of access rights during the step of extract and instal .egg on Linux and MacOsX
     for d in bin_dirs:
@@ -894,7 +898,7 @@ def set_env(dyn_lib=None):
             pass
 
     if virtualenv:
-        print "EDIT the activate script to setup PATH and/or LD_LIBRARY_PATH"
+        print("EDIT the activate script to setup PATH and/or LD_LIBRARY_PATH")
         return
 
     all_dirs = set(lib_dirs + bin_dirs)
@@ -911,7 +915,7 @@ def set_env(dyn_lib=None):
             # vars.append('DYLD_FRAMEWORK_PATH=$OPENALEA_LIB')
         set_lsb_env('openalea', vars)
     except:
-        print vars
+        print(vars)
         return
 
 
@@ -1090,8 +1094,8 @@ class egg_upload(Command):
                 self.release = '.'.join(version.split('.')[0:2])
                 warnings.warn(
                     'Release not provided but found one in the setup.py (%s).' % self.release)
-            except Exception, e:
-                print e, 'release could not be found.'
+            except Exception as e:
+                print(e, 'release could not be found.')
                 import sys
                 sys.exit(0)
 
@@ -1131,7 +1135,7 @@ class egg_upload(Command):
         if self.yes_to_all == 1:
             arguments += ' --yes-to-all '
 
-        print 'Command that will be called is : \n\tgforge_upload %s' % arguments
+        print('Command that will be called is : \n\tgforge_upload %s' % arguments)
         # password is afterwards so that it does not appear on the screen!
         if self.password:
             arguments += ' --password %s' % self.password
@@ -1207,7 +1211,7 @@ class pylint(Command):
             self.pylint_options = ''
 
     def run(self):
-        print '    PYLINT processing'
+        print('    PYLINT processing')
         if self.pylint_packages:
             # print '    Processing ' + self.pylint_packages + ' through pylint'
             cmd = 'pylint '
@@ -1215,13 +1219,13 @@ class pylint(Command):
                 cmd += package.replace('/', os.sep) + os.sep + '*.py '
             cmd += ' ' + self.pylint_options
             cmd += self.pylint_base_options
-            print cmd
+            print(cmd)
             status = subprocess.call(cmd,
                                      stdout=open(self.output_filename, 'w+'),
                                      stderr=None, shell=True)
             if status != 0:
-                print 'This command returns status (%s) different from 0.' % \
-                      str(status)
+                print('This command returns status (%s) different from 0.' % \
+                      str(status))
             cmd = 'tail -n 1 %s ; grep \"Your code\"  %s ' % (
                 self.output_filename, self.output_filename)
             subprocess.call(cmd, stdout=None, stderr=None, shell=True)
@@ -1273,10 +1277,10 @@ class upload_sphinx(Command):
                 """Project must be vplants, alinea or openalea. Check your setup.cfg pupload_sphinx] section. %s provided""" % self.project)
 
         if self.stable is False:
-            print "Documentation will be uploaded to unstable directory"
+            print("Documentation will be uploaded to unstable directory")
             self.destination = '/home/groups/openalea/htdocs/beta_doc'
         else:
-            print "Documentation will be uploaded to stable directory"
+            print("Documentation will be uploaded to stable directory")
             self.destination = '/home/groups/openalea/htdocs/doc'
 
         if (not self.release):
@@ -1288,19 +1292,19 @@ class upload_sphinx(Command):
                 self.release = version
 
         if not self.username:
-            self.username = raw_input('login:')
+            self.username = input('login:')
             # to be used with gforge tools only. not with scp tht is currently used.
             # if not self.password:
             #    self.password = raw_input('password:')
 
     def run(self):
         """.. todo:: fix this code so that gforge proxy and scp are not both used."""
-        print """
+        print("""
                 Warning: this option (sphinx_upload) will use the scp command to copy
                 the documentation on the gforge. Be sure to have the right to do so.
                 Requires to copy your ssh key on the server !
-               """
-        print "Copying files on the GForge. Be patient ..."
+               """)
+        print("Copying files on the GForge. Be patient ...")
 
         self.test_and_build_dir()
         for output in ['html', 'latex']:
@@ -1324,27 +1328,27 @@ class upload_sphinx(Command):
                   direc,
                   direc)
 
-        print cmd1
+        print(cmd1)
         status = subprocess.call(cmd1, stdout=open('/tmp/test', 'w'),
                                  stderr=None, shell=True)
         if status != 0:
-            print 'This command failed'
+            print('This command failed')
             import sys
             sys.exit(status)
-        print "Ensured directory exists."
+        print("Ensured directory exists.")
 
     def upload_file(self, command):
-        print "Project: ", self.project
-        print "Package: ", self.package
-        print "Release: ", self.release
-        print command
+        print("Project: ", self.project)
+        print("Package: ", self.package)
+        print("Release: ", self.release)
+        print(command)
         status = subprocess.call(command, stdout=open('/tmp/test', 'w'),
                                  stderr=None, shell=True)
         if status != 0:
-            print 'This command failed'
+            print('This command failed')
             import sys
             # sys.exit(status)
-        print "Files uploaded."
+        print("Files uploaded.")
 
 
 class alea_upload(Command):
@@ -1391,7 +1395,7 @@ class alea_upload(Command):
             rc = os.path.join(os.environ['HOME'], '.pypirc')
             if os.path.exists(rc):
                 self.announce('Using PyPI login from %s' % rc)
-                config = ConfigParser.ConfigParser({
+                config = configparser.ConfigParser({
                     'username': '',
                     'password': '',
                     'repository': ''})
@@ -1408,9 +1412,9 @@ class alea_upload(Command):
             raise DistutilsOptionError(
                 "No dist file created in earlier command")
 
-        import gforge
+        from . import gforge
 
-        print "Login...."
+        print("Login....")
         server = gforge.GForgeProxy()
 
         server.login(self.username, self.password)
@@ -1430,15 +1434,15 @@ class alea_upload(Command):
         for command, pyversion, filename in self.distribution.dist_files:
             self.upload_file(server, command, pyversion, filename)
 
-        print "Logout..."
+        print("Logout...")
         server.logout()
 
     def upload_file(self, server, command, pyversion, filename):
 
-        print "Project: ", self.project
-        print "Package: ", self.package
-        print "Release: ", self.release
-        print "Filename: ", filename
+        print("Project: ", self.project)
+        print("Package: ", self.package)
+        print("Release: ", self.release)
+        print("Filename: ", filename)
 
         server.add_file(self.project, self.package, self.release, filename)
 
@@ -1456,16 +1460,16 @@ class clean(old_clean):
 
         # Test if Sconstruct is present
         if os.path.isfile('SConstruct'):
-            print 'Found an SConstruct file. Starting "scons -c" command'
+            print('Found an SConstruct file. Starting "scons -c" command')
             # Call scons -c: see the scons command#
             try:
                 os.system('scons -c')
             except:
-                print 'Failed to launch sconc -c'
+                print('Failed to launch sconc -c')
         else:
-            print 'No SConstruct found. Skipping "scons -c" command.'
+            print('No SConstruct found. Skipping "scons -c" command.')
 
         if self.all:
             for egginfo in glob.glob(pj("src", "*.egg-info")):
-                print "removing", egginfo
+                print("removing", egginfo)
                 shutil.rmtree(egginfo)

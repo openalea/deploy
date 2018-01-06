@@ -32,22 +32,22 @@ def remove_egg(project_name, dist):
     location = dist.location
 
     try:
-        print "Remove ", project_name, version, location
+        print ("Remove ", project_name, version, location)
         if (os.path.isdir(location)):
-            print "Remove directory : %s" % (location,)
+            print ("Remove directory : %s" % (location,))
             shutil.rmtree(location)
         else:
-            print "Remove file %s" % (location)
+            print ("Remove file %s" % (location))
             os.remove(location)
             return True
 
-    except Exception, e:
-        print e
+    except Exception as e:
+        print (e)
         return False
 
     except:
-        print "Unexpected error:", sys.exc_info()[0]
-        print "Please check you have permission to remove packages. "
+        print ("Unexpected error:", sys.exc_info()[0])
+        print ("Please check you have permission to remove packages. ")
         return False
 
 
@@ -73,7 +73,7 @@ def update_all():
     env = Environment()
 
     for project_name in env._distmap.keys():
-        print "Update %s" % (project_name)
+        print ("Update %s" % (project_name))
         alea_install_U(project_name)
 
 
