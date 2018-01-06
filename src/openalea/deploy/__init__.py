@@ -6,7 +6,7 @@ __version__ = version.__version__
 
 # #}
 
-from util import *
+from .util import *
 
-from doc_tools import *
-from autosum_generator import *
+from .doc_tools import *
+from .autosum_generator import *
