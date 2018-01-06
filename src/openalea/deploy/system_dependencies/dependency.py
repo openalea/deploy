@@ -17,6 +17,8 @@
 ############################################################
 
 import platform, types, warnings, collections, subprocess, abc
+from six import with_metaclass
+
 
 
 __all__ =  ["get_platform"]
@@ -53,7 +55,7 @@ class MSingleton(type):
 
 
 
-class BaseOsFactory(object, metaclass=MSingleton):
+class BaseOsFactory(with_metaclass(MSingleton,object)):
     """Base class for foactories that create objects depending on the operating system"""
 
     @classmethod

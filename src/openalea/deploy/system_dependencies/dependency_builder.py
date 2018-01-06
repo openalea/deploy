@@ -486,7 +486,9 @@ def memoize(attr):
 #############################
 # A micro build environment #
 #############################
-class Tool(object, metaclass=MTool):
+from  six import with_metaclass
+
+class Tool(with_metaclass(MTool,object)):
     class PyExecPaths(object):
         """Include this symbol in the default_paths
         list to add the python "scripts" folder to
@@ -648,7 +650,7 @@ class Tool(object, metaclass=MTool):
 
 
 
-class Compiler_(object, metaclass=MSingleton):
+class Compiler_(with_metaclass(MSingleton,object)):
     default_32_comp = "https://gforge.inria.fr/frs/download.php/29029/MinGW-5.1.4_2-win32.egg"
 
     def __init__(self):
@@ -762,7 +764,7 @@ Compiler = Compiler_()
 
 
 
-class BuildEnvironment(object, metaclass=MSingleton):
+class BuildEnvironment(with_metaclass(MSingleton,object)):
     def __init__(self):
         self.options = {}
         # self.proj_builders = None
@@ -1179,7 +1181,7 @@ class BaseBuilder(object):
 
 
 
-class BaseProjectBuilder(BaseBuilder, object, metaclass=MProject):
+class BaseProjectBuilder(with_metaclass(MProject,BaseBuilder,object)):
     url = None
     # Name of the  local archive
     download_name  = None

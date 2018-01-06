@@ -27,7 +27,7 @@ import subprocess
 import sys
 import urllib.parse
 from os.path import join as pj, isdir, splitext
-
+from six import with_metaclass
 
 
 # --------------------------------------------------------------------------- #
@@ -197,7 +197,7 @@ class Ignore(object):
     pass
 
     
-class PlatformAPI(object, metaclass=MPlatformAPI):
+class PlatformAPI(with_metaclass(MPlatformAPI,object)):
     
     packagemap = None
     
@@ -629,7 +629,7 @@ class Windows(BaseWindowsPackageAPI):
 
 MDeploy = create_metabuilder("deploy")
 
-class BaseDepBuilder(BaseBuilder, object, metaclass=MDeploy):
+class BaseDepBuilder(with_metaclass(MDeploy,BaseBuilder, object)):
     all_tasks      = OrderedDict([("i",("_install",True)),                                  
                                  ])
     # Only execute these tasks:

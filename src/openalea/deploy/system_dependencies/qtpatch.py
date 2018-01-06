@@ -55,7 +55,7 @@ def patch(files, qtDirPath, where):
         prefix = "" + qtDirPath
         f = os.path.join(prefix,f)
         
-        print("patch file", f, end=' ')
+        print("patch file", f)
         if not os.path.exists(f):
             print("qpatch: warning: file not found", f)
             continue
