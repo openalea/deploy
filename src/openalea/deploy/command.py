@@ -50,7 +50,6 @@ from distutils.errors import DistutilsSetupError
 # from distutils.util import convert_path
 from distutils.dir_util import mkpath
 import re
-import new
 try:
     # Python 3
     import configparser
@@ -113,7 +112,8 @@ def has_ext_modules(dist):
 
 def set_has_ext_modules(dist):
     """ Set new function handler to dist object """
-    m = new.instancemethod(has_ext_modules, dist, Distribution)
+    from types import MethodType as instancemethod
+    m = instancemethod(has_ext_modules, dist, Distribution)
     dist.has_ext_modules = m
 
 
