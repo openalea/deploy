@@ -83,7 +83,7 @@ def get_dyn_lib_dir(use_default=True):
     try:
         f = open(join(up_dir, "shared-lib.pth"), 'r')
         lib_dir = f.read()
-        print 'Reading shared-lib.pth found in %s' % lib_dir
+        print('Reading shared-lib.pth found in %s' % lib_dir)
         f.close()
 
     except Exception:
@@ -107,8 +107,8 @@ def set_dyn_lib_dir(path):
         f = open(dst, 'w')
         f.write(path)
         f.close()
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
 
 
 def is_lib(filename):
@@ -164,7 +164,7 @@ def link_lib(src, dst):
         pass
 
     # copy
-    print "Installing %s -> %s" % (src, dst)
+    print("Installing %s -> %s" % (src, dst))
     if (os.path.exists(dst)):
         os.unlink(dst)
 
@@ -174,7 +174,7 @@ def link_lib(src, dst):
         shutil.copy2(src, dst)
 
     # create an egm file
-    print "Installing ", mark_file
+    print("Installing ", mark_file)
     f = open(mark_file, 'w')
     f.write(src)
     f.close()
@@ -196,16 +196,16 @@ def clean_lib(lib_dir, clean_all=False):
             libfile = egm[:- len(EGG_MARKER_EXTENSION)]
 
             try:
-                print "Removing ", libfile
+                print("Removing ", libfile)
                 os.remove(libfile)
-            except Exception, e:
-                print "Cannot remove %s : %s" % (libfile, e)
+            except Exception as e:
+                print("Cannot remove %s : %s" % (libfile, e))
 
             try:
-                print "Removing ", egm
+                print("Removing ", egm)
                 os.remove(egm)
-            except Exception, e:
-                print "Cannot remove %s : %s" % (egm, e)
+            except Exception as e:
+                print("Cannot remove %s : %s" % (egm, e))
 
 
 def install_lib(lib_dir):
@@ -254,7 +254,7 @@ def install_lib(lib_dir):
                     dst = join(dst_dir, f)
                     link_lib(src, dst)
 
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
 
     return lib_dir

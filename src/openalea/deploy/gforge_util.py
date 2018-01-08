@@ -42,11 +42,17 @@ then uploads it to the W3C validator.
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
-import urllib
-import urllib2
+
+try:
+    # python 3
+    from urllib.request import BaseHandler, HTTPHandler
+except:
+    # python 2
+    from urllib2 import BaseHandler, HTTPHandler
+
 import mimetools, mimetypes
 import os, stat, sys
-from cStringIO import StringIO
+from io import StringIO
 
 
 class Callable:
@@ -61,9 +67,9 @@ class Callable:
 doseq = 1
 
 
-class MultipartPostHandler(urllib2.BaseHandler):
+class MultipartPostHandler(BaseHandler):
     """ todo """
-    handler_order = urllib2.HTTPHandler.handler_order - 10  # needs to run first
+    handler_order = HTTPHandler.handler_order - 10  # needs to run first
 
     def http_request(self, request):
         data = request.get_data()
@@ -78,10 +84,10 @@ class MultipartPostHandler(urllib2.BaseHandler):
                         v_vars.append((key, value))
             except TypeError:
                 systype, value, traceback = sys.exc_info()
-                raise TypeError, "not a valid non-string sequence or mapping object", traceback
+                raise TypeError("not a valid non-string sequence or mapping object").with_traceback(traceback)
 
             if len(v_files) == 0:
-                data = urllib.urlencode(v_vars, doseq)
+                data = urllib.parse.urlencode(v_vars, doseq)
             else:
                 boundary, data = self.multipart_encode(v_vars, v_files)
 
@@ -89,8 +95,8 @@ class MultipartPostHandler(urllib2.BaseHandler):
                 if (request.has_header('Content-Type')
                     and request.get_header('Content-Type').find(
                         'multipart/form-data') != 0):
-                    print "Replacing %s with %s" % (
-                    request.get_header('content-type'), 'multipart/form-data')
+                    print("Replacing %s with %s" % (
+                    request.get_header('content-type'), 'multipart/form-data'))
                 request.add_unredirected_header('Content-Type', contenttype)
 
             request.add_data(data)
@@ -135,11 +141,15 @@ class MultipartPostHandler(urllib2.BaseHandler):
 
 ##########################################################"
 
-import cookielib, urllib, urllib2, urlparse
 import os
 from os.path import join as pj, exists
 import glob
-import ConfigParser
+try :
+    # python 3
+    import configparser
+except:
+    # python 2
+    import ConfigParser as configparser
 import getpass
 
 urlOpener = None
@@ -148,10 +158,10 @@ urlOpener = None
 def find_login_passwd(allow_user_input=True):
     home = ""
     # Get password
-    if os.environ.has_key('USERPROFILE'):
+    if 'USERPROFILE' in os.environ:
         home = os.environ['USERPROFILE']
 
-    elif os.environ.has_key('HOME'):
+    elif 'HOME' in os.environ:
         home = os.environ['HOME']
 
     rc = pj(home, '.pypirc')
@@ -162,8 +172,8 @@ def find_login_passwd(allow_user_input=True):
 
     username, password = None, None
     if exists(rc):
-        print 'Using PyPI login from %s' % (rc)
-        config = ConfigParser.ConfigParser({
+        print('Using PyPI login from %s' % (rc))
+        config = configparser.ConfigParser({
             'username': '',
             'password': '',
             'repository': ''})
@@ -172,9 +182,24 @@ def find_login_passwd(allow_user_input=True):
         username = config.get('server-login', 'username')
         password = config.get('server-login', 'password')
     elif allow_user_input:
-        username = raw_input("Enter your GForge login:")
+        username = input("Enter your GForge login:")
         password = getpass.getpass("Enter you GForge password:")
     return username, password
+
+try:
+    # python 3
+    from urllib.parse import urlencode, urlparse, splituser, unquote, urlunparse
+    from urllib.request import build_opener, install_opener, HTTPCookieProcessor, Request, urlopen
+except:
+    # python 2
+    from urllib2 import build_opener, install_opener, HTTPCookieProcessor, Request, splituser, unquote, urlopen
+    from urllib import urlencode
+    from urlparse import urlparse, urlunparse
+
+try:
+    import http.cookiejar as cookiejar
+except:
+    import cookielib as cookiejar
 
 
 def cookie_login(loginurl, values):
@@ -185,23 +210,21 @@ def cookie_login(loginurl, values):
     """
     global urlOpener
     # Enable cookie support for urllib2
-    cookiejar = cookielib.CookieJar()
-    urlOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar),
-                                     MultipartPostHandler)
+    mcookiejar = cookiejar.CookieJar()
+    urlOpener = build_opener(HTTPCookieProcessor(mcookiejar), MultipartPostHandler)
     
-    data = urllib.urlencode(values)
-    request = urllib2.Request(loginurl, data)
-    url = urlOpener.open(
-        request)  # Our cookiejar automatically receives the cookies
-    urllib2.install_opener(urlOpener)
+    data = urlencode(values)
+    request = Request(loginurl, data)
+    url = urlOpener.open(request)  # Our mcookiejar automatically receives the cookies
+    urllib.request.install_opener(urlOpener)
 
     # Make sure we are logged in by checking the presence of the cookie "session_ser".
     # (which is the cookie containing the session identifier.)
-    if not 'session_ser' in [cookie.name for cookie in cookiejar]:
-        print "Login failed !"
+    if not 'session_ser' in [cookie.name for cookie in mcookiejar]:
+        print("Login failed !")
         return False
     else:
-        print "We are logged in !"
+        print("We are logged in !")
         return True
 
 
@@ -298,36 +321,36 @@ def add_private_gforge_repositories(userid=None, passwd=None):
         setuptools.package_index.open_with_auth = open_with_auth2
 
 
+
 def open_with_auth2(url):
     """
     Open a urllib2 request, handling HTTP authentication
     In this version, user-agent is ignored
     """
 
-    scheme, netloc, path, params, query, frag = urlparse.urlparse(url)
+    scheme, netloc, path, params, query, frag = urlparse(url)
 
     if scheme in ('http', 'https'):
-        auth, host = urllib2.splituser(netloc)
+        auth, host = splituser(netloc)
     else:
         auth = None
 
     if auth:
-        auth = "Basic " + urllib2.unquote(auth).encode('base64').strip()
-        new_url = urlparse.urlunparse((scheme, host, path, params, query, frag))
-        request = urllib2.Request(new_url)
+        auth = "Basic " + unquote(auth).encode('base64').strip()
+        new_url = urlunparse((scheme, host, path, params, query, frag))
+        request = Request(new_url)
         request.add_header("Authorization", auth)
     else:
-        request = urllib2.Request(url)
+        request = Request(url)
 
     # request.add_header('User-Agent', user_agent)
-    fp = urllib2.urlopen(request)
+    fp = urlopen(request)
 
     if auth:
         # Put authentication info back into request URL if same host,
         # so that links found on the page will work
-        s2, h2, path2, param2, query2, frag2 = urlparse.urlparse(fp.url)
+        s2, h2, path2, param2, query2, frag2 = urlparse(fp.url)
         if s2 == scheme and h2 == host:
-            fp.url = urlparse.urlunparse(
-                (s2, netloc, path2, param2, query2, frag2))
+            fp.url = urlunparse((s2, netloc, path2, param2, query2, frag2))
 
     return fp

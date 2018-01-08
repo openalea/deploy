@@ -21,8 +21,9 @@
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
 
-import distributions, dependency
+from . import distributions, dependency
 import sys
+from functools import reduce
 
 def install_dependencies(software, osname=None, fake=False):
     if osname is None:
@@ -35,23 +36,23 @@ def install_dependencies(software, osname=None, fake=False):
     voth = False
 
     if len(dependencies.runtime_distribution_packages()):
-        print "Do you wish to install the required runtime packages:\n"
-        print reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.runtime_distribution_packages(), "") + " (y/n)?"
-        vrun = raw_input()
+        print("Do you wish to install the required runtime packages:\n")
+        print(reduce(lambda x,y: str(x)+" "+str(y),
+                     dependencies.runtime_distribution_packages(), "") + " (y/n)?")
+        vrun = input()
 
     if len(dependencies.development_distribution_packages()):
-        print "Do you wish to install the development packages:\n"
-        print reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.development_distribution_packages(), "") + " (y/n)?"
-        vdev = raw_input()
+        print("Do you wish to install the development packages:\n")
+        print(reduce(lambda x,y: str(x)+" "+str(y),
+                     dependencies.development_distribution_packages(), "") + " (y/n)?")
+        vdev = input()
 
 
     if len(dependencies.other_packages()):
-        print "Do you wish to install the other packages:\n"
-        print reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.other_packages(), "") + " (y/n)?"
-        voth = raw_input()
+        print("Do you wish to install the other packages:\n")
+        print(reduce(lambda x,y: str(x)+" "+str(y),
+                     dependencies.other_packages(), "") + " (y/n)?")
+        voth = input()
 
     if vrun == "y":
         theOs.install_packages(dependencies.runtime_distribution_packages(), fake)
@@ -76,13 +77,13 @@ for the one it is running on.
 
 def main():
 
-    print """
+    print("""
 ############################################################
 # THIS MODULE IS DEPRECATED, USE DEPLOY_SYSTEM2.PY INSTEAD #
 ############################################################
-"""
+""")
     if len(sys.argv)==1:
-        print usage%( reduce( lambda x, y: x+" "+y, distributions.canonical_dependencies.iterkeys() ), )
+        print(usage%( reduce( lambda x, y: x+" "+y, iter(distributions.canonical_dependencies.keys()) ), ))
         sys.exit(-1)
 
     software = sys.argv[1]

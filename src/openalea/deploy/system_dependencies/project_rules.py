@@ -179,7 +179,7 @@ class sip(BaseProjectBuilder):
     @option_to_sys_path("bisonflex_path")
     def configure(self):
         if exists(pj(self.sourcedir,"configure.py") ):
-            print "it's alive!"
+            print("it's alive!")
             # The -S flag is needed or else configure.py
             # sees any existing sip installation and can fail.
             return subprocess.call(sys.executable + \
@@ -190,12 +190,12 @@ class sip(BaseProjectBuilder):
             #sip's mercurial repository. This type of source
             #needs a step before actually calling configure.py
             if exists("build.py"):
-                print "Will try to build sip from mercurial source zipball"
+                print("Will try to build sip from mercurial source zipball")
                 try:
                     #We neeeed bison and flex
                     subprocess.call("bison.exe")
                 except:
-                    print "Could not find bison flex, use --bisonflex"
+                    print("Could not find bison flex, use --bisonflex")
                     return False
                 apply_patch( pj(ModuleBaseDir,"sip_build.patch") )
                 subprocess.call(sys.executable + " -S build.py prepare")
@@ -235,7 +235,7 @@ if 'qt4-dev' in env:
     """
 
         txt = ""
-        print "sip patching", os.getcwd()
+        print("sip patching", os.getcwd())
         with open("sipconfig.py") as f:
             txt = f.read()
 
@@ -351,8 +351,8 @@ class qscintilla(BaseProjectBuilder):
         qt4_ = qt4()
         try:
             shutil.move( pj(qt4_.install_dll_dir, "libqscintilla2.a"), qt4_.install_lib_dir)
-        except Exception, epyqt :
-            print e
+        except Exception as epyqt :
+            print(e)
         return ret
 
 
@@ -459,7 +459,7 @@ class boost(BaseProjectBuilder):
     def build(self):
         # it is possible to bootstrap boost if no bjam.exe is found:
         if not exists( pj(self.sourcedir, "bjam.exe") ):
-            print "Call bootstrap.bat"
+            print("Call bootstrap.bat")
             if subprocess.call("bootstrap.bat mingw") != 0:
                 return False
             else:
@@ -482,7 +482,7 @@ class boost(BaseProjectBuilder):
         cmd += " variant=release link=shared threading=multi runtime-link=shared toolset=gcc"
         cmd += " include=%s library-path=%s install"
         cmd %= paths
-        print cmd
+        print(cmd)
         return subprocess.call(cmd) == 0
 
     def install(self):
@@ -588,7 +588,7 @@ class cgal(BaseProjectBuilder):
                             ])
         options=options.replace("\\", "/") #avoid "escape sequence" errors with cmake
         cmd = 'cmake.exe -G"MinGW Makefiles" '+options+' . '
-        print cmd
+        print(cmd)
         return subprocess.call(cmd) == 0
                             
         

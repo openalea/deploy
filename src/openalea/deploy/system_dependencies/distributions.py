@@ -16,7 +16,7 @@
 # THIS MODULE IS DEPRECATED, USE DEPLOY_SYSTEM2.PY INSTEAD #
 ############################################################
 
-import dependency
+from . import dependency
 
 
 # -- our dependency tree --

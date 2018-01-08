@@ -52,7 +52,7 @@ class egg_mingw(BaseEggBuilder):
         data = []
         
         for dir in subd:
-            dat = recursive_glob_as_dict(pj(mingwbase,dir), "*", strip_keys=True, prefix_key=dir).items()         
+            dat = list(recursive_glob_as_dict(pj(mingwbase,dir), "*", strip_keys=True, prefix_key=dir).items())         
             data += [ (d, [f for f in t if not f.endswith(".dll")]) for d,t in dat]
 
         bindirs = {"bin": cpath}
@@ -78,10 +78,10 @@ class egg_qt4(BaseEggBuilder):
         sip_   = sip()
         # dlls are the union of qt dlls and plugins directories (which is actually the same!)
         # qscis apis are recursive from qt4 (need to list all files)        
-        qscis    = recursive_glob_as_dict(pysci_.qsci_dir, Pattern.sciapi, strip_keys=True, prefix_key="qsci").items()
-        extra_pyqt4_mods = recursive_glob_as_dict(pj(pyqt4_.install_site_dir,"PyQt4"), Pattern.pyall, strip_keys=True, prefix_key="PyQt4").items()
-        print "laaaaaaaaaaaaaaaajfdshfsdosfdo", extra_pyqt4_mods
-        sip_mods = recursive_glob_as_dict(sip_.install_site_dir, Pattern.pyall, strip_keys=True, levels=1).items()
+        qscis    = list(recursive_glob_as_dict(pysci_.qsci_dir, Pattern.sciapi, strip_keys=True, prefix_key="qsci").items())
+        extra_pyqt4_mods = list(recursive_glob_as_dict(pj(pyqt4_.install_site_dir,"PyQt4"), Pattern.pyall, strip_keys=True, prefix_key="PyQt4").items())
+        print("laaaaaaaaaaaaaaaajfdshfsdosfdo", extra_pyqt4_mods)
+        sip_mods = list(recursive_glob_as_dict(sip_.install_site_dir, Pattern.pyall, strip_keys=True, levels=1).items())
 
         lib_dirs    = {"PyQt4": qt4_.install_dll_dir}
         package_dir = {"PyQt4": pj(pyqt4_.install_site_dir, "PyQt4")}
@@ -112,21 +112,21 @@ class egg_qt4_dev(BaseEggBuilder):
         # binaries are the union of qt, pyqt and sip binaries 
         bin_dirs = {"bin":qt4_.install_bin_dir}
         # includes are recursive subdirectories and the union of qt and sip includes               
-        incs = recursive_glob_as_dict( qt4_.install_inc_dir, Pattern.qtinc, strip_keys=True, prefix_key="include", dirs=True).items() + \
-               recursive_glob_as_dict( sip_.install_inc_dir, Pattern.qtinc, strip_keys=True, prefix_key="include", dirs=True).items()
+        incs = list(recursive_glob_as_dict( qt4_.install_inc_dir, Pattern.qtinc, strip_keys=True, prefix_key="include", dirs=True).items()) + \
+               list(recursive_glob_as_dict( sip_.install_inc_dir, Pattern.qtinc, strip_keys=True, prefix_key="include", dirs=True).items())
         inc_dirs = merge_list_dict( incs )
         # libs are recursive subdirectories of qt libs          
-        libs = recursive_glob_as_dict(qt4_.install_lib_dir, Pattern.qtstalib, strip_keys=True, prefix_key="lib").items()
+        libs = list(recursive_glob_as_dict(qt4_.install_lib_dir, Pattern.qtstalib, strip_keys=True, prefix_key="lib").items())
         # sip files are recursive subdirectories and the union of pyqt4 and...
-        sips = recursive_glob_as_dict(pyqt4_.install_sip_dir, Pattern.sipfiles, strip_keys=True, prefix_key="sip").items()
+        sips = list(recursive_glob_as_dict(pyqt4_.install_sip_dir, Pattern.sipfiles, strip_keys=True, prefix_key="sip").items())
         # sources are recursive subdirectories and the union of qt4 and that all (CPP have been removed)...
-        srcs = recursive_glob_as_dict(qt4_.install_src_dir, Pattern.qtsrc, strip_keys=True, prefix_key="src").items()
+        srcs = list(recursive_glob_as_dict(qt4_.install_src_dir, Pattern.qtsrc, strip_keys=True, prefix_key="src").items())
         # tra files are recursive subdirectories in qt4
-        tra = recursive_glob_as_dict(qt4_.install_tra_dir, Pattern.qttransl, strip_keys=True, prefix_key="translations").items()
+        tra = list(recursive_glob_as_dict(qt4_.install_tra_dir, Pattern.qttransl, strip_keys=True, prefix_key="translations").items())
         # mks files are recursive subdirectories in qt4
-        mks = recursive_glob_as_dict(qt4_.install_mks_dir, Pattern.qtmkspec, strip_keys=True, prefix_key="mkspecs").items()        
+        mks = list(recursive_glob_as_dict(qt4_.install_mks_dir, Pattern.qtmkspec, strip_keys=True, prefix_key="mkspecs").items())        
         # plugins files are recursive subdirectories in qt4
-        plu = recursive_glob_as_dict(qt4_.install_plu_lib_dir, Pattern.qtstalib, strip_keys=True, prefix_key="plugins").items()        
+        plu = list(recursive_glob_as_dict(qt4_.install_plu_lib_dir, Pattern.qtstalib, strip_keys=True, prefix_key="plugins").items())        
 
         from openalea.vpltk.qt import QtCore
         
@@ -149,16 +149,16 @@ class egg_pyqglviewer(BaseEggBuilder):
         qglv_   = qglviewer()
         pyqglv_   = pyqglviewer()
         
-        pyqgl_mods = recursive_glob_as_dict(pyqglv_.install_site_dir, Pattern.pyall, strip_keys=True, levels=1).items()
+        pyqgl_mods = list(recursive_glob_as_dict(pyqglv_.install_site_dir, Pattern.pyall, strip_keys=True, levels=1).items())
         # includes are recursive subdirectories of qglviewer           
-        incs = recursive_glob_as_dict( qglv_.install_inc_dir, Pattern.include, strip_keys=True, prefix_key="include", dirs=True).items()
+        incs = list(recursive_glob_as_dict( qglv_.install_inc_dir, Pattern.include, strip_keys=True, prefix_key="include", dirs=True).items())
         inc_dirs = merge_list_dict( incs )
         # libs are recursive subdirectories of qt libs          
-        libs = recursive_glob_as_dict(qglv_.install_lib_dir, Pattern.qtstalib, strip_keys=True, prefix_key="lib").items()
+        libs = list(recursive_glob_as_dict(qglv_.install_lib_dir, Pattern.qtstalib, strip_keys=True, prefix_key="lib").items())
         # sip files are recursive subdirectories of pyqglviewer sip installation directory
-        sips = recursive_glob_as_dict(pyqglv_.install_sip_dir, Pattern.sipfiles, strip_keys=True, prefix_key="sip").items()
+        sips = list(recursive_glob_as_dict(pyqglv_.install_sip_dir, Pattern.sipfiles, strip_keys=True, prefix_key="sip").items())
         # examples are recursive subdirectories of pyqglviewer examples installation directory contains various types of files
-        exas = recursive_glob_as_dict(pyqglv_.install_exa_dir, Pattern.any, strip_keys=True, prefix_key="examples").items()        
+        exas = list(recursive_glob_as_dict(pyqglv_.install_exa_dir, Pattern.any, strip_keys=True, prefix_key="examples").items())        
         
         lib_dirs    = {"" : qglv_.install_dll_dir}
         data_files  = exas+sips+libs+pyqgl_mods
@@ -186,7 +186,7 @@ class egg_boost(BaseEggBuilder):
         version_re  = re_compile("^.*BOOST_VERSION\s:\s([\d\.]{4,8}).*$", re.MULTILINE|re.DOTALL)
         boost_ = boost()
                   
-        incs = recursive_glob_as_dict( boost_.install_inc_dir, Pattern.qtinc, strip_keys=True, prefix_key="include", dirs=True).items()
+        incs = list(recursive_glob_as_dict( boost_.install_inc_dir, Pattern.qtinc, strip_keys=True, prefix_key="include", dirs=True).items())
         inc_dirs = merge_list_dict( incs )
            
         # get the version from Jamroot file

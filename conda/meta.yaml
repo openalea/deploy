@@ -17,10 +17,12 @@ requirements:
     - python
     - setuptools
     - pywin32 # [win]
+    - six
   run:
     - python
     - setuptools
     - pywin32 # [win]
+    - six
     - path.py
 
 test:

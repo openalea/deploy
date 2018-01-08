@@ -59,7 +59,7 @@ class GForgeProxy(object):
 
     def login(self, userid=None, passwd=None):
         """  Open a session """
-        import gforge_util
+        from . import gforge_util
         rc_userid, rc_passwd = gforge_util.find_login_passwd()
         userid = userid or rc_userid
         passwd = passwd or rc_passwd
@@ -69,8 +69,8 @@ class GForgeProxy(object):
             self.userid = userid
             self.passwd = passwd
 
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
 
             return self.session
 
@@ -193,8 +193,8 @@ class GForgeProxy(object):
 
                     return (name, date, notes, changes)
 
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
         
         return (None, None, None, None,)
 
@@ -323,8 +323,8 @@ class GForgeProxy(object):
         try:
             return self.server.addPackage(self.session,
                                           project_id, package_name, int(public))
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
 
     def add_release(self, project_id, package_id, release_name,
                     notes, changes):
@@ -339,8 +339,8 @@ class GForgeProxy(object):
         try:
             return self.server.addRelease(self.session, project_id, package_id,
                                           release_name, notes, changes)
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
 
     def add_big_file(self, project_id, package_id, release_id, filename,
                      proc_type="any", file_type="other"):
@@ -360,18 +360,18 @@ class GForgeProxy(object):
         type = type_id.get(file_type, type_id['other'])
         processor = proc_id.get(proc_type, proc_id['any'])
 
-        print "Uploading %s..." % (name,)
+        print("Uploading %s..." % (name,))
 
         try:
-            import gforge_util
+            from . import gforge_util
             gforge_util.gforge_login(self.userid, self.passwd)
             gforge_util.upload_file(filename, project_id, package_id,
                                     release_id, type, processor)
 
-            print "Done."
+            print("Done.")
 
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
 
     def add_file(self, project_id, package_id, release_id, filename,
                  proc_type="any", file_type="other"):
@@ -399,7 +399,7 @@ class GForgeProxy(object):
 
         release_time = int(time.mktime(time.localtime()))
 
-        print "Uploading %s..." % (name,),
+        print("Uploading %s..." % (name,))
 
         try:
             
@@ -407,10 +407,10 @@ class GForgeProxy(object):
                                       _release_id,
                                       name, filestr, type, processor,
                                       release_time)
-            print "Done."
+            print("Done.")
             return ret
         
-        except Exception, e:
+        except Exception as e:
             return self.add_big_file(project_id, package_id, release_id,
                                      filename, proc_type, file_type)
 
@@ -422,7 +422,7 @@ class GForgeProxy(object):
         project_id, package_id = \
             self.convert_to_id(project_id, package_id)
 
-        import gforge_util
+        from . import gforge_util
         gforge_util.gforge_login(self.userid, self.passwd)
         gforge_util.delete_package(project_id, package_id)
 
@@ -434,7 +434,7 @@ class GForgeProxy(object):
         project_id, package_id, release_id = \
             self.convert_to_id(project_id, package_id, release_id)
 
-        import gforge_util
+        from . import gforge_util
         gforge_util.gforge_login(self.userid, self.passwd)
         gforge_util.delete_release(project_id, package_id, release_id)
 
@@ -443,11 +443,11 @@ class GForgeProxy(object):
         project_id, package_id, release_id, file_id = \
             self.convert_to_id(project_id, package_id, release_id, file_id)
         
-        import gforge_util
+        from . import gforge_util
         gforge_util.gforge_login(self.userid, self.passwd)
-        print 'Trying to delete file %s' % file_id,
+        print('Trying to delete file %s' % file_id)
         gforge_util.delete_file(project_id, package_id, release_id, file_id)
-        print 'Done.'
+        print('Done.')
 
 
 # CONST
