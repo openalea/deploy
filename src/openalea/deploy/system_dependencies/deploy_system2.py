@@ -16,18 +16,18 @@
 #
 ###############################################################################
 
-from dependency_builder import MSingleton, BaseBuilder, BuildEnvironment, BE
-from dependency_builder import create_metabuilder, build_epilog
-from dependency_builder import options_metabuilders, options_common, options_gforge
-from dependency_builder import exe_ext, makedirs, download, download_egg, setuptools, openalea_deploy
+from .dependency_builder import MSingleton, BaseBuilder, BuildEnvironment, BE
+from .dependency_builder import create_metabuilder, build_epilog
+from .dependency_builder import options_metabuilders, options_common, options_gforge
+from .dependency_builder import exe_ext, makedirs, download, download_egg, setuptools, openalea_deploy
 from collections import deque, OrderedDict
 import argparse
 import platform
 import subprocess
 import sys
-import urlparse
+import urllib.parse
 from os.path import join as pj, isdir, splitext
-
+from six import with_metaclass
 
 
 # --------------------------------------------------------------------------- #
@@ -43,7 +43,7 @@ class MPlatformAPI(MSingleton):
     def get(cls, item=None):
         if item is None:
             item = MPlatformAPI.get_platform_name()
-        item = cls.intersect_and_solve(item, cls.apis.keys(), sep="_")
+        item = cls.intersect_and_solve(item, list(cls.apis.keys()), sep="_")
         item = item or "EggPackageAPI".lower()
         return MPlatformAPI.apis[item]
 
@@ -113,11 +113,11 @@ class MPlatformAPI(MSingleton):
         # we build a chain of responsability
         first = cls.get()
         c_o_r = [first]
-        c_o_r += [api_cls for api_cls in cls.apis.itervalues() \
+        c_o_r += [api_cls for api_cls in cls.apis.values() \
                   if api_cls!=first and \
                   not issubclass(api_cls, NativePackageAPI)] #because this should be "first"
         
-        print c_o_r
+        print(c_o_r)
         action_men = OrderedDict()
         
         to_inst = packages[:]
@@ -126,24 +126,24 @@ class MPlatformAPI(MSingleton):
             handled, to_inst = api.decanonify(*to_inst)
             action_men[api] = handled
 
-        print "The packages will be installed:"
-        for api, handled in action_men.iteritems():
-            print "\t - using", api.__class__.__name__, "for"
+        print("The packages will be installed:")
+        for api, handled in action_men.items():
+            print("\t - using", api.__class__.__name__, "for")
             for h in handled:
-                print "\t\t", h
+                print("\t\t", h)
 
         if len(to_inst):
-            print "Will NOT install these (couldn't find any way to install them) :"
+            print("Will NOT install these (couldn't find any way to install them) :")
             for p in to_inst:
-                print "\t", p
+                print("\t", p)
                 
-        if not BE.options.get("yes_to_all") and raw_input("Do you want to proceed? (y/n):").lower() != "y":
+        if not BE.options.get("yes_to_all") and input("Do you want to proceed? (y/n):").lower() != "y":
             return False
 
-        for api, handled in action_men.iteritems():
+        for api, handled in action_men.items():
             apiName = api.__class__.__name__
-            print "Using", apiName
-            if not BE.options.get("yes_to_all") and BE.options.get("confirm_each") and raw_input("Install the %s group? (y/n):"%apiName).lower()=="n":
+            print("Using", apiName)
+            if not BE.options.get("yes_to_all") and BE.options.get("confirm_each") and input("Install the %s group? (y/n):"%apiName).lower()=="n":
                 continue
             if api.install_packages(*handled) == False:
                 return False
@@ -169,7 +169,7 @@ class Egg(DepSpec):
 class WinInst(DepSpec): #for exes and msi
     def __init__(self, url, ez_name=None):
         self.url = url
-        self.ez_name = ez_name or urlparse.urlsplit(url).path.split("/")[-1]
+        self.ez_name = ez_name or urllib.parse.urlsplit(url).path.split("/")[-1]
     def __str__(self):        
         if BE.verbose:
             return self.url+ " => " + self.ez_name
@@ -197,10 +197,8 @@ class Ignore(object):
     pass
 
     
-class PlatformAPI(object):
+class PlatformAPI(with_metaclass(MPlatformAPI,object)):
     
-    __metaclass__ = MPlatformAPI
-        
     packagemap = None
     
     handled_decanofied_types = set([str])
@@ -230,10 +228,10 @@ class PlatformAPI(object):
             elif isinstance(deca_list, list):
                 pass
             elif deca_list==Ignore:
-                print "Info: ignoring", pkg
+                print("Info: ignoring", pkg)
                 continue
             elif deca_list==NA:
-                print "Info: Delegating", pkg
+                print("Info: Delegating", pkg)
                 not_handled.add(pkg)
                 continue
             else:
@@ -273,10 +271,10 @@ class BaseEggPackageAPI(PlatformAPI, object):
             if not download_egg(pkg.spec, tempdir):
                 return False
             if BE.options.get("dl_only"):
-                print "skipping installation"
+                print("skipping installation")
                 continue
             cmd = inst + " -i "+ tempdir + " " + pkg.spec
-            print cmd            
+            print(cmd)            
             if subprocess.call(cmd, shell=True):
                 return False
         return True
@@ -291,7 +289,7 @@ class NativePackageAPI(PlatformAPI, object):
     
     def install_packages(self, *packages): 
         cmd = self.install_cmd + " " + " ".join(packages)
-        print cmd
+        print(cmd)
         if subprocess.call( cmd, shell=True ):
             return False
         return True        
@@ -311,7 +309,7 @@ class BaseWindowsPackageAPI(NativePackageAPI):
             if not download(pkg.url, pkg.ez_name, pkg_pth):
                 return False
             if BE.options.get("dl_only"):
-                print "skipping installation"
+                print("skipping installation")
                 continue
             name, ext = splitext(pkg.ez_name.lower())
             if ext == ".exe":
@@ -321,7 +319,7 @@ class BaseWindowsPackageAPI(NativePackageAPI):
                 if subprocess.call("msiexec /i "+pkg_pth):
                     return False
             else:
-                print "trying to install %s but found no way to do so."%pkg_pth
+                print("trying to install %s but found no way to do so."%pkg_pth)
         return True   
            
         
@@ -341,7 +339,7 @@ def get_dependencies(package):
         while currentPkg:
             hasChilds = True
             child     = None
-            try: child = currentPkgChilds.next()
+            try: child = next(currentPkgChilds)
             except: hasChilds = False
             if hasChilds:
                 ancestors.append(currentPkg)
@@ -369,7 +367,7 @@ def get_dependencies(package):
     
 # --------------------------------------------------------------------------- #
 def get_all_deps():
-    return [ dep for deps in get_canonical_dependency_tree().itervalues() for dep in deps \
+    return [ dep for deps in get_canonical_dependency_tree().values() for dep in deps \
             if dep not in ("openalea", "vplants", "alinea") ]
             
 def get_canonical_dependency_tree():
@@ -631,13 +629,11 @@ class Windows(BaseWindowsPackageAPI):
 
 MDeploy = create_metabuilder("deploy")
 
-class BaseDepBuilder(BaseBuilder, object):
-    __metaclass__  = MDeploy
-    # Task management:
+class BaseDepBuilder(with_metaclass(MDeploy,BaseBuilder, object)):
     all_tasks      = OrderedDict([("i",("_install",True)),                                  
                                  ])
     # Only execute these tasks:
-    supported_tasks = "".join(all_tasks.keys())
+    supported_tasks = "".join(list(all_tasks.keys()))
     
     required_tools = [setuptools, openalea_deploy]
     
@@ -646,7 +642,7 @@ class BaseDepBuilder(BaseBuilder, object):
         all_pkgs = get_all_deps()
         dependencies = get_dependencies(pkg)
         for to_skip in self.options["skip_inst"]:
-            print "removing", to_skip, "from dependencies"
+            print("removing", to_skip, "from dependencies")
             assert to_skip in all_pkgs
             dependencies.remove(to_skip)
         
@@ -672,7 +668,7 @@ class BaseDepBuilder(BaseBuilder, object):
             to_inst.remove("alinea")
         except:
             pass            
-        print "Will install dependencies for", MPlatformAPI.get_platform_name()
+        print("Will install dependencies for", MPlatformAPI.get_platform_name())
 
         return MPlatformAPI.install_packages(*to_inst)
         

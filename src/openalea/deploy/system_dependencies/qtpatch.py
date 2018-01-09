@@ -27,7 +27,7 @@ import shutil
 
 def patch(files, qtDirPath, where):
     if not os.path.isdir(qtDirPath):
-        print qtDirPath, "does not exist"
+        print(qtDirPath, "does not exist")
         sys.exit(-1)
     
     if os.path.exists( files ):
@@ -50,14 +50,14 @@ def patch(files, qtDirPath, where):
     qtDirPathA2 = bytearray(qtDirPath.replace("\\", "/"))
     patches     = 0 # a counter 
     
-    print "about to try to patch", len(filesToPatch), "files"
+    print("about to try to patch", len(filesToPatch), "files")
     for f in filesToPatch:
-        prefix = u"" + qtDirPath
+        prefix = "" + qtDirPath
         f = os.path.join(prefix,f)
         
-        print "patch file", f,
+        print("patch file", f)
         if not os.path.exists(f):
-            print "qpatch: warning: file not found", f
+            print("qpatch: warning: file not found", f)
             continue
               
         source = None
@@ -68,14 +68,14 @@ def patch(files, qtDirPath, where):
             stat = os.fstat(file_.fileno())
             
         if source.find(qtDirPathA) == -1 and source.find(qtDirPathA2) == -1:
-            print "string not found"
+            print("string not found")
             continue
   
         # make backup, if backup already exists, skip the patching.
         if not os.path.exists( f+"_bkp" ):
             shutil.move(f, f+"_bkp")
         else:
-            print "backup already exists, ignoring"
+            print("backup already exists, ignoring")
             continue
   
         patched = source.replace(qtDirPathA, replacement)
@@ -88,13 +88,13 @@ def patch(files, qtDirPath, where):
             try:
                 os.fchmod(out_.fileno(), stat.st_mode)
                 os.fchown(out_.fileno(), stat.st_uid, stat.st_gid)
-            except Exception, e:
-                print "\n\tOops! Couldn't copy file metadata", type(e), e
+            except Exception as e:
+                print("\n\tOops! Couldn't copy file metadata", type(e), e)
         
         patches += 1
-        print "ok"
+        print("ok")
             
-    print "patched", patches, "files"
+    print("patched", patches, "files")
     
 if __name__ == "__main__":
     try:
@@ -103,6 +103,6 @@ if __name__ == "__main__":
     except:
         import traceback
         traceback.print_exc()
-        print "Usage: python patch files oldQtDir where"
+        print("Usage: python patch files oldQtDir where")
         sys.exit(-1)    
     

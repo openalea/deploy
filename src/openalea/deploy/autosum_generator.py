@@ -19,7 +19,7 @@ Small functions to manipulate autosum files
 """
 
 from os.path import join, dirname, basename, splitext
-from list_modules import list_modules
+from .list_modules import list_modules
 
 
 def generate_autosum(pkg_name, filename):
@@ -38,7 +38,7 @@ def generate_autosum(pkg_name, filename):
      - `filename` (str) - name of the file in which to write the autosum
     """
     # find package root directory
-    exec "import %s as pkg" % pkg_name
+    exec ("import %s as pkg" % pkg_name)
 
     pkg_dir = dirname(pkg.__file__)
     pkg_dir_name = basename(pkg_dir)
@@ -68,7 +68,7 @@ Reference guide
 
     modules = []
 
-    print pkg_dir
+    print (pkg_dir)
     for mod_name in list_modules(pkg_dir):
         gr = mod_name.split(".")
         if not gr[-1].startswith("_") \
@@ -80,7 +80,7 @@ Reference guide
 
     for mod_dec in modules:
         full_mod_name = ".".join([pkg_name] + mod_dec)
-        print full_mod_name
+        print (full_mod_name)
         txt += """
 .. currentmodule:: %s
 """ % full_mod_name
