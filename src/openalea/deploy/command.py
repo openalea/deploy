@@ -470,37 +470,7 @@ class scons(Command):
                 # Test if command success with return value
                 if (retval != 0):
                     raise SconsError()
-
-                # Run scons install in a seconde step
-                # Install in the conda prefix
-                if self.scons_install:
-                    print("Run SCONS install in conda environment")
-
-                    if is_conda_build():
-                        # Fred remarks : Is it realy usefull ? Scons can be parameterized to find such repository
-                        prefix = conda_prefix()
-                        if not ("posix" in os.name): prefix = os.path.join(prefix, 'Library')
-                        externp += 'libdir=%s/lib bindir=%s/bin includedir=%s/include'%(prefix, prefix, prefix)
-
-                    # To have scons installation, it should be called with the install target. By default it is 'build'
-                    externp+= ' install' 
-
-                    command_param = ' '.join([file_param, build_param,
-                                          param, externp])
-                    commandstr = command + ' ' + command_param
-
-                    print(commandstr)
-
-                    # Run SCons
-                    if (subprocess_enabled):
-                        retval = subprocess.call(commandstr, shell=True)
-                    else:
-                        retval = os.system(commandstr)
-
-                    # Test if command success with return value
-                    if (retval != 0):
-                        raise SconsError()
-                    
+                                  
             except SconsError as i:
                 print(i, " Failure...")
                 sys.exit(1)
