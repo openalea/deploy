@@ -17,6 +17,8 @@
 To extend setuptools, we have to replace setuptools function with our
 own function.
 """
+from __future__ import print_function
+
 
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
