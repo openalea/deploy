@@ -1,3 +1,4 @@
+from __future__ import print_function
 # -*- python -*-
 #
 #       openalea.deploy.dependency_builder
@@ -46,14 +47,17 @@ __revision__ = " $Id$ "
 
 # TODO! This can be merged with the utility that makes windows installers
 # and the system_dependecies utility.
+from  six import with_metaclass
 
 import traceback
 import platform
 import os
 import sys
 import shutil
-import urllib.request, urllib.error, urllib.parse
-import urllib.request, urllib.parse, urllib.error
+
+from six.moves.urllib.request import urlopen, urlretrieve
+from six.moves.urllib.error import URLError
+
 import subprocess
 import glob
 import time
@@ -172,7 +176,7 @@ def get_python_scripts_dirs():
             # be compensated:
             if sys.platform == "win32":
                 # restore "driveletter:\\" on windows
-                script_path = script_path.replace(":", ":"+os.sep)            
+                script_path = script_path.replace(":", ":"+os.sep)
             else:
                 # restore "/" on unixes
                 script_path = "/"+script_path
@@ -212,7 +216,7 @@ def into_subdir(base, pattern):
 def download(url, easy_name, arch_path):
     def download_reporter(bk, bksize, bytes):
         if bytes == 0:
-            raise urllib.error.URLError("Url doesn't point to an existing resource.")
+            raise URLError("Url doesn't point to an existing resource.")
         progress= float(bk)/(bytes/bksize) * 100
         presentation_url = url[:]
         if len(presentation_url) >= 100:
@@ -223,7 +227,7 @@ def download(url, easy_name, arch_path):
     # get the size of the ressource we're about to download
     remote_sz = float("inf")
     try:
-        remote    = urllib.request.urlopen(url)
+        remote    = urlopen(url)
         # the content type shouldn' be text/*,
         # but application/*. text/* == error
         if remote.info().getheaders("Content-Type")[0].startswith("application"):
@@ -252,7 +256,7 @@ def download(url, easy_name, arch_path):
             raise os.error
     except os.error:
         try:
-            urllib.request.urlretrieve(url, arch_path, download_reporter)
+            urlretrieve(url, arch_path, download_reporter)
         except:
             traceback.print_exc()
             ret = False
@@ -276,7 +280,7 @@ def unpack(arch, where):
     return True
 
 #####################
-# Playing with eggs #  
+# Playing with eggs #
 #####################
 try:
     from setuptools.package_index import PackageIndex
@@ -289,7 +293,7 @@ try:
     can_egg_download = True
 except:
     can_egg_download = False
-    
+
 def download_egg(eggname, dir_):
     """Download an egg to a specific place"""
     if can_egg_download:
@@ -486,7 +490,6 @@ def memoize(attr):
 #############################
 # A micro build environment #
 #############################
-from  six import with_metaclass
 
 class Tool(with_metaclass(MTool,object)):
     class PyExecPaths(object):
@@ -655,7 +658,7 @@ class Compiler_(with_metaclass(MSingleton,object)):
 
     def __init__(self):
         self.options={}
-    
+
     def set_options(self, options):
         self.options = options.copy()
 
@@ -782,10 +785,10 @@ class BuildEnvironment(with_metaclass(MSingleton,object)):
 
     def set_options(self, options):
         self.options = options.copy()
-        Compiler.set_options(options)        
+        Compiler.set_options(options)
         self.tools = options.get("tools",[])[:]
         self.init()
-        
+
     @property
     def verbose(self):
         return self.options.get("verbose")
@@ -927,14 +930,14 @@ class BuildEnvironment(with_metaclass(MSingleton,object)):
         self.ensure_python_lib()
         self.__overwrite_path()
 
-    def __overwrite_path(self):        
+    def __overwrite_path(self):
         tool_paths = []
         for tool in self.tools:
             tool = tool()
             pth = tool.get_path()
             if pth:
                 tool_paths.append(pth)
-                
+
         path = sj(tool_paths + [Compiler.get_bin_path()])
         if self.options["pass_path"]:
             path = sj( [self.original_path, path] )
@@ -1113,7 +1116,7 @@ class BaseBuilder(object):
 
     def get_task_restriction(self):
         return None
-        
+
     def __find_pending_tasks(self):
         tasks = []
         name  = self.name
@@ -1124,7 +1127,7 @@ class BaseBuilder(object):
             # that removes tasks from all_tasks
                 continue
             done   = self.env.is_task_done(name, task)
-            
+
             forced = False
             restriction = self.get_task_restriction()
             if restriction != None:
@@ -1154,9 +1157,9 @@ class BaseBuilder(object):
         proc_str  = "Processing " + self.name
         print("\n",proc_str)
         print("="*len(proc_str))
-        print("forced tasks are:", forced_tasks)        
+        print("forced tasks are:", forced_tasks)
 
-        for task, task_func, skippable in self.pending:        
+        for task, task_func, skippable in self.pending:
             if skippable and not should_process:
                 continue
             # doing unskippable actions like extending python or env PATH.
@@ -1213,7 +1216,7 @@ class BaseProjectBuilder(with_metaclass(MProject,BaseBuilder,object)):
 
     def get_task_restriction(self):
         return self.options.get("only_action_projs")
-        
+
     def download_source(self):
         # a proj with a none url implicitely means
         # the sources are already here because some
@@ -1315,7 +1318,7 @@ class BaseProjectBuilder(with_metaclass(MProject,BaseBuilder,object)):
 class TemplateStr(string.Template):
     delimiter = "@"
 
-class BaseEggBuilder(BaseBuilder, object, metaclass=MEgg):
+class BaseEggBuilder(with_metaclass(MEgg, BaseBuilder, object)):
     __oldsyspath__ = sys.path[:]
     # The egg depends on the Python version (allows correct egg naming)
     py_dependent   = True
@@ -1370,15 +1373,15 @@ class BaseEggBuilder(BaseBuilder, object, metaclass=MEgg):
 
     def get_task_restriction(self):
         return self.options.get("only_action_eggs")
-    
+
     def _glob_egg(self):
         eggs = glob.glob( pj(self.eggdir, "dist", "*.egg") )
         if len(eggs) == 0:
             raise Exception("No egg found for "+self.egg_name())
         elif len(eggs) > 1:
             raise Exception("Found multiple eggs for "+self.egg_name()+reduce(lambda x,y:x+"\t->%s\n"%y, eggs, "\n"))
-        return eggs[0]    
-        
+        return eggs[0]
+
     @try_except
     def _configure_script(self):
         with open( self.setup_in_name, "r") as input, \
@@ -1417,7 +1420,7 @@ class BaseEggBuilder(BaseBuilder, object, metaclass=MEgg):
                 return Later
             return ret
         return self.upload_egg()
-        
+
     @in_dir("eggdir")
     @try_except
     def _copy_egg_in_dir(self):
@@ -1572,7 +1575,7 @@ class setuptools(Tool):
     exe            = "easy_install"+exe_ext
     default_paths  = [ Tool.PyExecPaths ]
 
-    
+
 class openalea_deploy(Tool):
     installable    = False
     exe            = "alea_install"+exe_ext
@@ -1629,7 +1632,7 @@ def options_dep_build(parser):
     g.add_argument("--compiler", "-c", default=None,
                    help="Path to compiler binaries")
     g.add_argument("--only", "-o", default=None, action="append", type=valid_builder,
-                   help="Only process these project/eggs")    
+                   help="Only process these project/eggs")
     g.add_argument("--only-action-projs", default=None, metavar="PROJECT_ACTIONS",
                    help="For all projects to be processed, only do these action")
     g.add_argument("--only-action-eggs", default=None, metavar="EGG_ACTIONS",
@@ -1639,7 +1642,7 @@ def options_dep_build(parser):
     g.add_argument("--no-upload", "-n", action="store_const", const=True, default=False,
                    help="Do not upload eggs to forge")
     g.add_argument("--release", action="store_const", const=True, default=False,
-                   help="Upload eggs to openalea repository or vplants (if False - for testing).")    
+                   help="Upload eggs to openalea repository or vplants (if False - for testing).")
     g.add_argument("--dest-egg-dir", default=None, type=abspath,
                    help="Put generated eggs in a directory.")
     return parser
@@ -1725,7 +1728,7 @@ def main():
     os.environ["MAKE_FLAGS"] = "-j"+str(args.jobs)
     if args.no_upload:
         del BaseEggBuilder.all_tasks["u"]
-        
+
     if args.python is not None: #use another Python to compile, this is weird, maybe useless.
         python = args.python
         del args.python #or else we will nevert start!
