@@ -17,6 +17,8 @@
 To extend setuptools, we have to replace setuptools function with our
 own function.
 """
+from __future__ import print_function
+
 
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
@@ -470,7 +472,26 @@ class scons(Command):
                 # Test if command success with return value
                 if (retval != 0):
                     raise SconsError()
-                                  
+
+                # Run scons install in a seconde step      
+                # To correctly dispatch the dll in the conda prefix bin dir
+                if self.scons_install:
+
+                    commandstr += ' install'
+
+                    print(commandstr)
+
+                    # Run SCons
+                    if (subprocess_enabled):
+                        retval = subprocess.call(commandstr, shell=True)
+                    else:
+                        retval = os.system(commandstr)
+
+                    # Test if command success with return value
+                    if (retval != 0):
+                        raise SconsError()
+
+
             except SconsError as i:
                 print(i, " Failure...")
                 sys.exit(1)
