@@ -461,6 +461,12 @@ class scons(Command):
                                           param, externp])
                 commandstr = command + ' ' + command_param
 
+                # Run scons install   
+                # To correctly dispatch the dll in the conda prefix bin dir
+                if self.scons_install:
+
+                    commandstr += ' install'
+
                 print(commandstr)
 
                 # Run SCons
@@ -472,7 +478,8 @@ class scons(Command):
                 # Test if command success with return value
                 if (retval != 0):
                     raise SconsError()
-                                  
+
+
             except SconsError as i:
                 print(i, " Failure...")
                 sys.exit(1)
