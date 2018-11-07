@@ -38,7 +38,7 @@
     ]
   },
   "github": {
-    "owner": "{{ base.authors[0][0] }}",
+    "owner": "openalea",
     "project": "{{ base.pkgname }}",
     "url": "https://github.com/{{ github.owner }}/{{ github.project }}"
   },
