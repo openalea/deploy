@@ -3,7 +3,7 @@
     "auto_install": true,
     "install_front_end": "stdout",
     "use_prompts": false,
-    "version": 8
+    "version": 12
   },
   "base": {
     "authors": [
@@ -37,6 +37,7 @@
       "openalea"
     ]
   },
+  "git": {},
   "github": {
     "owner": "openalea",
     "project": "{{ base.pkgname }}",
