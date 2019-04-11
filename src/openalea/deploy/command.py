@@ -20,6 +20,8 @@ own function.
 from __future__ import print_function
 
 
+from __future__ import absolute_import
+from six.moves import input
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -57,7 +59,7 @@ try:
     import configparser
 except:
     # Python 2
-    import ConfigParser as configparser
+    import six.moves.configparser as configparser
 
 from .util import get_all_lib_dirs, get_all_bin_dirs, DEV_DIST
 from .install_lib import get_dyn_lib_dir
@@ -1271,7 +1273,7 @@ class upload_sphinx(Command):
                 self.release = version
 
         if not self.username:
-            self.username = input('login:')
+            self.username = eval(input('login:'))
             # to be used with gforge tools only. not with scp tht is currently used.
             # if not self.password:
             #    self.password = raw_input('password:')

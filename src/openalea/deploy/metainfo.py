@@ -1,5 +1,7 @@
 """Functionalities to parse configuration file"""
 
+from __future__ import absolute_import
+from __future__ import print_function
 from .console import nocolor, color_terminal, green
 
 compulsary_words = ['project', 'version', 'authors', 'package', 'release']
@@ -33,11 +35,11 @@ def read_metainfo(filename, section='metainfo', verbose=False):
         nocolor()
 
     if verbose:
-        print(green('Reading metainfo '))
+        print((green('Reading metainfo ')))
     try:
         import configparser
     except:
-        import ConfigParser as configparser
+        import six.moves.configparser as configparser
 
     config = configparser.RawConfigParser()
     res = config.read(filename)
@@ -48,7 +50,7 @@ def read_metainfo(filename, section='metainfo', verbose=False):
 
     for option in config.options(section):
         if verbose:
-            print(green('...%s: %s' % (option, config.get(section, option))))
+            print((green('...%s: %s' % (option, config.get(section, option)))))
         metadata[option] = config.get(section, option)
 
     if 'project' in list(metadata.keys()):

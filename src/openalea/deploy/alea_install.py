@@ -1,5 +1,6 @@
 """Script to wrap easy install with some post-processing"""
 
+from __future__ import absolute_import
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
 

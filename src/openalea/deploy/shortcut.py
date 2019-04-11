@@ -17,6 +17,8 @@
 ################################################################################
 """OS Functions to add shortcut and Mime type association """
 
+from __future__ import absolute_import
+from __future__ import print_function
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -104,7 +106,7 @@ def set_win_reg(key, subkey, name, value):
 
     try:
         if sys.version_info.major == 2:
-            import _winreg as winreg
+            import six.moves.winreg as winreg
         else:
             import winreg
 
@@ -133,7 +135,7 @@ def set_win_reg(key, subkey, name, value):
     try:
         winreg.SetValue(keymap[key], subkey, winreg.REG_SZ, value)
     except:
-        print("Cannot set %s/%s/%s registery key" % (key, subkey, name))
+        print(("Cannot set %s/%s/%s registery key" % (key, subkey, name)))
 
 
 def create_fd_shortcut(name, target, arguments="", version="",

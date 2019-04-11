@@ -15,6 +15,8 @@
 #
 """Deployment utilities"""
 
+from __future__ import absolute_import
+from __future__ import print_function
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -249,7 +251,7 @@ def get_repo_list():
         from urllib.request import urlopen
     except:
         # Python 2
-        from urllib import urlopen
+        from six.moves.urllib.request import urlopen
     try:
         ret = []
         u = urlopen(OPENALEA_REPOLIST)
@@ -269,7 +271,7 @@ def get_recommended_prefix():
         from urllib.request import urlopen
     except:
         # Python 2
-        from urllib import urlopen
+        from six.moves.urllib.request import urlopen
     try:
         ret = []
         prefixes = urlopen(OPENALEA_RECOMMENDED_PKG)

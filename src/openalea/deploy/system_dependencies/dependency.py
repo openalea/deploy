@@ -16,8 +16,11 @@
 # THIS MODULE IS DEPRECATED, USE DEPLOY_SYSTEM2.PY INSTEAD #
 ############################################################
 
+from __future__ import absolute_import
+from __future__ import print_function
 import platform, types, warnings, collections, subprocess, abc
 from six import with_metaclass
+from six.moves import zip
 
 
 
@@ -190,7 +193,7 @@ class DistributionPackageFactory(BaseOsFactory):
         assert isinstance(type(cls), type)
         name = cls.__name__
         name = name[:name.find("_PackageNames")].replace("_", " ").lower()
-        print("registering:", name)
+        print(("registering:", name))
         self.__distPkgs[name] = cls
 
     def create(self, platform=None, conflictSolve=lambda x: x[0]):

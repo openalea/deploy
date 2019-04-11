@@ -18,6 +18,8 @@
 Small functions to manipulate autosum files
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 from os.path import join, dirname, basename, splitext
 from .list_modules import list_modules
 

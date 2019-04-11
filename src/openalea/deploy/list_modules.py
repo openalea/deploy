@@ -18,6 +18,7 @@
 Small functions to access packages files
 """
 
+from __future__ import absolute_import
 from os import listdir
 from os.path import isfile, isdir, join, splitext
 
