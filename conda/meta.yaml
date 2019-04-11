@@ -1,4 +1,4 @@
-{% set version = "2.1.6" %}
+{% set version = "2.1.7" %}
 
 package:
   name: openalea.deploy
@@ -14,12 +14,14 @@ build:
 
 requirements:
   build:
-    - python {{PY_VER}}*
+    - python {{PY_VER}}* [not win]
+    - python {{PY_VER}}  [win]
     - setuptools
     - pywin32 # [win]
     - six
   run:
-    - python {{PY_VER}}*
+    - python {{PY_VER}}* [not win]
+    - python {{PY_VER}}  [win]
     - setuptools
     - pywin32 # [win]
     - six
