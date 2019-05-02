@@ -732,7 +732,7 @@ class alea_install(old_easy_install):
         repolist = get_repo_list()
         if (not self.find_links):
             self.find_links = ""
-        self.find_links += " " + " ".join(repolist)
+        self.find_links += str(b" " + b" ".join(repolist))
 
         self.dist = None
 
