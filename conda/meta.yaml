@@ -14,14 +14,14 @@ build:
 
 requirements:
   build:
-    - python =3
+    - python
     - setuptools
-    - pywin32 # [win]
+    - pywin32 [win]
     - six
   run:
-    - python =3
+    - python
     - setuptools
-    - pywin32 # [win]
+    - pywin32 [win]
     - six
     - path.py
 
