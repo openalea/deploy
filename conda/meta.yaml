@@ -16,12 +16,12 @@ requirements:
   build:
     - python
     - setuptools
-    - pywin32 # [win]
+    - pywin32 [win]
     - six
   run:
     - python
     - setuptools
-    - pywin32 # [win]
+    - pywin32 [win]
     - six
     - path.py
 

@@ -115,7 +115,10 @@ def has_ext_modules(dist):
 def set_has_ext_modules(dist):
     """ Set new function handler to dist object """
     from types import MethodType as instancemethod
-    m = instancemethod(has_ext_modules, dist, Distribution)
+    try:
+        m = instancemethod(has_ext_modules, dist, Distribution)
+    except TypeError:
+        m = instancemethod(has_ext_modules, dist)
     dist.has_ext_modules = m
 
 
@@ -732,7 +735,7 @@ class alea_install(old_easy_install):
         repolist = get_repo_list()
         if (not self.find_links):
             self.find_links = ""
-        self.find_links += " " + " ".join(repolist)
+        self.find_links += str(b" " + b" ".join(repolist))
 
         self.dist = None
 
