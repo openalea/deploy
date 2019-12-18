@@ -2,17 +2,20 @@
 #
 #       OpenAlea.Deploy: OpenAlea setuptools extension
 #
-#       Copyright 2006-2009 INRIA - CIRAD - INRA  
+#       Copyright 2006-2009 INRIA - CIRAD - INRA
 #
 #       File author(s): Samuel Dufour-Kowalski <samuel.dufour@sophia.inria.fr>
 #
 #       Distributed under the Cecill-C License.
 #       See accompanying file LICENSE.txt or copy at
 #           http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
-# 
+#
 #       OpenAlea WebSite : http://openalea.gforge.inria.fr
 #
 """todo"""
+
+from __future__ import absolute_import
+from __future__ import print_function
 
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
@@ -32,12 +35,12 @@ def remove_egg(project_name, dist):
     location = dist.location
 
     try:
-        print ("Remove ", project_name, version, location)
+        print("Remove ", project_name, version, location)
         if (os.path.isdir(location)):
-            print ("Remove directory : %s" % (location,))
+            print("Remove directory : %s" % (location,))
             shutil.rmtree(location)
         else:
-            print ("Remove file %s" % (location))
+            print("Remove file %s" % (location))
             os.remove(location)
             return True
 
@@ -46,8 +49,8 @@ def remove_egg(project_name, dist):
         return False
 
     except:
-        print ("Unexpected error:", sys.exc_info()[0])
-        print ("Please check you have permission to remove packages. ")
+        print("Unexpected error:", sys.exc_info()[0])
+        print("Please check you have permission to remove packages. ")
         return False
 
 
@@ -73,7 +76,7 @@ def update_all():
     env = Environment()
 
     for project_name in env._distmap.keys():
-        print ("Update %s" % (project_name))
+        print("Update %s" % (project_name))
         alea_install_U(project_name)
 
 

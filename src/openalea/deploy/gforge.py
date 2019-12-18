@@ -22,6 +22,8 @@ Creation of a soap server, which serve as proxy to redirect python function
 and args into valid soap request and return results into Python.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -360,7 +362,7 @@ class GForgeProxy(object):
         type = type_id.get(file_type, type_id['other'])
         processor = proc_id.get(proc_type, proc_id['any'])
 
-        print("Uploading %s..." % (name,))
+        print(("Uploading %s..." % (name,)))
 
         try:
             from . import gforge_util
@@ -399,7 +401,7 @@ class GForgeProxy(object):
 
         release_time = int(time.mktime(time.localtime()))
 
-        print("Uploading %s..." % (name,))
+        print(("Uploading %s..." % (name,)))
 
         try:
             
@@ -445,7 +447,7 @@ class GForgeProxy(object):
         
         from . import gforge_util
         gforge_util.gforge_login(self.userid, self.passwd)
-        print('Trying to delete file %s' % file_id)
+        print(('Trying to delete file %s' % file_id))
         gforge_util.delete_file(project_id, package_id, release_id, file_id)
         print('Done.')
 

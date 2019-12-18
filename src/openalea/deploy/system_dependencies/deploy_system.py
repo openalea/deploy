@@ -18,6 +18,9 @@
 # THIS MODULE IS DEPRECATED, USE DEPLOY_SYSTEM2.PY INSTEAD #
 ############################################################
 
+from __future__ import absolute_import
+from __future__ import print_function
+from six.moves import input
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
 
@@ -37,22 +40,22 @@ def install_dependencies(software, osname=None, fake=False):
 
     if len(dependencies.runtime_distribution_packages()):
         print("Do you wish to install the required runtime packages:\n")
-        print(reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.runtime_distribution_packages(), "") + " (y/n)?")
-        vrun = input()
+        print((reduce(lambda x,y: str(x)+" "+str(y),
+                     dependencies.runtime_distribution_packages(), "") + " (y/n)?"))
+        vrun = eval(input())
 
     if len(dependencies.development_distribution_packages()):
         print("Do you wish to install the development packages:\n")
-        print(reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.development_distribution_packages(), "") + " (y/n)?")
-        vdev = input()
+        print((reduce(lambda x,y: str(x)+" "+str(y),
+                     dependencies.development_distribution_packages(), "") + " (y/n)?"))
+        vdev = eval(input())
 
 
     if len(dependencies.other_packages()):
         print("Do you wish to install the other packages:\n")
-        print(reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.other_packages(), "") + " (y/n)?")
-        voth = input()
+        print((reduce(lambda x,y: str(x)+" "+str(y),
+                     dependencies.other_packages(), "") + " (y/n)?"))
+        voth = eval(input())
 
     if vrun == "y":
         theOs.install_packages(dependencies.runtime_distribution_packages(), fake)
@@ -83,7 +86,7 @@ def main():
 ############################################################
 """)
     if len(sys.argv)==1:
-        print(usage%( reduce( lambda x, y: x+" "+y, iter(distributions.canonical_dependencies.keys()) ), ))
+        print((usage%( reduce( lambda x, y: x+" "+y, iter(distributions.canonical_dependencies.keys()) ), )))
         sys.exit(-1)
 
     software = sys.argv[1]

@@ -1,5 +1,7 @@
 """binary dependencies"""
 
+from __future__ import absolute_import
+from __future__ import print_function
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
 
@@ -24,5 +26,5 @@ def binary_deps(pkg, verbose=True):
     deps = pkg + '==' + dists[0].version
     
     if verbose:
-        print ("Binary dependency : '" + deps + "'")
+        print(("Binary dependency : '" + deps + "'"))
     return deps

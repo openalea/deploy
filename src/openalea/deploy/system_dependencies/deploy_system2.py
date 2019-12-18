@@ -16,6 +16,8 @@
 #
 ###############################################################################
 
+from __future__ import absolute_import
+from __future__ import print_function
 from .dependency_builder import MSingleton, BaseBuilder, BuildEnvironment, BE
 from .dependency_builder import create_metabuilder, build_epilog
 from .dependency_builder import options_metabuilders, options_common, options_gforge
@@ -28,6 +30,7 @@ import sys
 import urllib.parse
 from os.path import join as pj, isdir, splitext
 from six import with_metaclass
+from six.moves import input
 
 
 # --------------------------------------------------------------------------- #
@@ -128,22 +131,22 @@ class MPlatformAPI(MSingleton):
 
         print("The packages will be installed:")
         for api, handled in action_men.items():
-            print("\t - using", api.__class__.__name__, "for")
+            print(("\t - using", api.__class__.__name__, "for"))
             for h in handled:
-                print("\t\t", h)
+                print(("\t\t", h))
 
         if len(to_inst):
             print("Will NOT install these (couldn't find any way to install them) :")
             for p in to_inst:
-                print("\t", p)
+                print(("\t", p))
                 
-        if not BE.options.get("yes_to_all") and input("Do you want to proceed? (y/n):").lower() != "y":
+        if not BE.options.get("yes_to_all") and eval(input("Do you want to proceed? (y/n):").lower()) != "y":
             return False
 
         for api, handled in action_men.items():
             apiName = api.__class__.__name__
-            print("Using", apiName)
-            if not BE.options.get("yes_to_all") and BE.options.get("confirm_each") and input("Install the %s group? (y/n):"%apiName).lower()=="n":
+            print(("Using", apiName))
+            if not BE.options.get("yes_to_all") and BE.options.get("confirm_each") and eval(input("Install the %s group? (y/n):"%apiName).lower())=="n":
                 continue
             if api.install_packages(*handled) == False:
                 return False
@@ -228,10 +231,10 @@ class PlatformAPI(with_metaclass(MPlatformAPI,object)):
             elif isinstance(deca_list, list):
                 pass
             elif deca_list==Ignore:
-                print("Info: ignoring", pkg)
+                print(("Info: ignoring", pkg))
                 continue
             elif deca_list==NA:
-                print("Info: Delegating", pkg)
+                print(("Info: Delegating", pkg))
                 not_handled.add(pkg)
                 continue
             else:
@@ -319,7 +322,7 @@ class BaseWindowsPackageAPI(NativePackageAPI):
                 if subprocess.call("msiexec /i "+pkg_pth):
                     return False
             else:
-                print("trying to install %s but found no way to do so."%pkg_pth)
+                print(("trying to install %s but found no way to do so."%pkg_pth))
         return True   
            
         
@@ -642,7 +645,7 @@ class BaseDepBuilder(with_metaclass(MDeploy,BaseBuilder, object)):
         all_pkgs = get_all_deps()
         dependencies = get_dependencies(pkg)
         for to_skip in self.options["skip_inst"]:
-            print("removing", to_skip, "from dependencies")
+            print(("removing", to_skip, "from dependencies"))
             assert to_skip in all_pkgs
             dependencies.remove(to_skip)
         
@@ -668,7 +671,7 @@ class BaseDepBuilder(with_metaclass(MDeploy,BaseBuilder, object)):
             to_inst.remove("alinea")
         except:
             pass            
-        print("Will install dependencies for", MPlatformAPI.get_platform_name())
+        print(("Will install dependencies for", MPlatformAPI.get_platform_name()))
 
         return MPlatformAPI.install_packages(*to_inst)
         

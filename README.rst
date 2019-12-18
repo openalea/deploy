@@ -1,5 +1,5 @@
-.. image:: https://img.shields.io/badge/License-GPL-blue.svg
-   :target: https://opensource.org/licenses/GPL-3.0
+.. image:: https://img.shields.io/badge/License-CeCILL_C-blue.svg
+   :target: http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
 
 .. image:: https://travis-ci.org/openalea/deploy.svg?branch=master
     :target: https://travis-ci.org/openalea/deploy

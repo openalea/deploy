@@ -1,4 +1,6 @@
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os, os.path, sys, shutil, re, itertools
 from collections import namedtuple
 from distutils.command.build_ext import build_ext as _build_ext
@@ -16,7 +18,7 @@ if sys.platform == "win32":
         if ctypes.windll.kernel32.GetShortPathNameW(path, ctypes.pointer(out), nsize):
             return ctypes.wstring_at(path)
         else:
-            print(ctypes.windll.kernel32.GetLastError())
+            print((ctypes.windll.kernel32.GetLastError()))
 
 
 pack_name = 'rpy2'
@@ -320,7 +322,7 @@ def get_rconfig(r_home, about, allow_empty = False):
         arch = 'i386'
         inc_dirs     = os.path.join(r_home, 'include')
         arch_inc_dir = os.path.join(r_home, 'etc', arch)
-        print(os.path.join(r_home, 'include'))
+        print((os.path.join(r_home, 'include')))
         print(arch_inc_dir)
         d = get_makeconf_dict(r_home, arch)
         if about == "--cppflags":

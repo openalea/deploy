@@ -17,6 +17,8 @@
 ###############################################################################
 """ Environment variable manipulation functions """
 
+from __future__ import absolute_import
+from __future__ import print_function
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
 
@@ -137,8 +139,8 @@ def set_lsb_env(name, vars):
         else:
             filename = os.path.join(os.path.expanduser('~'), ".bashrc")
 
-        print("Warning : Cannot create /etc/profile.d/%s.sh" % (name))
-        print("Trying to setup environment in %s" % filename)
+        print(("Warning : Cannot create /etc/profile.d/%s.sh" % (name)))
+        print(("Trying to setup environment in %s" % filename))
 
         # If profile.d directory is not writable, try to update $HOM/.bashrc
         try:
@@ -173,7 +175,7 @@ def set_lsb_env(name, vars):
             print(e)
             raise
 
-    print("Creating %s" % (filename,))
+    print(("Creating %s" % (filename,)))
 
     filehandle.write(exportstr)
 
@@ -182,7 +184,7 @@ def set_lsb_env(name, vars):
     # ||source %s"%(filename,filename)
     cmdstr = ". %s" % (filename,)
     print("To enable new OpenAlea config, open a new shell or type")
-    print('  $ %s' % (bashrc_cmd))
+    print(('  $ %s' % (bashrc_cmd)))
 
 
 def set_win_env(vars):
@@ -202,7 +204,7 @@ def set_win_env(vars):
         from string import find
         try:
             if sys.version_info.major == 2:
-                import _winreg as winreg
+                import six.moves.winreg as winreg
             else:
                 import winreg
         except ImportError as e:
@@ -220,7 +222,7 @@ def set_win_env(vars):
         try:
             key = winreg.OpenKey(reg, regpath, 0, winreg.KEY_ALL_ACCESS)
         except  WindowsError as we:
-            print("Cannot set "+repr(name)+" for all users. Set for current user.")
+            print(("Cannot set "+repr(name)+" for all users. Set for current user."))
             winreg.CloseKey(reg)
             regpath = r'Environment'
             reg = winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
@@ -238,7 +240,7 @@ def set_win_env(vars):
             listpath = actualpath.split(';')
             if not (value in listpath):
                 value = actualpath + ';' + value
-                print("ADD %s to PATH" % (value,))
+                print(("ADD %s to PATH" % (value,)))
             else:
                 value = actualpath
 
@@ -273,7 +275,7 @@ def set_win_env(vars):
                                                  WM_SETTINGCHANGE, 0, sParam,
                                                  SMTO_ABORTIFHUNG, 100)
         if not res1:
-            print("result %s, %s from SendMessageTimeout" % (bool(res1), res2))
+            print(("result %s, %s from SendMessageTimeout" % (bool(res1), res2)))
 
     except Exception as e:
         print(e)
@@ -303,29 +305,29 @@ def set_conda_env(vars, name = 'openalea'):
 
     if ('posix' in os.name) :
         filename = join(activate_env_vars_dir, name+'.sh')
-        config = file(filename,'w')
+        config = open(filename,'w')
         config.write('#!/bin/sh\n\n')
         config.write(get_posix_activate_export_str(vars))
         config.close()
 
         filename2 = join(deactivate_env_vars_dir, name+'.sh')
-        config = file(filename2,'w')
+        config = open(filename2,'w')
         config.write('#!/bin/sh\n\n')
         config.write(get_posix_activate_export_str(vars))
         config.close()
 
     else:
         filename = join(activate_env_vars_dir, name+'.bat')
-        config = file(filename,'w')
+        config = open(filename,'w')
         config.write(get_win32_activate_export_str(vars))
         config.close()
 
         filename2 = join(deactivate_env_vars_dir, name+'.bat')
-        config = file(filename2,'w')
+        config = open(filename2,'w')
         config.write(get_win32_deactivate_export_str(vars))
         config.close()
     
-    print("Creating %s and %s" % (repr(filename),repr(filename2)))
+    print(("Creating %s and %s" % (repr(filename),repr(filename2))))
 
     if ('posix' in os.name) :
         bashrc_cmd = "source %s" % (filename,)
@@ -333,4 +335,4 @@ def set_conda_env(vars, name = 'openalea'):
         bashrc_cmd = "call %s" % (filename,)
         
     print("To enable new OpenAlea config, open a new shell or type")
-    print('  $ %s' % (bashrc_cmd))
+    print(('  $ %s' % (bashrc_cmd)))

@@ -3,7 +3,7 @@
     "auto_install": true,
     "install_front_end": "stdout",
     "use_prompts": false,
-    "version": 8
+    "version": 12
   },
   "base": {
     "authors": [
@@ -37,8 +37,9 @@
       "openalea"
     ]
   },
+  "git": {},
   "github": {
-    "owner": "{{ base.authors[0][0] }}",
+    "owner": "openalea",
     "project": "{{ base.pkgname }}",
     "url": "https://github.com/{{ github.owner }}/{{ github.project }}"
   },
@@ -50,7 +51,7 @@
   },
   "pysetup": {
     "intended_versions": [
-      "27"
+      "27", "37"
     ],
     "require": []
   },
@@ -65,6 +66,6 @@
   "version": {
     "major": 2,
     "minor": 1,
-    "post": 5
+    "post": 7
   }
 }

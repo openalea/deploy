@@ -21,6 +21,7 @@
 # - PROJECT BUILDERS - PROJECT BUILDERS - PROJECT BUILDERS - PROJECT BUILDERS - PROJECT BUILDERS - #
 # !!!!          THE ORDER OF CLASS DEFINITIONS IS THE ORDER OF PROJECT COMPILATION             !!!!#
 ####################################################################################################
+from __future__ import print_function
 class mingwrt(BaseProjectBuilder):
     url = None
     supported_tasks = "i"
@@ -235,7 +236,7 @@ if 'qt4-dev' in env:
     """
 
         txt = ""
-        print("sip patching", os.getcwd())
+        print(("sip patching", os.getcwd()))
         with open("sipconfig.py") as f:
             txt = f.read()
 

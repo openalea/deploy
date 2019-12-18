@@ -17,6 +17,8 @@
 """This module converts hard coded compilation paths inside Qt binairies into
 relative paths suitable for use inside eggs."""
 
+from __future__ import absolute_import
+from __future__ import print_function
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
 
@@ -27,7 +29,7 @@ import shutil
 
 def patch(files, qtDirPath, where):
     if not os.path.isdir(qtDirPath):
-        print(qtDirPath, "does not exist")
+        print((qtDirPath, "does not exist"))
         sys.exit(-1)
     
     if os.path.exists( files ):
@@ -50,14 +52,14 @@ def patch(files, qtDirPath, where):
     qtDirPathA2 = bytearray(qtDirPath.replace("\\", "/"))
     patches     = 0 # a counter 
     
-    print("about to try to patch", len(filesToPatch), "files")
+    print(("about to try to patch", len(filesToPatch), "files"))
     for f in filesToPatch:
         prefix = "" + qtDirPath
         f = os.path.join(prefix,f)
         
-        print("patch file", f)
+        print(("patch file", f))
         if not os.path.exists(f):
-            print("qpatch: warning: file not found", f)
+            print(("qpatch: warning: file not found", f))
             continue
               
         source = None
@@ -89,12 +91,12 @@ def patch(files, qtDirPath, where):
                 os.fchmod(out_.fileno(), stat.st_mode)
                 os.fchown(out_.fileno(), stat.st_uid, stat.st_gid)
             except Exception as e:
-                print("\n\tOops! Couldn't copy file metadata", type(e), e)
+                print(("\n\tOops! Couldn't copy file metadata", type(e), e))
         
         patches += 1
         print("ok")
             
-    print("patched", patches, "files")
+    print(("patched", patches, "files"))
     
 if __name__ == "__main__":
     try:

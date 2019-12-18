@@ -39,6 +39,9 @@ The main function of this file is a sample which downloads a page and
 then uploads it to the W3C validator.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
+from six.moves import input
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -48,7 +51,7 @@ try:
     from urllib.request import BaseHandler, HTTPHandler
 except:
     # python 2
-    from urllib2 import BaseHandler, HTTPHandler
+    from six.moves.urllib.request import BaseHandler, HTTPHandler
 
 import mimetools, mimetypes
 import os, stat, sys
@@ -95,8 +98,8 @@ class MultipartPostHandler(BaseHandler):
                 if (request.has_header('Content-Type')
                     and request.get_header('Content-Type').find(
                         'multipart/form-data') != 0):
-                    print("Replacing %s with %s" % (
-                    request.get_header('content-type'), 'multipart/form-data'))
+                    print(("Replacing %s with %s" % (
+                    request.get_header('content-type'), 'multipart/form-data')))
                 request.add_unredirected_header('Content-Type', contenttype)
 
             request.add_data(data)
@@ -149,7 +152,7 @@ try :
     import configparser
 except:
     # python 2
-    import ConfigParser as configparser
+    import six.moves.configparser as configparser
 import getpass
 
 urlOpener = None
@@ -172,7 +175,7 @@ def find_login_passwd(allow_user_input=True):
 
     username, password = None, None
     if exists(rc):
-        print('Using PyPI login from %s' % (rc))
+        print(('Using PyPI login from %s' % (rc)))
         config = configparser.ConfigParser({
             'username': '',
             'password': '',
@@ -182,7 +185,7 @@ def find_login_passwd(allow_user_input=True):
         username = config.get('server-login', 'username')
         password = config.get('server-login', 'password')
     elif allow_user_input:
-        username = input("Enter your GForge login:")
+        username = eval(input("Enter your GForge login:"))
         password = getpass.getpass("Enter you GForge password:")
     return username, password
 
@@ -192,14 +195,15 @@ try:
     from urllib.request import build_opener, install_opener, HTTPCookieProcessor, Request, urlopen
 except:
     # python 2
-    from urllib2 import build_opener, install_opener, HTTPCookieProcessor, Request, splituser, unquote, urlopen
-    from urllib import urlencode
-    from urlparse import urlparse, urlunparse
+    from six.moves.urllib.request import build_opener, install_opener, HTTPCookieProcessor, Request, urlopen
+    from six.moves.urllib.parse import splituser, unquote
+    from six.moves.urllib.parse import urlencode
+    from six.moves.urllib.parse import urlparse, urlunparse
 
 try:
     import http.cookiejar as cookiejar
 except:
-    import cookielib as cookiejar
+    import six.moves.http_cookiejar as cookiejar
 
 
 def cookie_login(loginurl, values):
