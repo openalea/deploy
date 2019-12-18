@@ -54,12 +54,15 @@ from distutils.errors import DistutilsSetupError
 # from distutils.util import convert_path
 from distutils.dir_util import mkpath
 import re
+PY3K = False
 try:
     # Python 3
     import configparser
+    PY3K = True
 except:
     # Python 2
     import six.moves.configparser as configparser
+    PY3K = False
 
 from .util import get_all_lib_dirs, get_all_bin_dirs, DEV_DIST
 from .install_lib import get_dyn_lib_dir
@@ -117,7 +120,10 @@ def has_ext_modules(dist):
 def set_has_ext_modules(dist):
     """ Set new function handler to dist object """
     from types import MethodType as instancemethod
-    m = instancemethod(has_ext_modules, dist, Distribution)
+    if PY3K:
+        m = instancemethod(has_ext_modules, dist)
+    else:
+        m = instancemethod(has_ext_modules, dist, Distribution)
     dist.has_ext_modules = m
 
 
@@ -463,7 +469,7 @@ class scons(Command):
                                           param, externp])
                 commandstr = command + ' ' + command_param
 
-                # Run scons install   
+                # Run scons install
                 # To correctly dispatch the dll in the conda prefix bin dir
                 if self.scons_install:
 
