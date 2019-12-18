@@ -17,13 +17,13 @@ requirements:
     - python {{PY_VER}}* [not win]
     - python {{PY_VER}}  [win]
     - setuptools
-    - pywin32 # [win]
+    - pywin32 [win]
     - six
   run:
     - python {{PY_VER}}* [not win]
     - python {{PY_VER}}  [win]
     - setuptools
-    - pywin32 # [win]
+    - pywin32 [win]
     - six
     - path.py
 
