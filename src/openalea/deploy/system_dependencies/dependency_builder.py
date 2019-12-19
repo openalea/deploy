@@ -18,6 +18,9 @@ from __future__ import print_function
 #
 ###############################################################################
 
+from __future__ import absolute_import
+from six.moves import zip
+from six.moves import input
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -630,7 +633,7 @@ class Tool(with_metaclass(MTool,object)):
         delay = 5000
         def ask_user_if_download():
             try:
-                do_dl = input().lower() == "y"
+                do_dl = eval(input().lower()) == "y"
             except:
                 do_dl = True
 
@@ -672,7 +675,7 @@ class Compiler_(with_metaclass(MSingleton,object)):
             print(e)
             print("No MingW compiler found, you can specify its path with -c")
             print("or install a default MingW compiler.")
-            if input("Install a default MingW? (Y/N). :").lower() == "y":
+            if eval(input("Install a default MingW? (Y/N). :").lower()) == "y":
                 self.install()
             else:
                 print("Cannot compile, continuing anyway...")
@@ -680,7 +683,7 @@ class Compiler_(with_metaclass(MSingleton,object)):
     def install(self):
         print("Will now install a default 32 bits MingW compiler to c:\mingw")
         print("Make sure you have to rights to do so and that the directory does NOT exist")
-        if input("Proceed? (Y/N):").lower() == "y":
+        if eval(input("Proceed? (Y/N):").lower()) == "y":
             ez_name  = "mingw.zip"
             archpath = pj(BE.working_path, ez_name)
             if download(default_32_comp, ez_name, archpath):

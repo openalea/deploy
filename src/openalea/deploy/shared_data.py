@@ -16,6 +16,7 @@
 """INRIA GForge SOAP python API wrappers (based on SOAPpy)
 
 """
+from __future__ import absolute_import
 import types
 import os
 from os.path import join as pj

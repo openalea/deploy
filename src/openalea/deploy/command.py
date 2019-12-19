@@ -20,6 +20,8 @@ own function.
 from __future__ import print_function
 
 
+from __future__ import absolute_import
+from six.moves import input
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -52,12 +54,15 @@ from distutils.errors import DistutilsSetupError
 # from distutils.util import convert_path
 from distutils.dir_util import mkpath
 import re
+PY3K = False
 try:
     # Python 3
     import configparser
+    PY3K = True
 except:
     # Python 2
-    import ConfigParser as configparser
+    import six.moves.configparser as configparser
+    PY3K = False
 
 from .util import get_all_lib_dirs, get_all_bin_dirs, DEV_DIST
 from .install_lib import get_dyn_lib_dir
@@ -115,7 +120,14 @@ def has_ext_modules(dist):
 def set_has_ext_modules(dist):
     """ Set new function handler to dist object """
     from types import MethodType as instancemethod
-    m = instancemethod(has_ext_modules, dist, Distribution)
+
+    try:
+        # Python 2
+        m = instancemethod(has_ext_modules, dist, Distribution)
+    except TypeError:
+        # Python 3
+        m = instancemethod(has_ext_modules, dist)
+
     dist.has_ext_modules = m
 
 
@@ -461,7 +473,7 @@ class scons(Command):
                                           param, externp])
                 commandstr = command + ' ' + command_param
 
-                # Run scons install   
+                # Run scons install
                 # To correctly dispatch the dll in the conda prefix bin dir
                 if self.scons_install:
 
@@ -732,7 +744,7 @@ class alea_install(old_easy_install):
         repolist = get_repo_list()
         if (not self.find_links):
             self.find_links = ""
-        self.find_links += " " + " ".join(repolist)
+        self.find_links += str(b" " + b" ".join(repolist))
 
         self.dist = None
 
@@ -1271,7 +1283,7 @@ class upload_sphinx(Command):
                 self.release = version
 
         if not self.username:
-            self.username = input('login:')
+            self.username = eval(input('login:'))
             # to be used with gforge tools only. not with scp tht is currently used.
             # if not self.password:
             #    self.password = raw_input('password:')

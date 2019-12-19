@@ -18,6 +18,9 @@
 # THIS MODULE IS DEPRECATED, USE DEPLOY_SYSTEM2.PY INSTEAD #
 ############################################################
 
+from __future__ import absolute_import
+from __future__ import print_function
+from six.moves import input
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
 
@@ -35,24 +38,27 @@ def install_dependencies(software, osname=None, fake=False):
     vdev = False
     voth = False
 
-    if len(dependencies.runtime_distribution_packages()):
+    rpkgs = dependencies.runtime_distribution_packages()
+    if len(rpkgs):
         print("Do you wish to install the required runtime packages:\n")
-        print(reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.runtime_distribution_packages(), "") + " (y/n)?")
-        vrun = input()
+        rpkgs = map(str, rpkgs)
+        print(" ".join(rpkgs) + " (y/n)?")
+        vrun = eval(input())
 
-    if len(dependencies.development_distribution_packages()):
+    dpkgs = dependencies.development_distribution_packages()
+
+    if len(dpkgs):
         print("Do you wish to install the development packages:\n")
-        print(reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.development_distribution_packages(), "") + " (y/n)?")
-        vdev = input()
+        dpkgs = map(str, dpkgs)
+        print(" ".join(dpkgs) + " (y/n)?")
+        vdev = eval(input())
 
-
-    if len(dependencies.other_packages()):
+    opkgs = dependencies.other_packages()
+    if len(opkgs):
         print("Do you wish to install the other packages:\n")
-        print(reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.other_packages(), "") + " (y/n)?")
-        voth = input()
+        opkgs = map(str, opkgs)
+        print(" ".join(opkgs) + " (y/n)?")
+        voth = eval(input())
 
     if vrun == "y":
         theOs.install_packages(dependencies.runtime_distribution_packages(), fake)
@@ -94,6 +100,6 @@ def main():
 
     install_dependencies(software, osname, fake)
 
-    
+
 if __name__=="__main__":
     main()

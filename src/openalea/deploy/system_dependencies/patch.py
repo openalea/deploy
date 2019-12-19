@@ -12,6 +12,7 @@
     $HeadURL: https://python-patch.googlecode.com/svn/trunk/patch.py $
 """
 
+from __future__ import absolute_import
 __author__ = "techtonik.rainforce.org"
 __version__ = "11.01"
 

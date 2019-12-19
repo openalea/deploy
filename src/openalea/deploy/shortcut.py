@@ -3,7 +3,7 @@
 #
 #       OpenAlea.Deploy : openalea setuptools extension
 #
-#       Copyright 2006-2009 INRIA - CIRAD - INRA  
+#       Copyright 2006-2009 INRIA - CIRAD - INRA
 #
 #       File author(s): Samuel Dufour-Kowalski <samuel.dufour@sophia.inria.fr>
 #                       Christophe Pradal <christophe.prada@cirad.fr>
@@ -11,12 +11,14 @@
 #       Distributed under the Cecill-C License.
 #       See accompanying file LICENSE.txt or copy at
 #           http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
-# 
+#
 #       OpenAlea WebSite : http://openalea.gforge.inria.fr
 #
 ################################################################################
 """OS Functions to add shortcut and Mime type association """
 
+from __future__ import absolute_import
+from __future__ import print_function
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -28,7 +30,7 @@ def create_win_shortcut(name, target, arguments="",
                         startin="", icon="", description="",
                         menugroup="OpenAlea"):
     """ Create windows shortcut
-    
+
     :param name: link name
     :param target: executable file path (ex : Pythonroot + pythonw.exe)
     :param arguments: (ex python module path)
@@ -38,7 +40,7 @@ def create_win_shortcut(name, target, arguments="",
     :param menugroup: Menu group entry
 
     :example:
-    
+
         >>> TempDir = os.environ["TEMP"]
         >>> Name        =  "New Link"
         >>> Target      =  Pythonroot + "pythonw.exe "
@@ -54,7 +56,7 @@ def create_win_shortcut(name, target, arguments="",
 
     if ((not 'win32' in sys.platform)):
         return
-    
+
     try:
         from openalea.deploy import get_base_dir
         win32dir = get_base_dir('pywin32')
@@ -64,19 +66,19 @@ def create_win_shortcut(name, target, arguments="",
         print(e)
         print("ERROR : pywin32 is not installed. Cannot create shortcut.")
         return
-    
+
     import win32api
     import pythoncom
 
     MenuRoot = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_PROGRAMS, 0, 0)
     MenuRoot = MenuRoot + "\\" + MenuGroup + "\\"
-    
+
     if (not os.path.isdir(MenuRoot)):
         os.mkdir(MenuRoot)
-    
+
     Path = MenuRoot + "\\%s.lnk" % (Name)
     Icon = (Icon, 0)
-    
+
     # Get the shell interface.
     sh = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, \
                                     pythoncom.CLSCTX_INPROC_SERVER,
@@ -104,7 +106,7 @@ def set_win_reg(key, subkey, name, value):
 
     try:
         if sys.version_info.major == 2:
-            import _winreg as winreg
+            import six.moves.winreg as winreg
         else:
             import winreg
 
@@ -139,7 +141,7 @@ def set_win_reg(key, subkey, name, value):
 def create_fd_shortcut(name, target, arguments="", version="",
                        icon="", description="", menugroup="OpenAlea"):
     """ Create a desktop shortcut on freedesktop compatible system
-    
+
     :param Name: Shortcut name
     :param Target: executable file path (ex : Pythonroot + pythonw.exe)
     :param Arguments: (ex python module path)

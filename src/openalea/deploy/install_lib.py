@@ -20,6 +20,8 @@
 The egm file describes the directory the dynamic library is originated from.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
 EGG_MARKER_EXTENSION = ".egm"

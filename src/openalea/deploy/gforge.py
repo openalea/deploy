@@ -2,26 +2,28 @@
 #
 #       OpenAlea.Deploy: OpenAlea setuptools extension
 #
-#       Copyright 2008 INRIA - CIRAD - INRA  
+#       Copyright 2008 INRIA - CIRAD - INRA
 #
 #       File author(s): Samuel Dufour-Kowalski <samuel.dufour@sophia.inria.fr>
 #
 #       Distributed under the Cecill-C License.
 #       See accompanying file LICENSE.txt or copy at
 #           http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
-# 
+#
 #       OpenAlea WebSite : http://openalea.gforge.inria.fr
 #
 
 """INRIA GForge SOAP python API wrappers (based on SOAPpy)
 
-See test functions below 
+See test functions below
 The specification has been found on the web : http://gforge.inria.fr/soap
 
 Creation of a soap server, which serve as proxy to redirect python function
 and args into valid soap request and return results into Python.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -44,7 +46,7 @@ class GForgeProxy(object):
     encoding = 'http://schemas.xmlsoap.org/soap/encoding/'
 
     def __init__(self):
-        # SOAP proxy 
+        # SOAP proxy
         self.server = SOAPProxy(self.url, namespace=self.namespace,
                                 encoding='ISO-8859-1')
 
@@ -80,7 +82,7 @@ class GForgeProxy(object):
         self.session = None
 
     def get_project_id(self, project_name):
-        """ 
+        """
         Return the project id (formely the group_id) for a particular name
         Return -1 if failed
         """
@@ -93,21 +95,21 @@ class GForgeProxy(object):
             return -1
 
     def get_project_details(self, project_id):
-        """ 
+        """
         Return the project details in a dictionary
         @param project_id : a number or a name
         """
 
         project_id = self.convert_to_id(project_id)
-        
+
         ret = self.server.getGroups(self.session, [project_id])
         id = ret[0]
 
         return id
 
     def get_packages(self, project_id):
-        """ 
-        Return a list of package name 
+        """
+        Return a list of package name
         @param project_id : a number or a name
         """
 
@@ -116,8 +118,8 @@ class GForgeProxy(object):
         return [pkg['name'] for pkg in pkgs]
 
     def get_package_id(self, project_id, pkg_name):
-        """ 
-        Return the package id, -1 if failed 
+        """
+        Return the package id, -1 if failed
         @param project_id : a number or a name
         """
         (project_id,) = self.convert_to_id(project_id)
@@ -136,8 +138,8 @@ class GForgeProxy(object):
         return -1
 
     def get_releases(self, project_id, package_id):
-        """ 
-        Return a list of release name 
+        """
+        Return a list of release name
         @param project_id : a number or a name
         @param package_id : a number or a name
         """
@@ -147,8 +149,8 @@ class GForgeProxy(object):
         return [rel['name'] for rel in rels]
 
     def get_release_id(self, project_id, package_id, release_name):
-        """ 
-        Return the release id, -1 if failed 
+        """
+        Return the release id, -1 if failed
         @param project_id : a number or a name
         @param package_id : a number or a name
         """
@@ -168,8 +170,8 @@ class GForgeProxy(object):
         return -1
 
     def get_release_details(self, project_id, package_id, release_id):
-        """ 
-        Return a tuple (name, date, notes, changes) 
+        """
+        Return a tuple (name, date, notes, changes)
         @param project_id : a number or a name
         @param package_id : a number or a name
         @param release_id : a number or a name
@@ -195,12 +197,12 @@ class GForgeProxy(object):
 
         except Exception as e:
             print(e)
-        
+
         return (None, None, None, None,)
 
     def get_files(self, project_id, package_id, release_id):
-        """ 
-        Return a list of package_name 
+        """
+        Return a list of package_name
         @param project_id : a number or a name
         @param package_id : a number or a name
         @param release_id : a number or a name
@@ -214,8 +216,8 @@ class GForgeProxy(object):
         return [f['name'] for f in files]
 
     def get_file_id(self, project_id, package_id, release_id, file_name):
-        """ 
-        Return a file id 
+        """
+        Return a file id
         """
 
         file_name = file_name.lower()
@@ -241,8 +243,8 @@ class GForgeProxy(object):
 
     def get_file(self, project_id, package_id, release_id, file_id,
                  filename=None):
-        """ 
-        Download a file given its id 
+        """
+        Download a file given its id
         If filename is not None, write file in filename
         Return the filename
         @param project_id : a number or a name
@@ -313,8 +315,8 @@ class GForgeProxy(object):
 
     ################################################################################
     def add_package(self, project_id, package_name, public=True):
-        """ 
-        Create a new package 
+        """
+        Create a new package
         @param project_id : a number or a name
         """
 
@@ -328,8 +330,8 @@ class GForgeProxy(object):
 
     def add_release(self, project_id, package_id, release_name,
                     notes, changes):
-        """ 
-        Create a new release 
+        """
+        Create a new release
         @param project_id : a number or a name
         @param package_id : a number or a name
         """
@@ -344,7 +346,7 @@ class GForgeProxy(object):
 
     def add_big_file(self, project_id, package_id, release_id, filename,
                      proc_type="any", file_type="other"):
-        """ 
+        """
         Add a file in a particular release (for big file)
         @param project_id : a number or a name
         @param package_id : a number or a name
@@ -375,8 +377,8 @@ class GForgeProxy(object):
 
     def add_file(self, project_id, package_id, release_id, filename,
                  proc_type="any", file_type="other"):
-        """ 
-        Add a file in a particular release 
+        """
+        Add a file in a particular release
         @param project_id : a number or a name
         @param package_id : a number or a name
         @param release_id : a number or a name
@@ -402,14 +404,14 @@ class GForgeProxy(object):
         print("Uploading %s..." % (name,))
 
         try:
-            
+
             ret = self.server.addFile(self.session, _project_id, _package_id,
                                       _release_id,
                                       name, filestr, type, processor,
                                       release_time)
             print("Done.")
             return ret
-        
+
         except Exception as e:
             return self.add_big_file(project_id, package_id, release_id,
                                      filename, proc_type, file_type)
@@ -442,7 +444,7 @@ class GForgeProxy(object):
         """remove a file"""
         project_id, package_id, release_id, file_id = \
             self.convert_to_id(project_id, package_id, release_id, file_id)
-        
+
         from . import gforge_util
         gforge_util.gforge_login(self.userid, self.passwd)
         print('Trying to delete file %s' % file_id)
@@ -525,7 +527,7 @@ if __name__ == "__main__" or "nose" in sys.argv[0]:
 
         assert server.get_package_id("openalea", "openalea.deploy") == \
                server.get_package_id(79, "openalea.deploy")
-    
+
 
     def test_release():
         server = GForgeProxy()
@@ -533,7 +535,7 @@ if __name__ == "__main__" or "nose" in sys.argv[0]:
         assert len(server.get_releases(79, 1176)) > 0
         assert server.get_releases(79, 1176) == server.get_releases("openalea",
                                                                     "openalea.deploy")
-        
+
         assert server.get_release_id(79, 1176, "0.3") == 1304
         assert server.get_release_id(79, 1176, "0.3") == \
                server.get_release_id("openalea", "openalea.deploy", "0.3")

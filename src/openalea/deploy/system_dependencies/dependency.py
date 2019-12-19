@@ -16,8 +16,11 @@
 # THIS MODULE IS DEPRECATED, USE DEPLOY_SYSTEM2.PY INSTEAD #
 ############################################################
 
+from __future__ import absolute_import
+from __future__ import print_function
 import platform, types, warnings, collections, subprocess, abc
 from six import with_metaclass
+from six.moves import zip
 
 
 

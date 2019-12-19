@@ -1,12 +1,12 @@
 #!/usr/bin/python
 #####################################################################"
 # 02/2006 Will Holcomb <wholcomb@gmail.com>
-# 
+#
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
 # version 2.1 of the License, or (at your option) any later version.
-# 
+#
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -39,6 +39,9 @@ The main function of this file is a sample which downloads a page and
 then uploads it to the W3C validator.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
+from six.moves import input
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -48,7 +51,7 @@ try:
     from urllib.request import BaseHandler, HTTPHandler
 except:
     # python 2
-    from urllib2 import BaseHandler, HTTPHandler
+    from six.moves.urllib.request import BaseHandler, HTTPHandler
 
 import mimetools, mimetypes
 import os, stat, sys
@@ -100,21 +103,21 @@ class MultipartPostHandler(BaseHandler):
                 request.add_unredirected_header('Content-Type', contenttype)
 
             request.add_data(data)
-        
+
         return request
 
     def multipart_encode(self, vars, files, boundary=None, buf=None):
-        
+
         if boundary is None:
             boundary = mimetools.choose_boundary()
         if buf is None:
             buf = StringIO()
-        
+
         for (key, value) in vars:
             buf.write('--%s\r\n' % boundary)
             buf.write('Content-Disposition: form-data; name="%s"' % key)
             buf.write('\r\n\r\n' + value + '\r\n')
-        
+
         for (key, fd) in files:
             file_size = os.fstat(fd.fileno())[stat.ST_SIZE]
             filename = fd.name.split('/')[-1]
@@ -149,7 +152,7 @@ try :
     import configparser
 except:
     # python 2
-    import ConfigParser as configparser
+    import six.moves.configparser as configparser
 import getpass
 
 urlOpener = None
@@ -182,7 +185,7 @@ def find_login_passwd(allow_user_input=True):
         username = config.get('server-login', 'username')
         password = config.get('server-login', 'password')
     elif allow_user_input:
-        username = input("Enter your GForge login:")
+        username = eval(input("Enter your GForge login:"))
         password = getpass.getpass("Enter you GForge password:")
     return username, password
 
@@ -192,14 +195,15 @@ try:
     from urllib.request import build_opener, install_opener, HTTPCookieProcessor, Request, urlopen
 except:
     # python 2
-    from urllib2 import build_opener, install_opener, HTTPCookieProcessor, Request, splituser, unquote, urlopen
-    from urllib import urlencode
-    from urlparse import urlparse, urlunparse
+    from six.moves.urllib.request import build_opener, install_opener, HTTPCookieProcessor, Request, urlopen
+    from six.moves.urllib.parse import splituser, unquote
+    from six.moves.urllib.parse import urlencode
+    from six.moves.urllib.parse import urlparse, urlunparse
 
 try:
     import http.cookiejar as cookiejar
 except:
-    import cookielib as cookiejar
+    import six.moves.http_cookiejar as cookiejar
 
 
 def cookie_login(loginurl, values):
@@ -212,7 +216,7 @@ def cookie_login(loginurl, values):
     # Enable cookie support for urllib2
     mcookiejar = cookiejar.CookieJar()
     urlOpener = build_opener(HTTPCookieProcessor(mcookiejar), MultipartPostHandler)
-    
+
     data = urlencode(values)
     request = Request(loginurl, data)
     url = urlOpener.open(request)  # Our mcookiejar automatically receives the cookies
@@ -248,7 +252,7 @@ def gforge_login(userid=None, passwd=None):
               'form_pw': passwd,
               'return_to': '',
               'login': "Connexion avec SSL"}
-    
+
     url = "https://gforge.inria.fr/account/login.php"
     return cookie_login(url, values)
 
@@ -282,7 +286,7 @@ def delete_release(group_id, pkg_id, release_id):
 def delete_file(group_id, pkg_id, release_id, filename_id):
     """ Delete a file """
     url = "https://gforge.inria.fr/frs/admin/editrelease.php"
-    
+
     values = {'group_id': group_id,
               'release_id': release_id,
               'package_id': pkg_id,
@@ -305,7 +309,7 @@ def upload_file(filename, group_id, pkg_id, release_id, type_id, proc_id):
               'processor_id': str(proc_id),
               'userfile': open(filename, "rb"),
               }
-    
+
     fp = urlOpener.open(url, values)
 
 

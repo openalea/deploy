@@ -17,11 +17,14 @@
 """This module converts hard coded compilation paths inside Qt binairies into
 relative paths suitable for use inside eggs."""
 
+from __future__ import absolute_import
+from __future__ import print_function
 __license__ = "Cecill-C"
 __revision__ = " $Id$"
 
 import sys
-import os, os.path
+import os
+import os.path
 import fnmatch
 import shutil
 
@@ -29,10 +32,10 @@ def patch(files, qtDirPath, where):
     if not os.path.isdir(qtDirPath):
         print(qtDirPath, "does not exist")
         sys.exit(-1)
-    
+
     if os.path.exists( files ):
         with open(files, "r") as fn:
-            filesToPatch = fn.read().split()            
+            filesToPatch = fn.read().split()
     else:
         filesToPatch = []
         patterns = files.split(",")
@@ -40,62 +43,62 @@ def patch(files, qtDirPath, where):
             for pat in patterns:
                 for fn in fnmatch.filter(subfiles, pat):
                     filesToPatch.append( os.path.join(dir_path, fn) )
-  
+
     # Make all paths relative to the patched file.
     # PortableExecutables have file size encoded in header.
-    # Instead of modifying the header we replace by a string 
+    # Instead of modifying the header we replace by a string
     # of exactly the same size using padding "/".
     replacement = bytearray(".." + "/"*(len(qtDirPath)-2))
     qtDirPathA  = bytearray(qtDirPath)
     qtDirPathA2 = bytearray(qtDirPath.replace("\\", "/"))
-    patches     = 0 # a counter 
-    
+    patches     = 0 # a counter
+
     print("about to try to patch", len(filesToPatch), "files")
     for f in filesToPatch:
         prefix = "" + qtDirPath
-        f = os.path.join(prefix,f)
-        
+        f = os.path.join(prefix, f)
+
         print("patch file", f)
         if not os.path.exists(f):
             print("qpatch: warning: file not found", f)
             continue
-              
+
         source = None
         stat   = None
         with open(f, "rb") as file_:
             source = bytearray(file_.read())
             # store permissions
             stat = os.fstat(file_.fileno())
-            
+
         if source.find(qtDirPathA) == -1 and source.find(qtDirPathA2) == -1:
             print("string not found")
             continue
-  
+
         # make backup, if backup already exists, skip the patching.
         if not os.path.exists( f+"_bkp" ):
             shutil.move(f, f+"_bkp")
         else:
             print("backup already exists, ignoring")
             continue
-  
+
         patched = source.replace(qtDirPathA, replacement)
         patched = patched.replace(qtDirPathA2, replacement)
-               
+
         with open( f, "wb") as out_:
             out_.write(patched)
-        
+
             # restore permissions
             try:
                 os.fchmod(out_.fileno(), stat.st_mode)
                 os.fchown(out_.fileno(), stat.st_uid, stat.st_gid)
             except Exception as e:
                 print("\n\tOops! Couldn't copy file metadata", type(e), e)
-        
+
         patches += 1
         print("ok")
-            
+
     print("patched", patches, "files")
-    
+
 if __name__ == "__main__":
     try:
         files, qtDirPath, where = sys.argv[1:]
@@ -104,5 +107,4 @@ if __name__ == "__main__":
         import traceback
         traceback.print_exc()
         print("Usage: python patch files oldQtDir where")
-        sys.exit(-1)    
-    
+        sys.exit(-1)
