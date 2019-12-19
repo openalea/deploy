@@ -7,7 +7,7 @@ major = 2
 minor = 1
 """(int) Version minor component."""
 
-post = 7
+post = 8
 """(int) Version post or bugfix component."""
 
 __version__ = ".".join([str(s) for s in (major, minor, post)])
