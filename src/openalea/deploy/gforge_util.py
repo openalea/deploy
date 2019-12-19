@@ -1,12 +1,12 @@
 #!/usr/bin/python
 #####################################################################"
 # 02/2006 Will Holcomb <wholcomb@gmail.com>
-# 
+#
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
 # version 2.1 of the License, or (at your option) any later version.
-# 
+#
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -98,26 +98,26 @@ class MultipartPostHandler(BaseHandler):
                 if (request.has_header('Content-Type')
                     and request.get_header('Content-Type').find(
                         'multipart/form-data') != 0):
-                    print(("Replacing %s with %s" % (
-                    request.get_header('content-type'), 'multipart/form-data')))
+                    print("Replacing %s with %s" % (
+                    request.get_header('content-type'), 'multipart/form-data'))
                 request.add_unredirected_header('Content-Type', contenttype)
 
             request.add_data(data)
-        
+
         return request
 
     def multipart_encode(self, vars, files, boundary=None, buf=None):
-        
+
         if boundary is None:
             boundary = mimetools.choose_boundary()
         if buf is None:
             buf = StringIO()
-        
+
         for (key, value) in vars:
             buf.write('--%s\r\n' % boundary)
             buf.write('Content-Disposition: form-data; name="%s"' % key)
             buf.write('\r\n\r\n' + value + '\r\n')
-        
+
         for (key, fd) in files:
             file_size = os.fstat(fd.fileno())[stat.ST_SIZE]
             filename = fd.name.split('/')[-1]
@@ -175,7 +175,7 @@ def find_login_passwd(allow_user_input=True):
 
     username, password = None, None
     if exists(rc):
-        print(('Using PyPI login from %s' % (rc)))
+        print('Using PyPI login from %s' % (rc))
         config = configparser.ConfigParser({
             'username': '',
             'password': '',
@@ -216,7 +216,7 @@ def cookie_login(loginurl, values):
     # Enable cookie support for urllib2
     mcookiejar = cookiejar.CookieJar()
     urlOpener = build_opener(HTTPCookieProcessor(mcookiejar), MultipartPostHandler)
-    
+
     data = urlencode(values)
     request = Request(loginurl, data)
     url = urlOpener.open(request)  # Our mcookiejar automatically receives the cookies
@@ -252,7 +252,7 @@ def gforge_login(userid=None, passwd=None):
               'form_pw': passwd,
               'return_to': '',
               'login': "Connexion avec SSL"}
-    
+
     url = "https://gforge.inria.fr/account/login.php"
     return cookie_login(url, values)
 
@@ -286,7 +286,7 @@ def delete_release(group_id, pkg_id, release_id):
 def delete_file(group_id, pkg_id, release_id, filename_id):
     """ Delete a file """
     url = "https://gforge.inria.fr/frs/admin/editrelease.php"
-    
+
     values = {'group_id': group_id,
               'release_id': release_id,
               'package_id': pkg_id,
@@ -309,7 +309,7 @@ def upload_file(filename, group_id, pkg_id, release_id, type_id, proc_id):
               'processor_id': str(proc_id),
               'userfile': open(filename, "rb"),
               }
-    
+
     fp = urlOpener.open(url, values)
 
 

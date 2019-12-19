@@ -1,4 +1,4 @@
-    ###############################################################################
+###############################################################################
 # -*- python -*-
 #
 #       OpenAlea.Deploy : OpenAlea setuptools extension
@@ -24,7 +24,11 @@ __revision__ = " $Id$"
 
 import os
 import sys
-from openalea.deploy.util import is_conda_env
+from os.path import join, exists
+from os import makedirs
+
+from openalea.deploy.util import is_conda_env, conda_prefix
+
 
 def get_posix_activate_export_str(vars):
     # Build string
@@ -54,6 +58,7 @@ def get_posix_activate_export_str(vars):
     exportstr += "############ Configuration END ########"
     return exportstr
 
+
 def get_posix_deactivate_export_str(vars):
     # Build string
     exportstr = "############ Configuration ############\n\n"
@@ -64,15 +69,15 @@ def get_posix_deactivate_export_str(vars):
 
         # Exception
         lib_names = ['LD_LIBRARY_PATH', 'DYLD_FALLBACK_LIBRARY_PATH',
-                     'DYLD_FRAMEWORK_PATH','PATH']
+                     'DYLD_FRAMEWORK_PATH', 'PATH']
         if (vname in lib_names):
             continue
         else:
             exportstr += 'unset  %s\n' % vname
 
-
     exportstr += "############ Configuration END ########"
     return exportstr
+
 
 def get_win32_activate_export_str(vars):
     # Build string
@@ -95,6 +100,7 @@ def get_win32_activate_export_str(vars):
     exportstr += "############ Configuration END ########"
     return exportstr
 
+
 def get_win32_deactivate_export_str(vars):
     # Build string
     exportstr = "############ Configuration ############\n\n"
@@ -107,7 +113,6 @@ def get_win32_deactivate_export_str(vars):
             continue
         else:
             exportstr += 'set  %s=\n' % vname
-
 
     exportstr += "############ Configuration END ########"
     return exportstr
@@ -124,7 +129,7 @@ def set_lsb_env(name, vars):
     if is_conda_env():
         return set_conda_env(vars, name)
 
-    if (not 'posix' in os.name):
+    if ('posix' not in os.name):
         return
 
     exportstr = get_posix_activate_export_str(vars)
@@ -139,8 +144,8 @@ def set_lsb_env(name, vars):
         else:
             filename = os.path.join(os.path.expanduser('~'), ".bashrc")
 
-        print(("Warning : Cannot create /etc/profile.d/%s.sh" % (name)))
-        print(("Trying to setup environment in %s" % filename))
+        print("Warning : Cannot create /etc/profile.d/%s.sh" % (name))
+        print("Trying to setup environment in %s" % filename)
 
         # If profile.d directory is not writable, try to update $HOM/.bashrc
         try:
@@ -162,7 +167,7 @@ def set_lsb_env(name, vars):
                     bashrc.append(line)
 
             # search for the "source ~/.openalea.sh" string
-            if not bashrc_cmd in bashrc:
+            if bashrc_cmd not in bashrc:
                 filehandle = open(filename, 'a+')
                 filehandle.write('\n' + bashrc_cmd)
                 filehandle.close()
@@ -175,7 +180,7 @@ def set_lsb_env(name, vars):
             print(e)
             raise
 
-    print(("Creating %s" % (filename,)))
+    print("Creating %s" % (filename,))
 
     filehandle.write(exportstr)
 
@@ -184,7 +189,7 @@ def set_lsb_env(name, vars):
     # ||source %s"%(filename,filename)
     cmdstr = ". %s" % (filename,)
     print("To enable new OpenAlea config, open a new shell or type")
-    print(('  $ %s' % (bashrc_cmd)))
+    print('  $ %s' % (bashrc_cmd))
 
 
 def set_win_env(vars):
@@ -196,12 +201,10 @@ def set_win_env(vars):
     if is_conda_env():
         return set_conda_env(vars)
 
-    if (not 'win32' in sys.platform):
+    if ('win32' not in sys.platform):
         return
 
     for newvar in vars:
-
-        from string import find
         try:
             if sys.version_info.major == 2:
                 import six.moves.winreg as winreg
@@ -221,8 +224,8 @@ def set_win_env(vars):
         reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
         try:
             key = winreg.OpenKey(reg, regpath, 0, winreg.KEY_ALL_ACCESS)
-        except  WindowsError as we:
-            print(("Cannot set "+repr(name)+" for all users. Set for current user."))
+        except WindowsError as we:
+            print("Cannot set " + repr(name) + " for all users. Set for current user.")
             winreg.CloseKey(reg)
             regpath = r'Environment'
             reg = winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
@@ -240,7 +243,7 @@ def set_win_env(vars):
             listpath = actualpath.split(';')
             if not (value in listpath):
                 value = actualpath + ';' + value
-                print(("ADD %s to PATH" % (value,)))
+                print("ADD %s to PATH" % (value,))
             else:
                 value = actualpath
 
@@ -275,14 +278,13 @@ def set_win_env(vars):
                                                  WM_SETTINGCHANGE, 0, sParam,
                                                  SMTO_ABORTIFHUNG, 100)
         if not res1:
-            print(("result %s, %s from SendMessageTimeout" % (bool(res1), res2)))
+            print("result %s, %s from SendMessageTimeout" % (bool(res1), res2))
 
     except Exception as e:
         print(e)
 
 
-
-def set_conda_env(vars, name = 'openalea'):
+def set_conda_env(vars, name='openalea'):
     """
     Set conda environment variable persistently.
     Use method proposed in https://conda.io/docs/user-guide/tasks/manage-environments.html#saving-environment-variables
@@ -292,8 +294,6 @@ def set_conda_env(vars, name = 'openalea'):
     """
     envprefix = conda_prefix()
 
-    from os.path import join, exists
-    from os import makedirs
     activate_env_vars_dir = join(envprefix, 'etc', 'conda', 'activate.d')
     deactivate_env_vars_dir = join(envprefix, 'etc', 'conda', 'deactivate.d')
 
@@ -303,36 +303,36 @@ def set_conda_env(vars, name = 'openalea'):
     if not exists(activate_env_vars_dir):
         makedirs(deactivate_env_vars_dir)
 
-    if ('posix' in os.name) :
-        filename = join(activate_env_vars_dir, name+'.sh')
-        config = open(filename,'w')
+    if ('posix' in os.name):
+        filename = join(activate_env_vars_dir, name + '.sh')
+        config = open(filename, 'w')
         config.write('#!/bin/sh\n\n')
         config.write(get_posix_activate_export_str(vars))
         config.close()
 
-        filename2 = join(deactivate_env_vars_dir, name+'.sh')
-        config = open(filename2,'w')
+        filename2 = join(deactivate_env_vars_dir, name + '.sh')
+        config = open(filename2, 'w')
         config.write('#!/bin/sh\n\n')
         config.write(get_posix_activate_export_str(vars))
         config.close()
 
     else:
-        filename = join(activate_env_vars_dir, name+'.bat')
-        config = open(filename,'w')
+        filename = join(activate_env_vars_dir, name + '.bat')
+        config = open(filename, 'w')
         config.write(get_win32_activate_export_str(vars))
         config.close()
 
-        filename2 = join(deactivate_env_vars_dir, name+'.bat')
-        config = open(filename2,'w')
+        filename2 = join(deactivate_env_vars_dir, name + '.bat')
+        config = open(filename2, 'w')
         config.write(get_win32_deactivate_export_str(vars))
         config.close()
-    
-    print(("Creating %s and %s" % (repr(filename),repr(filename2))))
 
-    if ('posix' in os.name) :
+    print("Creating %s and %s" % (repr(filename), repr(filename2)))
+
+    if ('posix' in os.name):
         bashrc_cmd = "source %s" % (filename,)
     else:
         bashrc_cmd = "call %s" % (filename,)
-        
+
     print("To enable new OpenAlea config, open a new shell or type")
-    print(('  $ %s' % (bashrc_cmd)))
+    print('  $ %s' % (bashrc_cmd))

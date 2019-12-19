@@ -1,11 +1,13 @@
 
 from __future__ import absolute_import
 from __future__ import print_function
-import os, os.path, sys, shutil, re, itertools
+import os
+import os.path
+import sys
+import re
 from collections import namedtuple
 from distutils.command.build_ext import build_ext as _build_ext
 from distutils.command.build import build as _build
-
 from distutils.core import setup
 from distutils.core import Extension
 
@@ -18,7 +20,7 @@ if sys.platform == "win32":
         if ctypes.windll.kernel32.GetShortPathNameW(path, ctypes.pointer(out), nsize):
             return ctypes.wstring_at(path)
         else:
-            print((ctypes.windll.kernel32.GetLastError()))
+            print(ctypes.windll.kernel32.GetLastError())
 
 
 pack_name = 'rpy2'
@@ -42,14 +44,14 @@ if sys.version_info >= (3,):
     outfiles_2to3 = []
     #dist_script = os.path.join("build", "src", "distribute_setup.py")
     for f in fl.files:
-        outf, copied = file_util.copy_file(f, os.path.join(package_prefix, f), 
+        outf, copied = file_util.copy_file(f, os.path.join(package_prefix, f),
                                            update=1)
         if copied and outf.endswith(".py"): #and outf != dist_script:
             outfiles_2to3.append(outf)
         if copied and outf.endswith('api_tests.txt'):
             # XXX support this in distutils as well
             from lib2to3.main import main
-            main('lib2to3.fixes', ['-wd', os.path.join(package_prefix, 
+            main('lib2to3.fixes', ['-wd', os.path.join(package_prefix,
                                                        'tests', 'api_tests.txt')])
 
     util.run_2to3(outfiles_2to3)
@@ -58,9 +60,6 @@ if sys.version_info >= (3,):
     sys.path.insert(0, package_prefix)
     src_root = package_prefix
     print('done.')
-else:
-    from distutils.core import setup    
-from distutils.core import Extension
 
 
 class build(_build):
@@ -70,7 +69,7 @@ class build(_build):
         # "guess all configuration paths from " +\
         #     "the R executable found in the PATH " +\
         #     "(this overrides r-home)"),
-        ('r-home=', None, 
+        ('r-home=', None,
          "full path for the R home to compile against " +\
              "(see r-autoconfig for an automatic configuration)"),
         ('r-home-lib=', None,
@@ -78,7 +77,7 @@ class build(_build):
              "(<r-home>/lib otherwise)"),
         ('r-home-modules=', None,
          "full path for the R shared modules/ directory " +\
-             "(<r-home>/modules otherwise)") 
+             "(<r-home>/modules otherwise)")
         ]
     boolean_options = _build.boolean_options #+ \
         #['r-autoconfig', ]
@@ -108,7 +107,7 @@ class build_ext(_build_ext):
         #  "guess all configuration paths from " +\
         #      "the R executable found in the PATH " +\
         #      "(this overrides r-home)"),
-        ('r-home=', None, 
+        ('r-home=', None,
          "full path for the R home to compile against " +\
              "(see r-autoconfig for an automatic configuration)"),
         ('r-home-lib=', None,
@@ -132,7 +131,7 @@ class build_ext(_build_ext):
         self.set_undefined_options('build',
                                    #('r_autoconfig', 'r_autoconfig'),
                                    ('r_home', 'r_home'))
-        _build_ext.finalize_options(self) 
+        _build_ext.finalize_options(self)
         if self.r_home is None:
             tmp = os.popen("R RHOME")
             self.r_home = tmp.readlines()
@@ -161,15 +160,15 @@ class build_ext(_build_ext):
         rversions.append(rversion)
 
         config = RConfig()
-        for about in ('--ldflags', '--cppflags', 
+        for about in ('--ldflags', '--cppflags',
                       'LAPACK_LIBS', 'BLAS_LIBS'):
-            config += get_rconfig(r_home, about)            
+            config += get_rconfig(r_home, about)
 
-        print((config.__repr__()))
+        print(config.__repr__())
 
         self.include_dirs.extend(config._include_dirs)
         self.libraries.extend(config._libraries)
-        self.library_dirs.extend(config._library_dirs)        
+        self.library_dirs.extend(config._library_dirs)
 
         if self.r_home_modules is None:
             self.library_dirs.extend([os.path.join(r_home, 'modules'), ])
@@ -217,7 +216,7 @@ def cmp_version(x, y):
 class RConfig(object):
     _include_dirs = None
     _libraries = None
-    _library_dirs = None 
+    _library_dirs = None
     _extra_link_args = None
     _frameworks = None
     _framework_dirs = None
@@ -227,7 +226,7 @@ class RConfig(object):
                  library_dirs = tuple(), extra_link_args = tuple(),
                  frameworks = tuple(),
                  framework_dirs = tuple()):
-        for k in ('include_dirs', 'libraries', 
+        for k in ('include_dirs', 'libraries',
                   'library_dirs', 'extra_link_args'):
             v = locals()[k]
             if not isinstance(v, tuple):
@@ -255,10 +254,10 @@ class RConfig(object):
                              '^(?P<extra_link_args>-Wl[^ ]+)$')
         pp = [re.compile(x) for x in possible_patterns]
         # sanity check of what is returned into rconfig
-        rconfig_m = None        
+        rconfig_m = None
         span = (0, 0)
         rc = RConfig()
-        
+
         for substring in re.split('(?<!-framework) ', string):
             ok = False
             if not substring:
@@ -272,34 +271,34 @@ class RConfig(object):
                     break
                 elif rconfig_m is None:
                     if allow_empty and (rconfig == ''):
-                        print((cmd + '\nreturned an empty string.\n'))
+                        print(cmd + '\nreturned an empty string.\n')
                         rc += RConfig()
                         ok = True
                         break
                     else:
-                        # if the configuration points to an existing library, 
+                        # if the configuration points to an existing library,
                         # use it
                         if os.path.exists(string):
                             rc += RConfig(library = substring)
                             ok = True
                             break
             if not ok:
-                raise ValueError('Invalid substring\n' + substring 
+                raise ValueError('Invalid substring\n' + substring
                                  + '\nin string\n' + string)
         return rc
-            
+
     def __repr__(self):
         s = 'Configuration for R as a library:' + os.linesep
         s += os.linesep.join(
             ['  ' + x + ': ' + self.__dict__['_'+x].__repr__() \
                  for x in ('include_dirs', 'libraries',
                            'library_dirs', 'extra_link_args')])
-        s += os.linesep + ' # OSX-specific (included in extra_link_args)' + os.linesep 
+        s += os.linesep + ' # OSX-specific (included in extra_link_args)' + os.linesep
         s += os.linesep.join(
             ['  ' + x + ': ' + self.__dict__['_'+x].__repr__() \
                  for x in ('framework_dirs', 'frameworks')]
             )
-        
+
         return s
 
     def __add__(self, config):
@@ -318,11 +317,11 @@ class RConfig(object):
 
 def get_rconfig(r_home, about, allow_empty = False):
     if sys.platform == "win32":
-        # parse the make conf file      
+        # parse the make conf file
         arch = 'i386'
         inc_dirs     = os.path.join(r_home, 'include')
         arch_inc_dir = os.path.join(r_home, 'etc', arch)
-        print((os.path.join(r_home, 'include')))
+        print(os.path.join(r_home, 'include'))
         print(arch_inc_dir)
         d = get_makeconf_dict(r_home, arch)
         if about == "--cppflags":
@@ -330,7 +329,7 @@ def get_rconfig(r_home, about, allow_empty = False):
         elif about == "--ldflags":
             rconfig = d.get("ALL_LIBS") + " -lreadline"
         elif about == "LAPACK_LIBS":
-            rconfig = d.get("LAPACK_LIBS")        
+            rconfig = d.get("LAPACK_LIBS")
         elif about == "BLAS_LIBS":
             rconfig = d.get("BLAS_LIBS")
     else:
@@ -347,10 +346,10 @@ def get_rconfig(r_home, about, allow_empty = False):
     rc = RConfig.from_string(rconfig, allow_empty = allow_empty)
     return rc
 
-    
+
 ####################
 # PATCHED SECTION  #
-####################   
+####################
 import re
 from collections import OrderedDict
 ass_re = re.compile(r"^\s*([\-\w]+)\s*=\s*(.*)$")
@@ -359,40 +358,40 @@ var_re = re.compile(r"\$\(([\-\w]*)\)$")
 var_re2 = re.compile(r"(.*)\$\(([\-\w]*)\)(.*)")
 def get_makeconf_dict(r_home, arch):
     makeconf = os.path.join(r_home, 'etc', arch, 'Makeconf')
-    return parse_make(makeconf, initial_vars={"R_HOME": r_home} )    
+    return parse_make(makeconf, initial_vars={"R_HOME": r_home} )
 
-def parse_make(makefile, initial_vars=None):	
+def parse_make(makefile, initial_vars=None):
     if isinstance(makefile, file):
         makefile.seek(0)
         txt = makefile.readlines()
     else:
         with open(makefile) as f:
             txt = f.readlines()
-    
+
     # -- gather variables --
     vardict = {}
-    # vardeps = [] #: variables interdependencies    
-    
+    # vardeps = [] #: variables interdependencies
+
     for l in txt:
         if "=" in l and not l.startswith("#"):
 
             # ignore commented equal signs
             if "#" in l and l.index("#") < l.index("="): continue
-            
+
 			# we do not do rule expansion so $* and relatives are not recognized
             l = l.replace("$*","")
-			
+
             assignmt = ass_re.match(l)
             appendmt = app_re.match(l)
-            if assignmt:                
+            if assignmt:
                 k = assignmt.group(1)
                 v = assignmt.group(2)
 
                 #print k,v
                 k = k.strip()
-                v = v.strip()          
+                v = v.strip()
                 vardict[k] = v
-                
+
                 se = var_re.findall(v)
                 # if se:
                     # vardeps.append( (k, se) )
@@ -403,22 +402,22 @@ def parse_make(makefile, initial_vars=None):
                     vardict[k] += " "+v
                 else:
                     vardict[k] = v
-                    
+
     if initial_vars:
         vardict.update(initial_vars)
-            
+
     # expand variables
     for var, value in vardict.copy().items():
         expand = var_re2.search(value) #something to expand
         while (expand):
-            value  = expand.group(1) + vardict.get(expand.group(2), "") + expand.group(3)  
+            value  = expand.group(1) + vardict.get(expand.group(2), "") + expand.group(3)
             expand = var_re2.search(value) #something to expand
         vardict[var] = value
 
-    return vardict    
+    return vardict
 #####################
 # /PATCHED SECTION  #
-##################### 
+#####################
 
 def getRinterface_ext():
     #r_libs = [os.path.join(RHOME, 'lib'), os.path.join(RHOME, 'modules')]
@@ -439,7 +438,7 @@ def getRinterface_ext():
         define_macros.append(('R_INTERFACE_PTRS', 1))
         define_macros.append(('HAVE_POSIX_SIGJMP', 1))
         define_macros.append(('RIF_HAS_RSIGHAND', 1))
-        
+
     define_macros.append(('CSTACK_DEFNS', 1))
 
 
@@ -450,11 +449,11 @@ def getRinterface_ext():
 
 
     include_dirs = []
-    
+
     rinterface_ext = Extension(
             name = pack_name + '.rinterface._rinterface',
             sources = [ \
-            #os.path.join('rpy', 'rinterface', 'embeddedr.c'), 
+            #os.path.join('rpy', 'rinterface', 'embeddedr.c'),
             #os.path.join('rpy', 'rinterface', 'r_utils.c'),
             #os.path.join('rpy', 'rinterface', 'buffer.c'),
             #os.path.join('rpy', 'rinterface', 'sequence.c'),
@@ -463,7 +462,7 @@ def getRinterface_ext():
                          'rpy', 'rinterface', '_rinterface.c')
                        ],
             depends = [os.path.join(package_prefix,
-                                    'rpy', 'rinterface', 'embeddedr.h'), 
+                                    'rpy', 'rinterface', 'embeddedr.h'),
                        os.path.join(package_prefix,
                                     'rpy', 'rinterface', 'r_utils.h'),
                        os.path.join(package_prefix,
@@ -486,13 +485,13 @@ def getRinterface_ext():
             extra_compile_args=[],
             #extra_link_args = extra_link_args
             )
-            
+
     rpy_device_ext = Extension(
         pack_name + '.rinterface.rpy_device',
             [
             os.path.join('rpy', 'rinterface', 'rpy_device.c'),
              ],
-            include_dirs = include_dirs + 
+            include_dirs = include_dirs +
                             [os.path.join('rpy', 'rinterface'), ],
             libraries = ['R', ],
             library_dirs = r_libs,
@@ -548,7 +547,7 @@ if __name__ == '__main__':
                        'Intended Audience :: Science/Research',
                        'Development Status :: 5 - Production/Stable'
                        ],
-        data_files = [(os.path.join('rpy2', 'images'), 
+        data_files = [(os.path.join('rpy2', 'images'),
                        [os.path.join('doc', 'source', 'rpy2_logo.png')])],
 
         #[pack_name + '.rinterface_' + x for x in rinterface_rversions] + \

@@ -38,23 +38,24 @@ def install_dependencies(software, osname=None, fake=False):
     vdev = False
     voth = False
 
-    if len(dependencies.runtime_distribution_packages()):
+    rpkgs = dependencies.runtime_distribution_packages()
+    if len(rpkgs):
         print("Do you wish to install the required runtime packages:\n")
-        print((reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.runtime_distribution_packages(), "") + " (y/n)?"))
+        rpkgs = map(str, rpkgs)
+        print(" ".join(rpkgs) + " (y/n)?")
         vrun = eval(input())
 
-    if len(dependencies.development_distribution_packages()):
+    dpkgs = dependencies.development_distribution_packages()
+
+    if len(dpkgs):
         print("Do you wish to install the development packages:\n")
-        print((reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.development_distribution_packages(), "") + " (y/n)?"))
+        print(" ".join(dpkgs) + " (y/n)?")
         vdev = eval(input())
 
-
-    if len(dependencies.other_packages()):
+    opkgs = dependencies.other_packages()
+    if len(opkgs:
         print("Do you wish to install the other packages:\n")
-        print((reduce(lambda x,y: str(x)+" "+str(y),
-                     dependencies.other_packages(), "") + " (y/n)?"))
+        print(" ".join(opkgs) + " (y/n)?")
         voth = eval(input())
 
     if vrun == "y":
@@ -86,7 +87,7 @@ def main():
 ############################################################
 """)
     if len(sys.argv)==1:
-        print((usage%( reduce( lambda x, y: x+" "+y, iter(distributions.canonical_dependencies.keys()) ), )))
+        print(usage%( reduce( lambda x, y: x+" "+y, iter(distributions.canonical_dependencies.keys()) ), ))
         sys.exit(-1)
 
     software = sys.argv[1]
@@ -97,6 +98,6 @@ def main():
 
     install_dependencies(software, osname, fake)
 
-    
+
 if __name__=="__main__":
     main()

@@ -5,7 +5,7 @@ define a list of packages with their revision
 dch --distribution precise -v 1.0.1~ppa1
 
 :Exemple:
-    
+
     >>> import ubuntu_release as ur
     >>> ur.openalea(distribution='precise', my_path='openalea1.0', dry_run=False)
 """
@@ -13,11 +13,13 @@ from __future__ import absolute_import
 from __future__ import print_function
 import os
 from collections import OrderedDict
-from path import path
-
+try:
+    from path import path
+except:
+    from path import Path as path
 
 ##########################################################################
-# Commands 
+# Commands
 ##########################################################################
 
 # version 1.0.0~ppa1
@@ -189,7 +191,7 @@ def my_dch(packages, my_path='.', distribution = 'precise', dry_run=False):
     for p, version in packages.items():
         os.chdir(p)
         cmd = cmd_dch%(distribution,version)
-        print(("%s: \n"%p + '\t'+cmd))
+        print("%s: \n"%p + '\t'+cmd)
         if not dry_run:
             os.system(cmd)
         os.chdir('..')
@@ -203,13 +205,13 @@ def my_debuild(packages, my_path='.', dry_run=False):
     os.chdir(my_path)
     for p in packages:
         os.chdir(p)
-        print(("%s: \n"%p + '\t'+cmd_debuild))
+        print("%s: \n"%p + '\t'+cmd_debuild)
         if not dry_run:
             os.system(cmd_debuild)
         os.chdir('..')
     os.chdir(cwd)
 
-def my_dput(packages, dist = 'openalea', my_path='.', dry_run=False):
+def my_dput(packages, dist='openalea', my_path='.', dry_run=False):
     """ Run dput for upload files on launchpad """
     cwd = os.getcwd()
     os.chdir(my_path)
@@ -219,46 +221,48 @@ def my_dput(packages, dist = 'openalea', my_path='.', dry_run=False):
         files = d.files('*%s_*.changes'%p)
         changes = sorted([str(f) for f in files])
         if not changes:
-            print(("ERROR: %s not found"%p))
+            print("ERROR: %s not found"%p)
             errors.append(p)
             continue
-        print(('\n ', p))
+        print('\n ', p)
         print(changes)
         my_file = changes[-1]
         print(my_file)
 
         cmd = cmd_dput%(dist,) + my_file
-        print(cmd) 
+        print(cmd)
         if not dry_run:
             os.system(cmd)
         print('#####################')
 
-    print(('\n'.join(errors)))
+    print('\n'.join(errors))
     os.chdir(cwd)
     return
 
-def openalea(distribution='precise',my_path='.', dry_run=True):
+
+def openalea(distribution='precise', my_path='.', dry_run=True):
     oa_pkgs = openalea_pkgs()
     my_dch(oa_pkgs, my_path=my_path, distribution=distribution, dry_run=dry_run)
     my_debuild(oa_pkgs, my_path=my_path, dry_run=dry_run)
     names = openalea_name()
     my_dput(names, dist='openalea', my_path=my_path, dry_run=dry_run)
 
-def vplants(distribution='precise',my_path='.', dry_run=True):
+
+def vplants(distribution='precise', my_path='.', dry_run=True):
     vp_pkgs = vplants_pkgs()
     my_dch(vp_pkgs, my_path=my_path, distribution=distribution, dry_run=dry_run)
     my_debuild(vp_pkgs, my_path=my_path, dry_run=dry_run)
     names = vplants_name()
     my_dput(names, dist='vplants', my_path=my_path, dry_run=dry_run)
 
-def tissue(distribution='precise',my_path='.', dry_run=True):
+
+def tissue(distribution='precise', my_path='.', dry_run=True):
     td_pkgs = tissue_deps_pkgs()
     my_dch(td_pkgs, my_path=my_path, distribution=distribution, dry_run=dry_run)
 
     pkgs = tissue_pkgs()
-    tissue_path = path(my_path)/'tissue'
+    tissue_path = path(my_path) / 'tissue'
     my_dch(pkgs, my_path=tissue_path, distribution=distribution, dry_run=dry_run)
-
 
     my_debuild(td_pkgs, my_path=my_path, dry_run=dry_run)
     my_debuild(pkgs, my_path=tissue_path, dry_run=dry_run)
@@ -270,7 +274,8 @@ def tissue(distribution='precise',my_path='.', dry_run=True):
     tissue_names[names.index('tissue_meta')]='tissue'
     my_dput(tissue_names, dist='vplants', my_path=tissue_path, dry_run=dry_run)
 
-def alinea(distribution='precise',my_path='.', dry_run=True):
+
+def alinea(distribution='precise', my_path='.', dry_run=True):
     pkgs = alinea_pkgs()
     my_dch(pkgs, my_path=my_path, distribution=distribution, dry_run=dry_run)
     my_debuild(pkgs, my_path=my_path, dry_run=dry_run)

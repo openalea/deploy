@@ -5,7 +5,7 @@
 #       Copyright 2006-2012 INRIA - CIRAD - INRA
 #
 #       File author(s): Daniel Barbeau
-#       File Contributors(s):   
+#       File Contributors(s):
 #                             - Yassin Refahi,
 #                             - Frederic Boudon,
 #
@@ -71,14 +71,14 @@ class qt4(BaseProjectBuilder):
         syncqtfiles = recursive_glob( "bin", "syncqt*")
         for sqt in syncqtfiles:
             os.rename(sqt, sqt+"_no_use")
-            
+
         # we must patch the sources in some cases
         if self.version == "4.8.0" :#and Compiler.version_gt("4.7.0"):
             apply_patch(  pj(ModuleBaseDir,"qt-4.8.0.patch") )
-            
+
         # build the configure command line
         common = " -release -opensource -shared -nomake demos -nomake examples -mmx -sse2 -3dnow"
-        common += " -declarative -webkit -no-s60 -no-cetest"        
+        common += " -declarative -webkit -no-s60 -no-cetest"
         cmd = "configure.exe" + common
         if Compiler.version_gt("4.6.0"):
             # TDM doesn't ship with DirectX headers. Cannot use Phonon
@@ -145,7 +145,7 @@ class qt4(BaseProjectBuilder):
             config.set(sec, "Plugins",   uj(unix_installdir, "dll"))
             #config.set(sec, "Imports"	"no idea")
             config.set(sec, "Data",      unix_installdir )
-            config.set(sec, "Translations", uj(unix_installdir, "translations")  )      
+            config.set(sec, "Translations", uj(unix_installdir, "translations")  )
         # Writing our configuration file
         if where is None:
             where = self.install_bin_dir
@@ -160,7 +160,7 @@ class sip(BaseProjectBuilder):
     #url = "http://www.riverbankcomputing.co.uk/static/Downloads/sip4/sip-4.13.2.zip"
     download_name  = "sip_src.zip"
     archive_subdir = "sip*"
-    
+
     required_tools = [bisonflex]
 
     def __init__(self, *args, **kwargs):
@@ -236,7 +236,7 @@ if 'qt4-dev' in env:
     """
 
         txt = ""
-        print(("sip patching", os.getcwd()))
+        print("sip patching", os.getcwd())
         with open("sipconfig.py") as f:
             txt = f.read()
 
@@ -268,7 +268,7 @@ class pyqt4(BaseProjectBuilder) :
     #url = "http://www.riverbankcomputing.co.uk/static/Downloads/PyQt4/PyQt-win-gpl-4.9.1.zip"
     download_name  = "pyqt4_src.zip"
     archive_subdir = "PyQt*"
-    
+
     cmd_options = [ ("siphome", None, "Path to sip.exe"),
                     ("sipsite", None, "Path(s) to sip modules (';' seperated)") ]
 
@@ -490,8 +490,8 @@ class boost(BaseProjectBuilder):
         """ bjam configures, builds and installs so nothing to do here"""
         return self.build()
 
-        
-        
+
+
 class ann(BaseProjectBuilder):
     version = '1.1.2'
     url = "http://www.cs.umd.edu/~mount/ANN/Files/"+version+"/ann_"+version+".zip"
@@ -504,7 +504,7 @@ class ann(BaseProjectBuilder):
         self.patchfile = pj(ModuleBaseDir,"ann_mgw.patch")
         self.install_inc_dir = pj(self.sourcedir, "include")
         self.install_lib_dir = pj(self.sourcedir, "lib")
-        
+
     def configure(self):
         apply_patch(self.patchfile)
         return True
@@ -548,18 +548,18 @@ class qhull(BaseProjectBuilder):
         BaseProjectBuilder.__init__(self, *args, **kwargs)
         self.install_inc_dir = pj(self.installdir, "include")
         self.install_lib_dir = pj(self.installdir, "lib")
-    
+
     def configure(self):
         return True
 
     def build(self):
         return True
-    
+
     def install(self):
         return True
 
-        
-        
+
+
 class cgal(BaseProjectBuilder):
     url = "https://gforge.inria.fr/frs/download.php/30390/CGAL-4.0.zip"
     download_name  = "cgal_src.zip"
@@ -571,13 +571,13 @@ class cgal(BaseProjectBuilder):
         BaseProjectBuilder.__init__(self, *args, **kwargs)
         self.install_inc_dir = pj(self.installdir, "include")
         self.install_lib_dir = pj(self.installdir, "lib")
-    
+
     def configure(self):
         compiler = Compiler.get_bin_path()
         boost_ = boost()
-        
+
         db_quote = lambda x: '"'+x+'"'
-        
+
         options = " ".join(['-DCMAKE_INSTALL_PREFIX='+db_quote(self.installdir),
                             '-DCMAKE_CXX_COMPILER:FILEPATH='+db_quote(pj(compiler,'g++.exe')),
                             '-DBOOST_ROOT='+db_quote(boost_.installdir),
@@ -591,28 +591,28 @@ class cgal(BaseProjectBuilder):
         cmd = 'cmake.exe -G"MinGW Makefiles" '+options+' . '
         print(cmd)
         return subprocess.call(cmd) == 0
-                            
-        
-    
+
+
+
 class rpy2(BaseProjectBuilder):
     version = "2.3"
     revision = "f075a4291e9c"
     url = "https://bitbucket.org/lgautier/rpy2/get/"+revision+".zip"
     download_name  = "rpy2_src.zip"
     archive_subdir = "lgautier-rpy2*"
-    
+
     cmd_options = [ ("rhome", None, "Path to R.exe") ]
 
     @option_to_sys_path("rhome")
     def configure(self):
         apply_patch( pj(ModuleBaseDir,"rpy2.patch") )
         return True
-        
+
     @option_to_sys_path("rhome")
     def build(self):
         cmd = sys.executable + " setup.py build --compiler=mingw32"
         return subprocess.call(cmd) == 0
-        
+
     @option_to_sys_path("rhome")
     def install(self):
         cmd = sys.executable + " setup.py install --install-lib=" + self.installdir
