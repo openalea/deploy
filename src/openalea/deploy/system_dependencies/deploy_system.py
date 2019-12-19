@@ -49,12 +49,14 @@ def install_dependencies(software, osname=None, fake=False):
 
     if len(dpkgs):
         print("Do you wish to install the development packages:\n")
+        dpkgs = map(str, dpkgs)
         print(" ".join(dpkgs) + " (y/n)?")
         vdev = eval(input())
 
     opkgs = dependencies.other_packages()
-    if len(opkgs:
+    if len(opkgs):
         print("Do you wish to install the other packages:\n")
+        opkgs = map(str, opkgs)
         print(" ".join(opkgs) + " (y/n)?")
         voth = eval(input())
 
