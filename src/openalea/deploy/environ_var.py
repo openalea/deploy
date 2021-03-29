@@ -81,7 +81,7 @@ def get_posix_deactivate_export_str(vars):
 
 def get_win32_activate_export_str(vars):
     # Build string
-    exportstr = "REM ######### Configuration ############\n\n"
+    exportstr = "" #"REM ######### Configuration ############\n\n"
 
     for newvar in vars:
 
@@ -97,13 +97,13 @@ def get_win32_activate_export_str(vars):
         elif (vname and value):
             exportstr += 'SET %s=%s\n\n' % (vname, value)
 
-    exportstr += "REM ######### Configuration END ########"
+    #exportstr += "REM ######### Configuration END ########"
     return exportstr
 
 
 def get_win32_deactivate_export_str(vars):
     # Build string
-    exportstr = "REM ############ Configuration ############\n\n"
+    exportstr ="" # "REM ############ Configuration ############\n\n"
 
     for newvar in vars:
 
@@ -114,7 +114,7 @@ def get_win32_deactivate_export_str(vars):
         else:
             exportstr += 'SET  %s=\n' % vname
 
-    exportstr += "############ Configuration END ########"
+    exportstr += "" #"############ Configuration END ########"
     return exportstr
 
 
@@ -317,6 +317,8 @@ def set_conda_env(vars, name='openalea'):
         config.close()
 
     else:
+        # Do not update the environment variables on Windows under conda
+        # Let conda manage it using activate batch
         filename = join(activate_env_vars_dir, name + '.bat')
         config = open(filename, 'w')
         config.write(get_win32_activate_export_str(vars))
