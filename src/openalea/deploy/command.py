@@ -962,7 +962,7 @@ from %s.__init__ import *
                   ):
             if (not d):
                 continue
-            for dest_dir, src_dir in d.items():
+            for dest_dir, src_dir in list(d.items()):
                 # replace dest_dir by src_dir
                 adir = os.path.join(self.setup_path, src_dir)
                 d[adir] = adir

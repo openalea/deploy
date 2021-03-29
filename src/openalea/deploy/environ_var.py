@@ -81,29 +81,29 @@ def get_posix_deactivate_export_str(vars):
 
 def get_win32_activate_export_str(vars):
     # Build string
-    exportstr = "############ Configuration ############\n\n"
+    exportstr = "" #"REM ######### Configuration ############\n\n"
 
     for newvar in vars:
 
         vname, value = newvar.split('=')
 
         if ((vname == "PATH") and value):
-            exportstr += 'if [ -z "$%s" ]; then\n' % (vname)
-            exportstr += '  export %s=%s\n' % (vname, value,)
-            exportstr += 'else\n'
-            exportstr += '   export %s=%s:$%s\n' % (vname, value, vname,)
-            exportstr += 'fi\n\n'
+            exportstr += 'IF "%{0}%"=="" (\n'.format(vname)
+            exportstr += '  SET {0}={1}\n'.format(vname, value)
+            exportstr += ') ELSE (\n'
+            exportstr += '   SET {0}={1};%{2}%\n'.format(vname, value, vname,)
+            exportstr += ')\n\n'
 
         elif (vname and value):
-            exportstr += 'export %s=%s\n\n' % (vname, value)
+            exportstr += 'SET %s=%s\n\n' % (vname, value)
 
-    exportstr += "############ Configuration END ########"
+    #exportstr += "REM ######### Configuration END ########"
     return exportstr
 
 
 def get_win32_deactivate_export_str(vars):
     # Build string
-    exportstr = "############ Configuration ############\n\n"
+    exportstr ="" # "REM ############ Configuration ############\n\n"
 
     for newvar in vars:
 
@@ -112,9 +112,9 @@ def get_win32_deactivate_export_str(vars):
         if (vname == "PATH"):
             continue
         else:
-            exportstr += 'set  %s=\n' % vname
+            exportstr += 'SET  %s=\n' % vname
 
-    exportstr += "############ Configuration END ########"
+    exportstr += "" #"############ Configuration END ########"
     return exportstr
 
 
@@ -317,6 +317,8 @@ def set_conda_env(vars, name='openalea'):
         config.close()
 
     else:
+        # Do not update the environment variables on Windows under conda
+        # Let conda manage it using activate batch
         filename = join(activate_env_vars_dir, name + '.bat')
         config = open(filename, 'w')
         config.write(get_win32_activate_export_str(vars))
