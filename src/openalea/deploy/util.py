@@ -261,7 +261,7 @@ def get_repo_list():
 
     except Exception as e:
         print (e)
-        return [OPENALEA_PI]
+        return [OPENALEA_PI.encode()]
 
 
 def get_recommended_prefix():
