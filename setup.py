@@ -34,20 +34,8 @@ setup_kwds = dict(
     packages=find_packages('src'),
     namespace_packages=['openalea'],
     package_dir={'': 'src'},
-    setup_requires=[
-        ],
-    install_requires=[
-        'six'
-        ],
-    tests_require=[
-        "mock",
-        "nose",
-        "sphinx",
-        ],
     entry_points={},
     keywords='setuptools, openalea',
-    
-    test_suite='nose.collector',
     )
 # #}
 # change setup_kwds below before the next pkglts tag
@@ -74,8 +62,6 @@ entry_points = {
         "cmake = openalea.deploy.command:cmake",
         "scons = openalea.deploy.command:scons",
     ],
-
-
 }
 setup_kwds["entry_points"] = entry_points
 setup_kwds["include_package_data"] = True

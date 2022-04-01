@@ -247,25 +247,6 @@ def check_system():
 
 
 
-def get_recommended_prefix():
-    """ Return the list of recommended package prefix """
-    try:
-        # Python 3
-        from urllib.request import urlopen
-    except:
-        # Python 2
-        from six.moves.urllib.request import urlopen
-    try:
-        ret = []
-        prefixes = urlopen(OPENALEA_RECOMMENDED_PKG)
-        for i in prefixes:
-            ret.append(i.strip())
-        return ret
-
-    except Exception as e:
-        print (e)
-        return ["openalea"]
-
 
 def is_virtual_env():
     """ Return True if we are in a virtual env"""

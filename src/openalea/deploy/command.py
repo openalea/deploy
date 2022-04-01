@@ -21,7 +21,7 @@ from __future__ import print_function
 
 
 from __future__ import absolute_import
-from six.moves import input
+
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
@@ -57,14 +57,9 @@ from distutils.dir_util import mkpath
 import re
 
 PY3K = False
-try:
-    # Python 3
-    import configparser
-    PY3K = True
-except:
-    # Python 2
-    import six.moves.configparser as configparser
-    PY3K = False
+# Python 3
+import configparser
+PY3K = True
 
 from .util import get_all_lib_dirs, get_all_bin_dirs, DEV_DIST
 from .install_lib import get_dyn_lib_dir
