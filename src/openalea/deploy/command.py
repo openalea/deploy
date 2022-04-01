@@ -40,7 +40,6 @@ from distutils.command.build import build as old_build
 from setuptools.command.install_lib import install_lib as old_install_lib
 from setuptools.command.build_py import build_py as old_build_py
 from setuptools.command.build_ext import build_ext as old_build_ext
-from setuptools.command.develop import develop as old_develop
 
 from distutils.command.clean import clean as old_clean
 import distutils.command.build
@@ -300,9 +299,8 @@ def validate_bin_dirs(dist, attr, value):
         if (value):
             # Change commands
             setuptools.command.build_ext.build_ext = build_ext
-            setuptools.command.install.install = install
             setuptools.command.install_lib.install_lib = cmd_install_lib
-            setuptools.command.develop.develop = develop
+            #setuptools.command.develop.develop = develop
             set_has_ext_modules(dist)
 
     except (TypeError, ValueError, AttributeError, AssertionError):
