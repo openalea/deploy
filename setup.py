@@ -60,8 +60,6 @@ entry_points = {
         "share_dirs = openalea.deploy.command:validate_share_dirs",
         "cmake_scripts = openalea.deploy.command:validate_cmake_scripts",
         "scons_scripts = openalea.deploy.command:validate_scons_scripts",
-        "pylint_packages = openalea.deploy.command:validate_pylint_packages",
-        "pylint_options = openalea.deploy.command:validate_pylint_options",
         "scons_parameters = setuptools.dist:assert_string_list",
         "add_plat_name = openalea.deploy.command:validate_add_plat_name",
     ],
@@ -75,8 +73,6 @@ entry_points = {
     "distutils.commands": [
         "cmake = openalea.deploy.command:cmake",
         "scons = openalea.deploy.command:scons",
-        "pylint = openalea.deploy.command:pylint",
-        "clean = openalea.deploy.command:clean",
     ],
 
 

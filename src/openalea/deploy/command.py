@@ -40,8 +40,6 @@ from distutils.command.build import build as old_build
 from setuptools.command.install_lib import install_lib as old_install_lib
 from setuptools.command.build_py import build_py as old_build_py
 from setuptools.command.build_ext import build_ext as old_build_ext
-from setuptools.command.install import install as old_install
-from setuptools.command.easy_install import easy_install as old_easy_install
 from setuptools.command.develop import develop as old_develop
 
 from distutils.command.clean import clean as old_clean
@@ -152,7 +150,6 @@ class build(old_build):
 class build_py(old_build_py):
     """
     Enhanced 'build_py'
-    Create namespace
     """
 
     def initialize_options(self):
@@ -256,14 +253,6 @@ class cmd_install_lib(old_install_lib):
 
 # Validation functions
 
-def validate_create_namespaces(dist, attr, value):
-    """ Validation for create_namespaces keyword """
-    assert_bool(dist, attr, value)
-
-    if (value and dist.namespace_packages):
-        setuptools.command.build_py.build_py = build_py
-        setuptools.command.develop.develop = develop
-
 
 def validate_scons_scripts(dist, attr, value):
     """ Validation for scons_scripts keyword """
@@ -330,7 +319,7 @@ def validate_share_dirs(dist, attr, value):
         if (value):
             # Change commands
             setuptools.command.build_py.build_py = build_py
-            setuptools.command.install.install = install
+            #setuptools.command.install.install = install
             set_has_ext_modules(dist)
 
     except (TypeError, ValueError, AttributeError, AssertionError):
