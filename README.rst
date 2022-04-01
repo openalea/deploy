@@ -1,9 +1,14 @@
 .. image:: https://img.shields.io/badge/License-CeCILL_C-blue.svg
    :target: http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
 
-.. image:: https://ci.appveyor.com/api/projects/status/8d3qs5f00wriryo2/branch/master?svg=true
-   :target: https://ci.appveyor.com/project/fredboudon/deploy
+.. image:: https://anaconda.org/conda-forge/openalea.deploy/badges/downloads.svg
+   :target: https://anaconda.org/conda-forge/openalea.deploy
 
+.. image:: https://anaconda.org/conda-forge/openalea.deploy/badges/platforms.svg
+   :target: https://anaconda.org/conda-forge/openalea.deploy
+   
+.. image:: https://anaconda.org/conda-forge/openalea.deploy/badges/installer/conda.svg   
+   :target: https://conda.anaconda.org/conda-forge
 ========================
 Openalea.Deploy
 ========================
