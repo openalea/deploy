@@ -2,7 +2,7 @@
 #
 #       OpenAlea.Deploy: OpenAlea setuptools extension
 #
-#       Copyright 2006-2015 INRIA - CIRAD - INRA
+#       Copyright 2006-2022 INRIA - CIRAD - INRAe
 #
 #       File author(s): Samuel Dufour-Kowalski <samuel.dufour@cirad.fr>
 #          Christophe Pradal <christophe.pradal@cirad.fr>
@@ -24,9 +24,9 @@ import pkg_resources
 import os, sys
 from os.path import join as pj
 
-OPENALEA_PI = "http://openalea.gforge.inria.fr/pi"
-OPENALEA_REPOLIST = "http://openalea.gforge.inria.fr/repolist"
-OPENALEA_RECOMMENDED_PKG = "http://openalea.gforge.inria.fr/pkg_prefix"
+#OPENALEA_PI = "http://openalea.gforge.inria.fr/pi"
+#OPENALEA_REPOLIST = "http://openalea.gforge.inria.fr/repolist"
+#OPENALEA_RECOMMENDED_PKG = "http://openalea.gforge.inria.fr/pkg_prefix"
 
 # Precedence
 INSTALL_DIST = [pkg_resources.EGG_DIST,
@@ -244,44 +244,8 @@ def check_system():
 
 # Repository management
 
-def get_repo_list():
-    """ Return the list of OpenAlea repository """
-    try:
-        # Python 3
-        from urllib.request import urlopen
-    except:
-        # Python 2
-        from six.moves.urllib.request import urlopen
-    try:
-        ret = []
-        u = urlopen(OPENALEA_REPOLIST)
-        for i in u:
-            ret.append(i.strip())
-        return ret
-
-    except Exception as e:
-        print (e)
-        return [OPENALEA_PI.encode()]
 
 
-def get_recommended_prefix():
-    """ Return the list of recommended package prefix """
-    try:
-        # Python 3
-        from urllib.request import urlopen
-    except:
-        # Python 2
-        from six.moves.urllib.request import urlopen
-    try:
-        ret = []
-        prefixes = urlopen(OPENALEA_RECOMMENDED_PKG)
-        for i in prefixes:
-            ret.append(i.strip())
-        return ret
-
-    except Exception as e:
-        print (e)
-        return ["openalea"]
 
 
 def is_virtual_env():

@@ -36,12 +36,11 @@ def read_metainfo(filename, section='metainfo', verbose=False):
 
     if verbose:
         print(green('Reading metainfo '))
-    try:
-        import configparser
-    except:
-        import six.moves.configparser as configparser
-
+    
+    import configparser
+    
     config = configparser.RawConfigParser()
+    
     res = config.read(filename)
     if len(res) == 0:
         raise IOError("Input file %s does not seem to exist" % filename)

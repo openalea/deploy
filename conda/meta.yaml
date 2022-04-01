@@ -1,8 +1,8 @@
-{% set version = "2.2.0" %}
+{% set data = load_setup_py_data() %}
 
 package:
   name: openalea.deploy
-  version: {{ version }}
+  version: {{ data.get('version') }}
 
 source:
   path: ..
@@ -17,14 +17,10 @@ requirements:
     - python {{PY_VER}}* [not win]
     - python {{PY_VER}}  [win]
     - setuptools
-    - pywin32 [win]
-    - six
   run:
     - python {{PY_VER}}* [not win]
     - python {{PY_VER}}  [win]
     - setuptools
-    - pywin32 [win]
-    - six
     - path.py
 
 test:

@@ -1,9 +1,6 @@
 .. image:: https://img.shields.io/badge/License-CeCILL_C-blue.svg
    :target: http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
 
-.. image:: https://travis-ci.org/openalea/deploy.svg?branch=master
-    :target: https://travis-ci.org/openalea/deploy
-
 .. image:: https://ci.appveyor.com/api/projects/status/8d3qs5f00wriryo2/branch/master?svg=true
    :target: https://ci.appveyor.com/project/fredboudon/deploy
 
@@ -36,24 +33,20 @@ About
 OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage
 their dependencies .
 It is an extension of Setuptools_.
-
+The last version is only available for Python 3.
 
 
 **Additional Features** :
    * Discover and manage packages in EGG format
    * Declare shared libraries directory and include directories
    * Call SCons scripts
-   * Create namespaces if necessary
-   * Support post_install scripts
-   * Support 'develop' command
-   * OpenAlea GForge upload
 
 It doesn't include any GUI interface (See [[packages:compilation_installation:deploygui:deploygui|OpenAlea.DeployGui]] for that).
 
 Requirements
 -------------
 
-  * Python_ <= 2.7
+  * Python_ >= 3.7
   * Setuptools_
 
 Download
@@ -71,7 +64,7 @@ Installation
   OpenAlea.Deploy can be automatically installed with the *alea_setup.py* script.
 
 
-.. _Setuptools: http://pythonhosted.org/setuptools
+.. _Setuptools: https://setuptools.pypa.io/
 .. _Python: http://www.python.org
 
 
@@ -87,7 +80,6 @@ as you do with setuptools.
 Setup keywords
 ###############
 
-  * create_namespace = [True|False] : if **True** create the namespaces in *namespace_packages*
   * scons_scripts = [list of Scons scripts] : if not empty, call scons to build extensions
   * scons_parameters = [list of Scons parameters] : such as ``build_prefix=...``
   * postinstall_scripts = [list of strings] : Each string corresponds to a python module to execute at installation time. The module may contain a install function ``def install():``.
@@ -98,10 +90,7 @@ Setup keywords
 Additional setup.py commands
 #############################
 
-   * *create_namespace* : create_namespace declared in *namespace_packages*, usage : ``python setup.py create_namespace``.
    * *scons* : call scons scripts, usage : ``python setup.py scons``.
-   * *alea_install* : wrap easy_install command, usage : ``python setup.py alea_install``.
-   * *alea_upload* : upload distribution forge on the openalea gforge
 
 For more information see : ``python setup.py --help-commands``
 
@@ -134,7 +123,6 @@ Setup.py example
 
         # Packages
         namespace_packages = ["openalea"],
-        create_namespaces = True,
         packages = ['openalea.fakepackage', ],
 
         package_dir = {
@@ -148,7 +136,6 @@ Setup.py example
         lib_dirs = { 'lib' : pj(build_prefix, 'lib'), },
         inc_dirs = { 'include' : pj(build_prefix, 'include') },
         share_dirs = { 'share' : 'share' },
-        postinstall_scripts = ['openalea.fakepackage.postinstall',],
 
         # Scripts
         entry_points = { 'console_scripts': [
@@ -158,8 +145,6 @@ Setup.py example
 
         # Dependencies
         setup_requires = ['openalea.deploy'],
-        dependency_links = ['http://openalea.gforge.inria.fr/pi'],
-        #install_requires = [],
 
     )
 
