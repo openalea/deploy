@@ -1,10 +1,10 @@
 # {# pkglts, version
 #  -*- coding: utf-8 -*-
 
-major = 2
+major = 3
 """(int) Version major component."""
 
-minor = 2
+minor = 0
 """(int) Version minor component."""
 
 post = 0

@@ -2,9 +2,9 @@
 #
 #       OpenAlea.Deploy: OpenAlea setuptools extension
 #
-#       Copyright 2008 INRIA - CIRAD - INRA
+#       Copyright 2008-2022 INRIA - CIRAD - INRAE
 #
-#       File author(s): Thomas Cokelae
+#       File author(s): Thomas Cokelaer
 #
 #       Distributed under the Cecill-C License.
 #       See accompanying file LICENSE.txt or copy at

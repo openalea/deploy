@@ -1,4 +1,5 @@
-"""Alea config
+""" DEPRECATED : To remove
+Alea config
 
 Update all the shared libraries in the openalea global share lib directory.
 Try to update environment variable by:

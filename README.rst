@@ -1,9 +1,6 @@
 .. image:: https://img.shields.io/badge/License-CeCILL_C-blue.svg
    :target: http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
 
-.. image:: https://travis-ci.org/openalea/deploy.svg?branch=master
-    :target: https://travis-ci.org/openalea/deploy
-
 .. image:: https://ci.appveyor.com/api/projects/status/8d3qs5f00wriryo2/branch/master?svg=true
    :target: https://ci.appveyor.com/project/fredboudon/deploy
 
@@ -53,7 +50,7 @@ It doesn't include any GUI interface (See [[packages:compilation_installation:de
 Requirements
 -------------
 
-  * Python_ <= 2.7
+  * Python_ >= 3.7
   * Setuptools_
 
 Download
@@ -98,10 +95,7 @@ Setup keywords
 Additional setup.py commands
 #############################
 
-   * *create_namespace* : create_namespace declared in *namespace_packages*, usage : ``python setup.py create_namespace``.
    * *scons* : call scons scripts, usage : ``python setup.py scons``.
-   * *alea_install* : wrap easy_install command, usage : ``python setup.py alea_install``.
-   * *alea_upload* : upload distribution forge on the openalea gforge
 
 For more information see : ``python setup.py --help-commands``
 
@@ -134,7 +128,6 @@ Setup.py example
 
         # Packages
         namespace_packages = ["openalea"],
-        create_namespaces = True,
         packages = ['openalea.fakepackage', ],
 
         package_dir = {
@@ -148,7 +141,6 @@ Setup.py example
         lib_dirs = { 'lib' : pj(build_prefix, 'lib'), },
         inc_dirs = { 'include' : pj(build_prefix, 'include') },
         share_dirs = { 'share' : 'share' },
-        postinstall_scripts = ['openalea.fakepackage.postinstall',],
 
         # Scripts
         entry_points = { 'console_scripts': [
@@ -158,8 +150,6 @@ Setup.py example
 
         # Dependencies
         setup_requires = ['openalea.deploy'],
-        dependency_links = ['http://openalea.gforge.inria.fr/pi'],
-        #install_requires = [],
 
     )
 
