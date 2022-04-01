@@ -33,17 +33,13 @@ About
 OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage
 their dependencies .
 It is an extension of Setuptools_.
-
+The last version is only available for Python 3.
 
 
 **Additional Features** :
    * Discover and manage packages in EGG format
    * Declare shared libraries directory and include directories
    * Call SCons scripts
-   * Create namespaces if necessary
-   * Support post_install scripts
-   * Support 'develop' command
-   * OpenAlea GForge upload
 
 It doesn't include any GUI interface (See [[packages:compilation_installation:deploygui:deploygui|OpenAlea.DeployGui]] for that).
 
@@ -68,7 +64,7 @@ Installation
   OpenAlea.Deploy can be automatically installed with the *alea_setup.py* script.
 
 
-.. _Setuptools: http://pythonhosted.org/setuptools
+.. _Setuptools: https://setuptools.pypa.io/
 .. _Python: http://www.python.org
 
 
@@ -84,7 +80,6 @@ as you do with setuptools.
 Setup keywords
 ###############
 
-  * create_namespace = [True|False] : if **True** create the namespaces in *namespace_packages*
   * scons_scripts = [list of Scons scripts] : if not empty, call scons to build extensions
   * scons_parameters = [list of Scons parameters] : such as ``build_prefix=...``
   * postinstall_scripts = [list of strings] : Each string corresponds to a python module to execute at installation time. The module may contain a install function ``def install():``.

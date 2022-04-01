@@ -17,12 +17,10 @@ requirements:
     - python {{PY_VER}}* [not win]
     - python {{PY_VER}}  [win]
     - setuptools
-    - six
   run:
     - python {{PY_VER}}* [not win]
     - python {{PY_VER}}  [win]
     - setuptools
-    - six
     - path.py
 
 test:
