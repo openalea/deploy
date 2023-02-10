@@ -21,7 +21,7 @@ requirements:
     - python {{PY_VER}}* [not win]
     - python {{PY_VER}}  [win]
     - setuptools
-    - path.py
+    - path
 
 test:
   imports:
