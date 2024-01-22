@@ -6,7 +6,7 @@
 # {# pkglts, pysetup.kwds
 # format setup arguments
 
-from setuptools import setup, find_namespace_packages
+from setuptools import setup, find_packages
 
 
 short_descr = "OpenAlea.Deploy support the installation of OpenAlea packages via the network and manage their dependencies. It is an extension of Setuptools."
@@ -27,12 +27,12 @@ setup_kwds = dict(
     long_description=readme + '\n\n' + history,
     author="openalea",
     author_email="openalea@inria.fr",
-    url='https://openalea.rtfd.io',
+    url='https://openalea.gforge.inria.fr',
     license='cecill-c',
     zip_safe=False,
 
-    packages=find_namespace_packages(where='src', include=['openalea', 'openalea.*']),
-    #namespace_packages=['openalea'],
+    packages=find_packages('src'),
+    namespace_packages=['openalea'],
     package_dir={'': 'src'},
     entry_points={},
     keywords='setuptools, openalea',
