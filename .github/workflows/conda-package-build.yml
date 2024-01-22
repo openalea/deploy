@@ -5,7 +5,7 @@ on:
     branches: 
       - '**'
     tags:
-      - 'v*'
+      - 'openalea3*'
   pull_request:
     branches: 
       - '**'
