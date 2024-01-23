@@ -31,7 +31,7 @@ setup_kwds = dict(
     license='cecill-c',
     zip_safe=False,
 
-    packages=find_namespace_packages(where='src', include=['openalea', 'openalea.*']),
+    packages=find_namespace_packages(where='src', include=['openalea.*']),
     #namespace_packages=['openalea'],
     package_dir={'': 'src'},
     entry_points={},
