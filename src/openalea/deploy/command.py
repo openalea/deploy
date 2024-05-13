@@ -32,6 +32,8 @@ import shutil
 from distutils.errors import *
 import stat
 import glob
+import shlex
+
 from os.path import join as pj
 from setuptools import Command
 from setuptools.dist import assert_string_list, assert_bool
@@ -412,11 +414,9 @@ class scons(Command):
             return
 
         # try to import subprocess package
-        try:
-            import subprocess
-            subprocess_enabled = True
-        except ImportError:
-            subprocess_enabled = False
+        import subprocess
+        subprocess_enabled = True
+
 
         # run each scons script from setup.py
         for s in self.scons_scripts:
@@ -453,10 +453,11 @@ class scons(Command):
                 print(commandstr)
 
                 # Run SCons
-                if (subprocess_enabled):
-                    retval = subprocess.call(commandstr, shell=True)
-                else:
-                    retval = os.system(commandstr)
+                # Fix issue 57 : Martin and Christophe
+
+                command_line = shlex.split(commandstr)
+                result = subprocess.run(command_line, shell=True, timeout=None)
+                retval = result.returncode
 
                 # Test if command success with return value
                 if (retval != 0):
