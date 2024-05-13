@@ -413,11 +413,6 @@ class scons(Command):
         if (not self.scons_scripts):
             return
 
-        # try to import subprocess package
-        import subprocess
-        subprocess_enabled = True
-
-
         # run each scons script from setup.py
         for s in self.scons_scripts:
             try:
@@ -512,13 +507,6 @@ class cmake(Command):
         if (not self.cmake_scripts):
             return
 
-        # try to import subprocess package
-        try:
-            import subprocess
-            subprocess_enabled = True
-        except ImportError:
-            subprocess_enabled = False
-
         # run each CMake script from setup.py
         for s in self.cmake_scripts:
             try:
@@ -536,13 +524,10 @@ class cmake(Command):
                 if not os.path.isdir('build-cmake'):
                     os.mkdir('build-cmake')
 
-                os.chdir('build-cmake')
-
                 # Run CMake
-                if (subprocess_enabled):
-                    retval = subprocess.call(commandstr, shell=True)
-                else:
-                    retval = os.system(commandstr)
+                command_line = shlex.split(commandstr)
+                result = subprocess.run(command_line, cwd='build-cmake', shell=True, timeout=None)
+                retval = result.returncode
 
                 # Test if command success with return value
                 if (retval != 0):
