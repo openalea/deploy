@@ -21,6 +21,10 @@ import types
 import os
 from os.path import join as pj
 from os.path import realpath, isdir, isfile
+
+from pathlib import Path
+
+"""
 try:
     from path import Path
 except ImportError:
@@ -31,6 +35,7 @@ except ImportError:
             from openalea.core.path import path as Path
         except ImportError:
             from IPython.external.path import path as Path
+"""
 
 __license__ = "Cecill-C"
 __revision__ = " $Id: gforge.py 2243 2010-02-08 17:08:47Z cokelaer $ "
@@ -86,22 +91,24 @@ def shared_data(package_path, filename=None, pattern=None,
             package_path = package_path[0]
     package_path = Path(package_path)
     ff = package_path / share_path
-    ff = ff.realpath()
+    # ff = ff.realpath() # path.py
+    ff = ff.resolve()
     shared_data_path = None
-    if ff.isdir():
+    #if ff.isdir():
+    if ff.is_dir():
         if filename is None:
             shared_data_path = ff
             if pattern:
-                l = ff.glob(pattern)
+                l = list(ff.glob(pattern))
                 if l:
                     shared_data_path = l
         else:
             ff = ff / filename
-            ff = ff.realpath()
-            if ff.isfile():
+            ff = ff.resolve()
+            if ff.is_file():
                 shared_data_path = ff
 
-    if shared_data_path is None and (package_path / '__init__.py').isfile():
+    if shared_data_path is None and (package_path / '__init__.py').is_file():
         shared_data_path = shared_data(package_path.parent, filename, pattern,
                                        share_path)
         if shared_data_path is None:
