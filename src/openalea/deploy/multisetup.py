@@ -19,7 +19,9 @@ import os
 import re
 from subprocess import PIPE, Popen
 
-from path import Path
+# issue 49 : replace path by pathlib 
+# from path import Path
+from pathlib import Path
 
 #from openalea.deploy.console import color_terminal, nocolor, bold, purple, red, green, underline
 
@@ -71,7 +73,8 @@ class Multisetup(object):
         >>> Multisetup(["install","--keep-going"], ['deploy', 'visualea'], '.', verbose=True)
         """
         #default
-        self.curdir = Path(curdir).abspath()
+        #self.curdir = Path(curdir).abspath()
+        self.curdir = Path(curdir).resolve()
         if isinstance(commands, list):
             self.commands = list(commands)
         elif isinstance(commands, str):
@@ -247,27 +250,32 @@ class Multisetup(object):
 
         print('Will process the following directories: ',)
         for directory in directories:
-            print(bold(directory.basename()), end=' ')
+            print(bold(directory.name), end=' ') # pathlib
+            # print(bold(directory.basename()), end=' ') # path.py
         print('')
 
         try:
             for directory in directories:
                 try:
                     os.chdir(directory)
-                    print(underline('Entering %s package'
-                                    % directory.basename()))
+                    #print(underline('Entering %s package'
+                    #                % directory.basename()))
+                    print(underline(f'Entering {directory.name} package'))
+                    
                 except OSError as e:
-                    print(underline('Entering %s package'
-                                    % directory.basename()), end=' ')
-                    print(red("cannot find this directory (%s)"
-                              % directory.basename()))
+                    #print(underline('Entering %s package'
+                    #                % directory.basename()), end=' ')
+                    #print(red("cannot find this directory (%s)"
+                    #          % directory.basename()))
+                    print(underline(f'Entering {directory.name} package'), end=' ')
+                    print(red(f"cannot find this directory ({directory.name})"))
                     print(e)
 
                 print('Python exec : ', sys.executable)
 
                 #print underline('Entering %s package' % directory.basename())
                 for cmd in self.commands:
-                    setup_command = '%s setup.py %s ' % (sys.executable, cmd)
+                    setup_command = f'{sys.executable} setup.py {cmd} ' # % (sys.executable, cmd)
                     print("\tExecuting " + setup_command + '...processing', end=' ')
 
                     #Run setup.py with user commands
